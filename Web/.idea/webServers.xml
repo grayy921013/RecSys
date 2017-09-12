@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="17e1aa23-8ce0-42bf-baf9-1879e6238b50" name="AWS instance" url="http://54.193.113.161">
+        <fileTransfer host="54.193.113.161" port="22" privateKey="$PROJECT_DIR$/../RecSys.pem" rootFolder="/home/ubuntu/Web" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
