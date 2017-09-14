@@ -51,58 +51,58 @@ class PostgresDataHandler(DataHandler):
             raise AttributeError("Parameter field should be value of the enum Field")
 
         if field == Field.TITLE:
-            cursor = mainsite_movie.select(mainsite_movie.title)
-            return list(map(lambda x: x.title, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.title)
+            return list(map(lambda x: [x.movielens_id, x.title], cursor))
         elif field == Field.GENRE:
-            cursor = mainsite_movie.select(mainsite_movie.genre)
-            return list(map(lambda x: x.genre, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.genre)
+            return list(map(lambda x: [x.movielens_id, x.genre], cursor))
         elif field == Field.CAST:
-            cursor = mainsite_movie.select(mainsite_movie.cast)
-            return list(map(lambda x: x.cast, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.cast)
+            return list(map(lambda x: [x.movielens_id, x.cast], cursor))
         elif field == Field.PLOT:
-            cursor = mainsite_movie.select(mainsite_movie.plot)
-            return list(map(lambda x: x.plot, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.plot)
+            return list(map(lambda x: [x.movielens_id, x.plot], cursor))
         elif field == Field.FULL_PLOT:
-            cursor = mainsite_movie.select(mainsite_movie.full_plot)
-            return list(map(lambda x: x.full_plot, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.full_plot)
+            return list(map(lambda x: [x.movielens_id, x.full_plot], cursor))
         elif field == Field.AWARDS:
-            cursor = mainsite_movie.select(mainsite_movie.awards)
-            return list(map(lambda x: x.awards, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.awards)
+            return list(map(lambda x: [x.movielens_id, x.awards], cursor))
 
         elif field == Field.DIRECTOR:
-            cursor = mainsite_movie.select(mainsite_movie.director)
-            return list(map(lambda x: x.director, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.director)
+            return list(map(lambda x: [x.movielens_id, x.director], cursor))
         elif field == Field.WRITER:
-            cursor = mainsite_movie.select(mainsite_movie.writer)
-            return list(map(lambda x: x.writer, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.writer)
+            return list(map(lambda x: [x.movielens_id, x.writer], cursor))
         elif field == Field.LANGUAGE:
-            cursor = mainsite_movie.select(mainsite_movie.language)
-            return list(map(lambda x: x.language, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.language)
+            return list(map(lambda x: [x.movielens_id, x.language], cursor))
         elif field == Field.COUNTRY:
-            cursor = mainsite_movie.select(mainsite_movie.country)
-            return list(map(lambda x: x.country, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.country)
+            return list(map(lambda x: [x.movielens_id, x.country], cursor))
 
         elif field == Field.YEAR:
-            cursor = mainsite_movie.select(mainsite_movie.year)
-            return list(map(lambda x: x.year, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.year)
+            return list(map(lambda x: [x.movielens_id, x.year], cursor))
         elif field == Field.RATING:
-            cursor = mainsite_movie.select(mainsite_movie.rating)
-            return list(map(lambda x: x.rating, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.rating)
+            return list(map(lambda x: [x.movielens_id, x.rating or ''], cursor))
         elif field == Field.RUNTIME:
-            cursor = mainsite_movie.select(mainsite_movie.runtime)
-            return list(map(lambda x: x.runtime, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.runtime)
+            return list(map(lambda x: [x.movielens_id, x.runtime], cursor))
         elif field == Field.RELEASED:
-            cursor = mainsite_movie.select(mainsite_movie.released)
-            return list(map(lambda x: x.released, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.released)
+            return list(map(lambda x: [x.movielens_id, x.released], cursor))
         elif field == Field.METACRITIC:
-            cursor = mainsite_movie.select(mainsite_movie.metacritic)
-            return list(map(lambda x: x.metacritic, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.metacritic)
+            return list(map(lambda x: [x.movielens_id, x.metacritic], cursor))
         elif field == Field.IMDB_RATING:
-            cursor = mainsite_movie.select(mainsite_movie.imdb_rating)
-            return list(map(lambda x: x.imdb_rating, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.imdb_rating)
+            return list(map(lambda x: [x.movielens_id, x.imdb_rating], cursor))
         elif field == Field.IMDB_VOTES:
-            cursor = mainsite_movie.select(mainsite_movie.imdb_votes)
-            return list(map(lambda x: x.imdb_votes, cursor))
+            cursor = mainsite_movie.select(mainsite_movie.movielens_id, mainsite_movie.imdb_votes)
+            return list(map(lambda x: [x.movielens_id, x.imdb_votes], cursor))
         else:
             return []
 
