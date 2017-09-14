@@ -14,33 +14,32 @@ This module implements content base recommendation algorithms:
 
 import logging
 from CB.CBAlgorithm import CBAlgorithm
-
+from Util import Field
 
 logger = logging.getLogger(__name__)
 
 
 class CBRecommender(object):
-
-    def train(self, field, algorithm, dataset):
+    def train(self, data, algorithm):
         '''
-        Index the dataset for a given field and calculate the similarity
-        score of each pair of items using the specified algorithm
-        :param field: String [Title, Plot, ]
+        Given a dataset:
+        - Index it
+        - Calculate the similarity score of each pair of items using the specified algorithm
+        :param data: List of strings
         :param algorithm: [tfidf, bm25f, jaccard]
         :return: Sparse matrix NxN with the similarity score of every pair of items
         '''
-        if not isinstance(field, str):
-            raise AttributeError("The parameter field should be a string")
+        if not isinstance(data, list):
+            raise AttributeError("The parameter data should be a list of string")
         if not isinstance(algorithm, CBAlgorithm):
             raise AttributeError("The parameter algorithm should be an instance of CBAlgorithm or its childs")
 
-        data = dataset.get_data(field)
         index = algorithm.index(data)
         score = algorithm.similarity(index)
 
         return score
 
-    def train_several_fields(self, fields, algorithm, dataset, weigth):
+    def train_several_fields(self, fields, algorithm, dataset, weigths):
         '''
         Index the dataset for a set of fields
          - calculate the similarity score of each pair of items using the specified algorithm for each field
@@ -51,21 +50,34 @@ class CBRecommender(object):
         :param algorithm: [tfidf, bm25f, jaccard]
         :return: Sparse matrix NxN with the similarity score of every pair of items
         '''
+        if not isinstance(fields, list):
+            raise AttributeError("The parameter fields should be a list of Field values")
+        if not isinstance(weigths, list):
+            raise AttributeError("The parameter weigths should be a list of Field values")
+
         if len(fields) == 0:
             return None
 
+        if not isinstance(fields[0], Field):
+            raise AttributeError("The parameter fields should be a list of Field values")
+        if not isinstance(algorithm, CBAlgorithm):
+            raise AttributeError("The parameter algorithm should be an instance of CBAlgorithm or its childs")
+        if len(fields) != len(weigths):
+            raise AttributeError("The number of fields should be equal to the number of weights")
+
         scores = []
         for field in fields:
-            scores.append(self.train(field, algorithm, dataset))
+            data = dataset.get_data(field)
+            scores.append(self.train(data, algorithm))
 
         # Try to aggregate the different scores
-        aggregated_score = weigth[0]*scores[0]
+        aggregated_score = weigths[0] * scores[0]
         i = 1
         for score in scores[1:]:
             if aggregated_score.shape != scores[i].shape:
-                raise IndexError("The field No. %d only have %d items whereas the other fields have %d items" %\
-                                 (i+1, len(aggregated_score), len(score)))
-            aggregated_score += weigth[i]*scores[i]
+                raise IndexError("The field No. %d only have %d items whereas the other fields have %d items" % \
+                                 (i + 1, len(aggregated_score), len(score)))
+            aggregated_score += weigths[i] * scores[i]
             i += 1
 
         return aggregated_score
@@ -77,5 +89,5 @@ class CBRecommender(object):
         :param scores:
         :return:
         '''
-        #TODO: Save method
+        # TODO: Save method
         raise NotImplementedError("#TODO")
