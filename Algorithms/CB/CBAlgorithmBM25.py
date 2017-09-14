@@ -30,15 +30,15 @@ class CBAlgorithmBM25(CBAlgorithm):
         :param data: Array of strings
         :return: Sparse matrix NxM where N is the same length of data and M is the number of features
         '''
-        super(CBAlgorithmBM25, self).index(data)
+        data = super(CBAlgorithmBM25, self).index(data)
 
         t0 = time()
         self.vectorizer = Bm25Vectorizer(max_df=0.5, stop_words='english')
-        self.index = self.vectorizer.fit_transform(data)
+        self.indexed = self.vectorizer.fit_transform(data)
         duration = time() - t0
-        logger.info("n_samples: %d, n_features: %d" % self.index.shape)
+        logger.info("n_samples: %d, n_features: %d" % self.indexed.shape)
         logger.info("duration: %d\n" % duration)
-        return self.index
+        return self.indexed
 
     def similarity(self, index=None):
         '''
@@ -47,6 +47,6 @@ class CBAlgorithmBM25(CBAlgorithm):
         :return: Sparse matrix NxN where every cell is the similarity of its indexes
         '''
         if index is None:
-            index = self.index
+            index = self.indexed
         super(CBAlgorithmBM25, self).similarity(index)
         return self.dot_product_similarity(index)

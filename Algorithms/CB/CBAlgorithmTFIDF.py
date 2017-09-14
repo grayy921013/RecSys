@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class CBAlgorithmTFIDF(CBAlgorithm):
 
     def __init__(self):
-        self.__name__ = 'TFIDF'
+        self.__name__ = 'TFIDF*'
 
     def index(self, data):
         '''
@@ -31,15 +31,15 @@ class CBAlgorithmTFIDF(CBAlgorithm):
         :param data: Array of strings
         :return: Sparse matrix NxM where N is the same length of data and M is the number of features
         '''
-        super(CBAlgorithmTFIDF, self).index(data)
+        data = super(CBAlgorithmTFIDF, self).index(data)
 
         t0 = time()
         self.vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english')
-        self.index = self.vectorizer.fit_transform(data)
+        self.indexed = self.vectorizer.fit_transform(data)
         duration = time() - t0
-        logger.info("n_samples: %d, n_features: %d" % self.index.shape)
+        logger.info("n_samples: %d, n_features: %d" % self.indexed.shape)
         logger.info("duration: %d\n" % duration)
-        return self.index
+        return self.indexed
 
     def similarity(self, index=None):
         '''
@@ -48,6 +48,6 @@ class CBAlgorithmTFIDF(CBAlgorithm):
         :return: Sparse matrix NxN where every cell is the similarity of its indexes
         '''
         if index is None:
-            index = self.index
+            index = self.indexed
         super(CBAlgorithmTFIDF, self).similarity(index)
         return self.dot_product_similarity(index)
