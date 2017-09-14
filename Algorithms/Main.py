@@ -16,15 +16,10 @@ import sys
 import logging
 
 #~~~                                    Do a basic silly run                                 ~~~#
+from DataHandler import PostgresDataHandler
+from Util import Field
 
-class Dataset(object):
 
-    def get_data(self, field):
-        return ['this is a practice dataset',
-                'only used to test functionality',
-                'hola',
-                'hola este es mi mejor momento',
-                'quizas no']
 
 
 from CB import CBRecommender, CBAlgorithmTFIDF, CBAlgorithmBM25, CBAlgorithmJACCARD
@@ -36,14 +31,29 @@ def main(argv):
     rec = CBRecommender()
 
     # Get the connection with the 'database'
-    dataset = Dataset()
+    dataset = PostgresDataHandler()
 
+
+    # Single Field
+    data = dataset.get_data(Field.CAST)
+
+    logging.warn("%d records retrieved", len(data))
     for algo in [CBAlgorithmTFIDF(), CBAlgorithmBM25(), CBAlgorithmJACCARD()]:
         # Train the recommender using the given algorithm and dataset
-        result = rec.train('title', algo, dataset)
+        result = rec.train(data, algo)
 
         # Report similarity score for every single pair that has a score > 0
-        logging.warning('\n%s\n%s' % (algo.__name__, str(result)))
+        logging.warning('\nAlgorithm: %s\nComparisons: %s\nExample Data%s' % (algo.__name__, format(result.nnz, ",d"), str(result[0,0:10])))
+
+    # Multiple Field
+
+    logging.warn("%d records retrieved", len(data))
+    for algo in [CBAlgorithmTFIDF(), CBAlgorithmBM25(), CBAlgorithmJACCARD()]:
+        # Train the recommender using the given algorithm and dataset
+        result = rec.train_several_fields([Field.CAST, Field.TITLE, Field.PLOT], algo, dataset, [0.3, 0.3, 0.4])
+
+        # Report similarity score for every single pair that has a score > 0
+        logging.warning('\nAlgorithm: %s\nComparisons: %s\nExample Data%s' % (algo.__name__, format(result.nnz, ",d"), str(result[0,0:10])))
 
 
 if __name__ == "__main__":
