@@ -1,0 +1,1 @@
+from .get_data import get_related, get_related_tmdb
