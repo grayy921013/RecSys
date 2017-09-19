@@ -57,3 +57,4 @@ fabric.properties
 *.jpg
 # .idea stuffs seem not working
 .idea
+*.sqlite3
