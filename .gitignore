@@ -58,3 +58,4 @@ fabric.properties
 # .idea stuffs seem not working
 .idea
 *.sqlite3
+*.pyc
