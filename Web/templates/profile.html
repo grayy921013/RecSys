@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+    <title>Profile Page</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block navbar %}
+
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <div>
+                <a href="{% url 'profile' user.id %}">
+                    <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon" width="44"
+                         height="44">
+                </a>
+            </div>
+        </li>
+        <li>
+            <a type="button" href="{% url 'home' %}" class="btn btn-default btn-md btn-icon-left"><span
+                    class="glyphicon glyphicon-home nav-glyphicon" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a type="button" class="btn btn-default btn-md btn-icon-right" href="{% url 'userlogout' %}"><span
+                    class="glyphicon glyphicon-log-out nav-glyphicon" aria-hidden="true"></span>
+            </a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+
+        <div class="col-sm-4 col-md-3 sidebar profile-container">
+            <div class="profile-image">
+                <img src="{% static 'images/user_image.jpg' %}" class="img-rounded" alt="personal icon" width="120"
+                     height="120">
+            </div>
+            <div class="profile-username">
+                <label>{{ current_user.username }}</label>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        </div>
+    </div> <!-- /container -->
+
+{% endblock %}

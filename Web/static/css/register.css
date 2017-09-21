@@ -1,0 +1,71 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+  /*background-image:url(../images/register.jpg);*/
+  background-size: cover;  
+  height:780px;
+}
+
+.form-element{
+  margin-top: 40px;
+}
+
+.btn-return-login{
+  background-color:transparent; 
+  border:none; 
+  outline:none; 
+  margin-top:10%; 
+  margin-right:10px;
+}
+
+.glyphicon-home{
+  color:white !important; 
+  font-size:2em !important;
+}
+
+.btn-login{
+  background: none;
+  padding: 6px 25px;
+  border: 2px solid #B13B3B;
+  color: #B13B3B;
+  margin-left: -10%;
+}
+.btn-register{
+  text-align: center;
+  background: #880909;
+  padding: 6px 25px;
+  border: 2px solid #880909;
+  color: white;
+  width:40%;
+}
+
+.register-container{
+  text-align: center;
+  border-radius: 6px;
+  overflow:visible;
+  position:absolute;
+  background-color: white;
+  z-index:1;
+  opacity:0.9;
+  background-size:cover;
+  padding-left: 2%;
+  padding-right: 2%;
+  width:70%;
+  margin-left:15%;
+  margin-right:15%;
+}
+
+log.container{
+   background-image:url("https://static.pexels.com/photos/26135/pexels-photo-26135.jpg");
+}
+
+.reg-welcome{
+  margin-top:60px; 
+  color:#880909;
+}
+
+.reg-btn-div{
+  margin-bottom:50px;
+}
+

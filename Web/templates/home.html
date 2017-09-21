@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <title>Homepage</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <div>
+                <a href="{% url 'profile' user.id %}">
+                    <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon"
+                         width="43" height="43">
+                </a>
+            </div>
+        </li>
+        <li>
+            <a type="button" class="btn btn-default btn-md btn-icon-left" href="{% url 'home' %}">
+                <span class="glyphicon nav-glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a type="button" class="btn btn-default btn-md btn-icon-right" href="{% url 'userlogout' %}">
+                <span class="glyphicon nav-glyphicon glyphicon-log-out" aria-hidden="true"></span>
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div role="tabpanel" class="tab-pane fade in active" id="randomMovieList">
+        <div class="row" style="margin-top: 60px;">
+
+            <div id="movieR1" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR2" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR3" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR4" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: 40px;">
+
+            <div id="movieR1" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR2" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR3" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR4" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top: 40px;">
+
+            <div id="movieR1" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR2" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR3" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+            <div id="movieR4" class="col-xs-3 col-lg-2.5">
+                <a>
+                    <img src="http://img.loud.ninja/Posters//1682.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+                <h4 class="centerBlock" id="title1682">The Truman Show (1998)</h4>
+            </div>
+
+        </div>
+        <div id="wrap"></div>
+        <br>
+    </div>
+{% endblock %}
