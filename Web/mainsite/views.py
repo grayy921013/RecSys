@@ -6,6 +6,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+import math
 
 def get_metadata(request, imdb_id):
     try:
@@ -18,6 +19,11 @@ def movie_to_json(movie):
     dict = {}
     dict['title'] = movie.title
     return dict
+
+def get_random_movie(user_id):
+	rand_list = Movie.objects.order_by('?').all()[:20]
+	return rand_list
+
 
 #### Web UI Implementation####
 
@@ -113,9 +119,25 @@ def register(request):
 @login_required
 def home(request):
     print("enter globalStream")
+
+    # get the random movie
+    random_movie_list = get_random_movie(request.user.id)
+    # prepare the movie into nested list, which correspond to the display grid
+    row_length = 4
+    grid_list = []
+    for row in range(0, int(math.ceil(float(len(random_movie_list)) / row_length))):
+        row_list = []
+        for col in range(0, min(row_length, len(random_movie_list) - (row * row_length))):
+            row_list.append(random_movie_list[row * row_length + col])
+        grid_list.append(row_list) 
+    print(grid_list)
+
     errors = " "
     if request.method == "GET":
-        context = {'errors': errors}
+        context = {
+            'errors': errors,
+            'movie_grid': grid_list 
+        }
         return render(request, 'home.html', context)
 
 
