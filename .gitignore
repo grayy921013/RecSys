@@ -59,3 +59,5 @@ fabric.properties
 .idea
 *.sqlite3
 *.pyc
+tomatoes.txt
+migrations/

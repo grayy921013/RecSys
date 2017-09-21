@@ -24,6 +24,7 @@ class Movie(models.Model):
     country = models.CharField(max_length=500)
     awards = models.CharField(max_length=500)
     last_updated = models.CharField(max_length=40)
+    blockbuster = models.IntegerField(null=True)
 
 # we define id1 as the smaller id
 class Similarity(models.Model):
