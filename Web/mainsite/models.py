@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Genre(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=100)
 
 class Movie(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
@@ -13,7 +16,7 @@ class Movie(models.Model):
     year = models.IntegerField()
     rating = models.FloatField(null=True)
     runtime = models.CharField(max_length=100)
-    genre = models.CharField(max_length=2000)
+    genre = models.ManyToManyField(Genre)
     released = models.CharField(max_length=2000)
     director = models.CharField(max_length=2000)
     writer = models.CharField(max_length=2000)
