@@ -32,8 +32,8 @@ class Movie(models.Model):
     awards = models.CharField(max_length=500)
     last_updated = models.CharField(max_length=40)
     popularity = models.FloatField(null=True)
-    budget = models.IntegerField(null=True)
-    revenue = models.IntegerField(null=True)
+    budget = models.BigIntegerField(null=True)
+    revenue = models.BigIntegerField(null=True)
 
 # we define id1 as the smaller id
 class Similarity(models.Model):
