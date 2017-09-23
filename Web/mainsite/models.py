@@ -5,6 +5,7 @@ class Movie(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     imdb_id = models.CharField(max_length=10, unique=True)
     movielens_id = models.CharField(max_length=10, unique=True)
+    tmdb_id = models.CharField(max_length=10, unique=True, null=True)
     title = models.CharField(max_length=500)
     year = models.IntegerField()
     rating = models.FloatField(null=True)
@@ -24,7 +25,9 @@ class Movie(models.Model):
     country = models.CharField(max_length=500)
     awards = models.CharField(max_length=500)
     last_updated = models.CharField(max_length=40)
-    blockbuster = models.IntegerField(null=True)
+    popularity = models.FloatField(null=True)
+    budget = models.IntegerField(null=True)
+    revenue = models.IntegerField(null=True)
 
 # we define id1 as the smaller id
 class Similarity(models.Model):

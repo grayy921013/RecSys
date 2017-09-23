@@ -59,5 +59,7 @@ fabric.properties
 .idea
 *.sqlite3
 *.pyc
+# data files
 tomatoes.txt
+links.csv
 migrations/
