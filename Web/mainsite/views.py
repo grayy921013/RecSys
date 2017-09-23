@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from mainsite.models import Movie
+from mainsite.models import Movie, Userinfo
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -37,7 +37,6 @@ def userlogin(request):
     errors = " "
 
     if request.method == 'POST' and request.POST['log_username'] and request.POST['log_password']:
-        print("enter login")
         username = request.POST.get('log_username')
         password = request.POST.get('log_password')
         user = authenticate(username=username, password=password)
@@ -106,6 +105,8 @@ def register(request):
         elif not errors:
             user = User.objects.create_user(username=username, password=password)
             user.save()
+            new_info = Userinfo(user=user, age=age, gender=gender, education=education, employment=employment)
+            new_info.save()
 
             user = authenticate(username=username, password=password)
             login(request, user)
@@ -118,8 +119,6 @@ def register(request):
 
 @login_required
 def home(request):
-    print("enter globalStream")
-
     # get the random movie
     random_movie_list = get_random_movie(request.user.id)
     # prepare the movie into nested list, which correspond to the display grid

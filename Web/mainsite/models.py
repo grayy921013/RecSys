@@ -1,6 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
+
+
 class Movie(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     imdb_id = models.CharField(max_length=10, unique=True)
@@ -78,3 +81,18 @@ class Similarity(models.Model):
 
     class Meta:
         unique_together = (('id1', 'id2'),)
+
+
+class Userinfo(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    age = models.IntegerField(default=0,blank=True)
+    gender = models.CharField(max_length=10, default='',blank=True)
+    education = models.CharField(max_length=100, default='',blank=True)
+    employment = models.CharField(max_length=100, default='',blank=True)
+
+    def __unicode__(self):
+        return self.user
