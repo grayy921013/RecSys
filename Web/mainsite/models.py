@@ -16,7 +16,7 @@ class Movie(models.Model):
     year = models.IntegerField()
     rating = models.FloatField(null=True)
     runtime = models.CharField(max_length=100)
-    genre = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre)
     released = models.CharField(max_length=2000)
     director = models.CharField(max_length=2000)
     writer = models.CharField(max_length=2000)
