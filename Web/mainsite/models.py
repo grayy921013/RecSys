@@ -99,3 +99,9 @@ class Userinfo(models.Model):
 
     def __unicode__(self):
         return self.user
+
+class UserVote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie1 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie1")
+    movie2 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie2")
+    is_similar = models.BooleanField()
