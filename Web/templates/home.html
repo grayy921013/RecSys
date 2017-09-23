@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block head %}
-    <title>Homepage</title>
+    <title>{{ title }}</title>
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
@@ -38,20 +38,15 @@
 
         {% load static %}
         {% static "" as baseUrl %}
-        {% for movie_row in movie_grid%}
-        <div class="row" style="margin-top: 60px;">
-            {% for movie in movie_row%}
-            <div id="movieR1" class="col-xs-3 col-lg-2.5">
+        {% for movie in movie_list%}
+            <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                 <a>
                     <img src="{{baseUrl}}/posters/{{ movie.movielens_id }}.jpg"
                          style="height: 206px; width: 144px" alt="Mountain View"
                          class="noresize img-responsive centerBlock">
                 </a>
-                <h4 class="centerBlock" id="title1682">{{ movie.title }}</h4>
+                <div class="movie-title" id="title1682">{{ movie.title }}</div>
             </div>
-            {% endfor %}
- 
-        </div>
         {% endfor %}
         <div id="wrap"></div>
         <br>

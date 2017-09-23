@@ -121,21 +121,27 @@ def register(request):
 def home(request):
     # get the random movie
     random_movie_list = get_random_movie(request.user.id)
-    # prepare the movie into nested list, which correspond to the display grid
-    row_length = 4
-    grid_list = []
-    for row in range(0, int(math.ceil(float(len(random_movie_list)) / row_length))):
-        row_list = []
-        for col in range(0, min(row_length, len(random_movie_list) - (row * row_length))):
-            row_list.append(random_movie_list[row * row_length + col])
-        grid_list.append(row_list) 
-    print(grid_list)
 
     errors = " "
     if request.method == "GET":
         context = {
             'errors': errors,
-            'movie_grid': grid_list 
+            'movie_list': random_movie_list,
+            'titile' : 'Home Page'
+        }
+        return render(request, 'home.html', context)
+
+@login_required
+def blockbuster(request):
+    # get the random movie
+    random_movie_list = Movie.objects.exclude(popularity__isnull=True).order_by('-popularity')[:30]
+
+    errors = " "
+    if request.method == "GET":
+        context = {
+            'errors': errors,
+            'movie_list': random_movie_list,
+            'title': 'Block Buster'
         }
         return render(request, 'home.html', context)
 
