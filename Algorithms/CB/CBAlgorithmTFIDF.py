@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 class CBAlgorithmTFIDF(CBAlgorithm):
 
     def __init__(self):
-        self.__name__ = 'TFIDF*'
+        self.__name__ = 'TFITF'
+        # self.__name__ = 'TFIDF*'
 
     def index(self, data):
         '''

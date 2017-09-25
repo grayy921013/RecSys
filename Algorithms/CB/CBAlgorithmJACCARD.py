@@ -17,7 +17,6 @@ from time import time
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.sparse import csr_matrix
 
-from Util import chunking_dot
 from .CBAlgorithm import CBAlgorithm
 import dask.array as da
 from chest import Chest

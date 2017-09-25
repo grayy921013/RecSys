@@ -45,7 +45,9 @@ class CBAlgorithmTMDB(CBAlgorithm):
         pass
         # raise NotImplementedError()
 
-    def ranking(self, similarity_matrix=None, rank_length=21):
+    def ranking(self, similarity_matrix=None, rank_length=21, flag=True):
         top, ids = get_related_tmdb(rank_length)
         self.ids = np.array(ids)
+        if flag:
+            top = zip(ids, top)
         return top
