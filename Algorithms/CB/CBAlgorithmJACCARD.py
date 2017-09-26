@@ -18,8 +18,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from scipy.sparse import csr_matrix
 
 from .CBAlgorithm import CBAlgorithm
-import dask.array as da
-from chest import Chest
+#import dask.array as da
+#from chest import Chest
 
 logger = logging.getLogger(__name__)
 
