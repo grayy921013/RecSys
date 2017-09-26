@@ -1,6 +1,8 @@
 import sys
+import os
 import logging
 import numpy as np
+import pickle
 from DataHandler import PostgresDataHandler
 from enums import Field
 
@@ -22,8 +24,19 @@ logger.warn('Start')
 import pandas
 
 def main():
-    movies = pandas.read_csv(r'Data\ml-20m\movies.csv')
-    groundtruth = pandas.read_csv(r'Data\groundtruth.exp1.csv')
+    if os.path.isfile(r'similarity_batch.pkl'):
+        pkl_file = open(r'similarity_batch.pkl', 'rb')
+        dataset = pickle.load(pkl_file)
+        pkl_file.close()
+        dataset.clear_similarity()
+        dataset.save_similarity_batch()
+        # return data1
+
+    movies = pandas.read_csv(r'./Data/ml-20m/movies.csv')
+    groundtruth = pandas.read_csv(r'./Data/groundtruth.exp1.csv')
+    
+    # movies = pandas.read_csv(r'Data\ml-20m\movies.csv')
+    # groundtruth = pandas.read_csv(r'Data\groundtruth.exp1.csv')
 
     groundtruth.shape
     groundtruth.dropna()
@@ -97,4 +110,7 @@ def main():
             # Release Memory
             algo.destroy()
 
+    output = open(r'similarity_batch', 'wb')
+    pickle.dump(dataset, output, -1)
+    output.close()
     dataset.save_similarity_batch()
