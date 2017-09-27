@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+    <title>Profile Page</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/label.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block navbar %}
+
+    <ul class="nav navbar-nav navbar-right">
+        <li>
+            <div>
+                <a href="{% url 'profile' user.id %}">
+                    <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon" width="40"
+                         height="40">
+                </a>
+            </div>
+        </li>
+        <li>
+            <a type="button" href="{% url 'home' %}" class="btn btn-default btn-md btn-icon-left"><span
+                    class="glyphicon glyphicon-home nav-glyphicon" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a type="button" class="btn btn-default btn-md btn-icon-right" href="{% url 'userlogout' %}"><span
+                    class="glyphicon glyphicon-log-out nav-glyphicon" aria-hidden="true"></span>
+            </a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+
+        <div class="col-sm-4 col-md-3 sidebar profile-container">
+            <h4 style="text-align: center;">{{ movie.title }}({{ movie.year }})</h4>
+            <div class="movie-poster">
+                <a>
+                    <img src="{{baseUrl}}/posters/{{ movie.movielens_id }}.jpg"
+                         style="height: 206px; width: 144px" alt="Mountain View"
+                         class="noresize img-responsive centerBlock">
+                </a>
+            </div>
+            <div class="movie-info">
+                <ul>
+                    <li>
+                        <b>Genre:</b>
+                        {% if movie.genres.name %}
+                            {{ movie.genres }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </li>
+                    <li>
+                        <b>Director:</b> {{ movie.director }}
+                    </li>
+                    <li>
+                        <b>Cast:</b> {{ movie.cast }}
+                    </li>
+                    <br>
+                    <li>
+                        <b>Plot:</b> {{ movie.plot }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 similar-main">
+                <h4 class="label-instruction">Vote for movie similar to {{ movie.title }}({{ movie.year }})</h4>
+                {% load static %}
+                {% static "" as baseUrl %}
+                {% for similar_movie in similar_list %}
+                    <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">
+                        <div class="similar-title" id="title{{ similar_movie.imdb_id }}">
+                            <b>{{ similar_movie.title }}({{ similar_movie.year }})</b>
+                        </div>
+                        <a>
+                            <img src="{{baseUrl}}/posters/{{ similar_movie.movielens_id }}.jpg"
+                                 style="height: 206px; width: 144px" alt="Mountain View"
+                                 class="noresize img-responsive centerBlock">
+                        </a>
+                        <div class="btn-group label-bar">
+                            <button class="btn-no">
+                                <span class="glyphicon  glyphicon-remove" aria-hidden="true"></span>
+                            </button>
+                            <button class="btn-skip">
+                                Skip
+                            </button>
+                            <button class="btn-yes">
+                                <span class="glyphicon  glyphicon-ok" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div id="wrap"></div>
+                <br>
+        </div>
+    </div> <!-- /container -->
+
+{% endblock %}

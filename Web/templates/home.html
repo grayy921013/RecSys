@@ -16,7 +16,7 @@
             <div>
                 <a href="{% url 'profile' user.id %}">
                     <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon"
-                         width="43" height="43">
+                         width="40" height="40">
                 </a>
             </div>
         </li>
@@ -40,7 +40,7 @@
         {% static "" as baseUrl %}
         {% for movie in movie_list%}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-                <a>
+                <a href="{% url 'label' movie.movielens_id %}">
                     <img src="{{baseUrl}}/posters/{{ movie.movielens_id }}.jpg"
                          style="height: 206px; width: 144px" alt="Mountain View"
                          class="noresize img-responsive centerBlock">
