@@ -90,5 +90,5 @@ def random_popularity_range():
 
 
 if __name__ == '__main__':
-    print random_genre()
-    print random_popularity_range()
+    print(random_genre())
+    print(random_popularity_range())

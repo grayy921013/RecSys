@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from models import Movie, Userinfo, Genre
+from mainsite.models import Movie, Userinfo, Genre
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import math
 import random
-import random_module
+from mainsite.random_module import *
 
 
 def get_metadata(request, imdb_id):
@@ -26,8 +26,8 @@ def movie_to_json(movie):
 
 
 def get_random_movie(user_id):
-    genre = random_module.random_genre()
-    popularity_range = random_module.random_popularity_range()
+    genre = random_genre()
+    popularity_range = random_popularity_range()
 
     movie_list = []
     for i in range(20):
