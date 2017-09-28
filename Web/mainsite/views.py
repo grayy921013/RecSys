@@ -153,6 +153,24 @@ def blockbuster(request):
         }
         return render(request, 'home.html', context)
 
+@login_required
+def label(request, movielens_id):
+    errors = " "
+    try:
+        # get the random movie
+        temp_similar_list = get_random_movie(request.user.id)
+        movie_obj = Movie.objects.get(movielens_id=movielens_id)
+        context = {
+            'movie': movie_obj,
+            'similar_list': temp_similar_list,
+            'errors': errors
+        }
+        return render(request, "label.html", context)
+    except ObjectDoesNotExist:
+        context = {
+            'errors': errors
+        }
+        return render(request, "home.html", context)
 
 @login_required
 def profile(request, id):
