@@ -94,6 +94,9 @@ def register(request):
     if not 'confirm_password' in request.POST or not request.POST['confirm_password']:
         errors.append('Invalid password confirm.')
 
+    if not 'consent' in request.POST or not request.POST['consent']:
+        errors.append('Please check the privacy statement.')
+
     else:
         username = request.POST.get('username')
         password = request.POST.get('password')

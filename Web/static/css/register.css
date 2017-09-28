@@ -7,6 +7,16 @@ body {
   height:780px;
 }
 
+.terms:hover {
+  color: #B13B3B !important;
+}
+
+.btn-register:hover {
+  background-color: #B13B3B !important;
+  border-color: #B13B3B !important;
+  color: white !important;
+}
+
 .form-element{
   margin-top: 40px;
 }
