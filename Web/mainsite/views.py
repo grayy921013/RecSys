@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import math
 import random
+import time
 from mainsite.random_module import *
 
 
@@ -30,10 +31,19 @@ def get_random_movie(user_id):
     popularity_range = random_popularity_range()
 
     movie_list = []
-    for i in range(20):
-        movie = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
-                                 popularity__lte=popularity_range[0]).order_by("?").all()[0]
+    movie_id_set = set()
+    while True:
+        movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
+                                 popularity__lte=popularity_range[0]).order_by("?")[:1]
+        if not movie_qs.exists():
+            continue
+        movie = movie_qs[0]
+        if movie.id in movie_id_set:
+            continue
+        movie_id_set.add(movie.id)
         movie_list.append(movie)
+        if len(movie_list) == 20:
+            break
 
     return movie_list
 
@@ -130,7 +140,10 @@ def register(request):
 @login_required
 def home(request):
     # get the random movie
+    start = time.time()
     random_movie_list = get_random_movie(request.user.id)
+    end = time.time()
+    print("time:", end - start)
 
     errors = " "
     if request.method == "GET":

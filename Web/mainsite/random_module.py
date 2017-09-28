@@ -66,13 +66,13 @@ def random_genre():
 
 '''
 probability for each popular score range:
-score >= 50: 1/3
-50 > score >= 5: 1/3
-5 > score >= 0: 1/3
+score >= 50: 5/9
+50 > score >= 5: 3/9
+5 > score >= 0: 1/9
 '''
 
 popularity_ranges = [[10000, 50], [50, 5], [5, 0]]
-popularity_percentage = [1, 1, 1]
+popularity_percentage = [5, 3, 1]
 
 
 def random_popularity_range():

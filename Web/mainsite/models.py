@@ -32,7 +32,7 @@ class Movie(models.Model):
     country = models.CharField(max_length=500)
     awards = models.CharField(max_length=500)
     last_updated = models.CharField(max_length=40)
-    popularity = models.FloatField(null=True)
+    popularity = models.FloatField(null=True, db_index=True)
     budget = models.BigIntegerField(null=True)
     revenue = models.BigIntegerField(null=True)
 
