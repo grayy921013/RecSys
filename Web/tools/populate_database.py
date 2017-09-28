@@ -1,5 +1,8 @@
 #! /usr/bin/python3
 import os
+import sys
+sys.path.append('/home/ubuntu/RecSys')
+sys.path.append('/home/ubuntu/RecSys/Web')
 os.environ['DJANGO_SETTINGS_MODULE']='Web.settings'
 import django
 django.setup()

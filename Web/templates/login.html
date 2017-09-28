@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <title>Find Similar Movies</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block navbar %}
+    <ul class="nav navbar-nav navbar-right navbar-login">
+        <li class="nav-click"><a href="{% url 'userlogin' %}" class="nav-href">Log in</a></li>
+        <li class="nav-click"><a href="{% url 'register' %}" class="nav-href">Sign up</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="login-container">
+            <form class="form-signin" method="post" action="{% url 'userlogin' %}">
+                {% csrf_token %}
+                <h2 class="form-signin-heading">Hi.</h2>
+                <p name="errors">{{ errors }}</p>
+
+                <label for="inputEmail" class="sr-only">Username</label>
+                <input type="username" id="log_username" name="log_username" class="form-control"
+                       value="{{ log_username }}"
+                       placeholder="Username" required autofocus>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="log_password" name="log_password" class="form-control"
+                       value="{{ log_password }}"
+                       placeholder="Password" required>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                </div>
+                <ul>
+                    <button type="submit" class="btn btn-login btn-primary">Log in</button>
+                    <a href="{% url 'register' %}" class="btn btn-signup btn-primary">Sign up</a>
+                </ul>
+                <input type="hidden" name="next" value="{{ next }}"/>
+            </form>
+        </div>
+{% endblock %}

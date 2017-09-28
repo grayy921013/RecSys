@@ -102,7 +102,7 @@ class CBAlgorithm(object):
 
         return score
 
-    def ranking(self, similarity_matrix=None, rank_length=21):
+    def ranking(self, similarity_matrix=None, rank_length=21, flag=False):
         # Reference:
         # https://stackoverflow.com/questions/6910641/how-to-get-indices-of-n-maximum-values-in-a-numpy-array
         if similarity_matrix is None:
@@ -138,6 +138,8 @@ class CBAlgorithm(object):
             top.append(r)
         logger.info('Movies Processed: %d Movies without enough Related Movies: %d' % (len(top), j))
 
+        if flag:
+            top = zip(list(self.ids), top)
         return top
 
     def score(self, similarity_matrix, test_data):

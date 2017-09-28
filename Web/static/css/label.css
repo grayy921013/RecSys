@@ -1,0 +1,111 @@
+body {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+    /*background-image:url(../images/background.jpg);*/
+    background-size: cover;
+    height: auto;
+    opacity: 0.92;
+}
+
+button:hover{
+    cursor: hand;
+}
+
+.navbar-nav > li > a {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.navbar {
+    min-height: 20px !important
+}
+
+.profile-container {
+    opacity: 0.95;
+}
+
+.movie-poster {
+    position: absolute;
+    z-index: 1;
+    margin-top: 20px;
+    left: 50% !important;
+    transform: translate(-50%, 0) !important;
+}
+
+.movie-title{
+
+}
+
+.movie-info{
+    position: absolute;
+    z-index: 1;
+    margin-top: 260px;
+    margin-right: 10px;
+}
+
+.movie-item {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.similar-main{
+    padding-top: 30px;
+    padding-right: 10px;
+    padding-left: 120px;
+}
+
+.label-instruction{
+    text-align: center;
+}
+
+.similar-title{
+    height: 45px;
+    text-align: center;
+}
+
+.label-bar{
+    width: 100%;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.btn-skip{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.img-circle {
+    margin-top: 10%;
+    margin-right: 10px;
+}
+
+.btn-icon-left {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    margin-top: 10%;
+    margin-right: 2px;
+}
+
+.btn-icon-mid {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    margin-top: 10%;
+    margin-right: 6px;
+}
+
+.btn-icon-right {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    margin-top: 6%;
+    margin-right: 30px;
+}
+
+.nav-glyphicon {
+    color: white;
+    font-size: 2em;
+}

@@ -1,0 +1,113 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+  /*background-image:url(../images/background.jpg);*/
+  background-size: cover;  
+  height:auto; 
+  opacity:0.92;
+}
+
+.navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
+.navbar {min-height:20px !important}
+
+.profile-container{
+  opacity:0.95;
+}
+
+.profile-image{
+  position:absolute;
+  z-index:1;
+  top:80px !important;
+  left:50% !important;
+  transform:translate(-50%,0) !important;
+}
+
+.profile-username{
+  position:absolute;
+  z-index:1;
+  top:218px;
+  left:50%;
+  transform:translate(-50%,0);
+}
+
+.profile-content{
+  position:absolute;
+  z-index:1;
+  top:250px;
+  left:50%;
+  transform:translate(-50%,0);
+}
+
+.img-circle{
+  margin-top:10%; 
+  margin-right:10px;
+}
+
+.btn-icon-left{
+  background-color:transparent; 
+  border:none; 
+  outline:none; 
+  margin-top:10%; 
+  margin-right:2px;
+}
+
+.btn-icon-mid{
+  background-color:transparent; 
+  border:none; 
+  outline:none; 
+  margin-top:10%; 
+  margin-right:6px;
+}
+
+.btn-icon-right{
+  background-color:transparent; 
+  border:none; 
+  outline:none; 
+  margin-top:6%; 
+  margin-right:30px;
+}
+
+.nav-glyphicon{
+  color:white; 
+  font-size:2em;
+}
+
+log.container{
+   background-image:url("https://static.pexels.com/photos/26135/pexels-photo-26135.jpg");
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+    <title>Just one step away</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/register.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block navbar %}
+
+    <a class="btn btn-md btn-return-login" href="{% url 'userlogin' %}">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+    </a>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="register-container">
+        <form class="form-horizontal" method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+
+            <h2 class="reg-welcome">   Welcome to FindSimilar</h2>
+
+            {% for error in errors %}
+                <div class="col-sm-7 col-sm-offset-3">
+                    <p>{{ error }}</p>
+                </div>
+            {% endfor %}
+
+            <div class="form-group form-element">
+                <label for="username" class="col-sm-3 control-label">*Username</label>
+                <div class="col-sm-7">
+                    <input type="text" id="username" name="username" value="{{ username }}" placeholder="Username"
+                           class="form-control" autofocus>
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="password" class="col-sm-3 control-label">*Password</label>
+                <div class="col-sm-7">
+                    <input type="password" id="password" name="password" value="{{ password }}"
+                           placeholder="Password" class="form-control">
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="password" class="col-sm-3 control-label">*Confirm Password</label>
+                <div class="col-sm-7">
+                    <input type="password" id="confirm_password" name="confirm_password"
+                           value="{{ confirm_password }}" placeholder="Password" class="form-control">
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="gender" class="col-sm-3 control-label optional-label">Gender</label>
+                <div class="col-sm-7">
+                    <select name="gender" value="{{ gender }}" class="form-control">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="age" class="col-sm-3 control-label optional-label">Age</label>
+                <div class="col-sm-7">
+                    <input type="number" name="age" min="5" max="110" value="{{ age }}"
+                           placeholder="5 - 110" class="form-control">
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="education" class="col-sm-3 control-label optional-label">Education Level</label>
+                <div class="col-sm-7">
+                    <select name="education" value="{{ education }}" class="form-control">
+                        <option value="low">Less than a high school diploma</option>
+                        <option value="high">High school degree or equivalent (e.g. GED)</option>
+                        <option value="college">Bachelor’s or Associate degree</option>
+                        <option value="master">Master’s degree (e.g. MA, MS, MEd)</option>
+                        <option value="phd">Doctorate (e.g. PhD, EdD) and higher</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="employment" class="col-sm-3 control-label optional-label">Employment</label>
+                <div class="col-sm-7">
+                    <select name="employment" value="{{ employment }}" class="form-control">
+                        <option value="student">Student</option>
+                        <option value="self">Self-employed</option>
+                        <option value="homemaker">Homemaker</option>
+                        <option value="employed">Employed</option>
+                        <option value="unemployed">Unemployed</option>
+                        <option value="retired">Retired</option>
+                        <option value="unable">Unable to work</option>
+                    </select>
+                </div>
+            </div>
+
+            <h class="col-sm-4 control-label">* Required fields</h>
+            <br>
+
+            <div class="form-group form-element reg-btn-div">
+                <div class="col-sm-7 col-sm-offset-3">
+                    <button type="submit" class="btn btn-register">Register</button>
+                </div>
+            </div>
+        </form> <!-- /form -->
+    </div>
+
+{% endblock %}

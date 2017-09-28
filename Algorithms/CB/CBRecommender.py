@@ -31,8 +31,8 @@ class CBRecommender(object):
         '''
         if not isinstance(data, list):
             raise AttributeError("The parameter data should be a list of string")
-        if not isinstance(algorithm, CBAlgorithm):
-            raise AttributeError("The parameter algorithm should be an instance of CBAlgorithm or its childs")
+        # if not isinstance(algorithm, CBAlgorithm):
+        #     raise AttributeError("The parameter algorithm should be an instance of CBAlgorithm or its childs")
 
         index = algorithm.index(data)
         score = algorithm.similarity(index)
