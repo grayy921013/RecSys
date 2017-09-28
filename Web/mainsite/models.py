@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
+
 
 class Movie(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
@@ -33,6 +35,7 @@ class Movie(models.Model):
     popularity = models.FloatField(null=True)
     budget = models.BigIntegerField(null=True)
     revenue = models.BigIntegerField(null=True)
+
 
 # we define id1 as the smaller id
 class Similarity(models.Model):
@@ -91,13 +94,14 @@ class Userinfo(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    age = models.IntegerField(default=0,blank=True)
-    gender = models.CharField(max_length=10, default='',blank=True)
-    education = models.CharField(max_length=100, default='',blank=True)
-    employment = models.CharField(max_length=100, default='',blank=True)
+    age = models.IntegerField(default=0, blank=True)
+    gender = models.CharField(max_length=10, default='', blank=True)
+    education = models.CharField(max_length=100, default='', blank=True)
+    employment = models.CharField(max_length=100, default='', blank=True)
 
     def __unicode__(self):
         return self.user
+
 
 class UserVote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

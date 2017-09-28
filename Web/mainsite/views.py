@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from mainsite.models import Movie, Userinfo
+from models import Movie, Userinfo, Genre
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import math
+import random
+import random_module
+
 
 def get_metadata(request, imdb_id):
     try:
@@ -15,14 +18,24 @@ def get_metadata(request, imdb_id):
     except:
         return HttpResponse("No result found.")
 
+
 def movie_to_json(movie):
     dict = {}
     dict['title'] = movie.title
     return dict
 
+
 def get_random_movie(user_id):
-	rand_list = Movie.objects.order_by('?').all()[:20]
-	return rand_list
+    genre = random_module.random_genre()
+    popularity_range = random_module.random_popularity_range()
+
+    movie_list = []
+    for i in range(20):
+        movie = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
+                                 popularity__lte=popularity_range[0]).order_by("?").all()[0]
+        movie_list.append(movie)
+
+    return movie_list
 
 
 #### Web UI Implementation####
@@ -92,12 +105,6 @@ def register(request):
         education = request.POST.get('education')
         employment = request.POST.get('employment')
 
-        print("username   ", username)
-        print("age   ", age)
-        print("gender   ", gender)
-        print("education   ", education)
-        print("employment   ", employment)
-
         # check password
         if password != confirm_password:
             errors.append('The passwords did not match. Please check.')
@@ -127,9 +134,10 @@ def home(request):
         context = {
             'errors': errors,
             'movie_list': random_movie_list,
-            'titile' : 'Home Page'
+            'titile': 'Home Page'
         }
         return render(request, 'home.html', context)
+
 
 @login_required
 def blockbuster(request):
