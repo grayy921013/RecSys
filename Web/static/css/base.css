@@ -13,9 +13,11 @@ body {
   padding-top:3px !important;
   padding-bottom:3px !important;
 }
+
 .navbar {
   min-height:15px !important;
-  background-color: rgba(51, 122, 183, 0.89) !important;
+  background-color: #FFD220
+  /* background-color: rgba(51, 122, 183, 0.89) !important; */
   /*background-color:#B13B3B !important;*/
 }
 

@@ -37,6 +37,8 @@
 {% endblock %}
 
 {% block content %}
+    {% load static %}
+    {% static "" as baseUrl %}
 
     <div class="container-fluid">
 
@@ -44,7 +46,7 @@
             <h4 style="text-align: center;">{{ movie.title }}({{ movie.year }})</h4>
             <div class="movie-poster">
                 <a>
-                    <img src="{{baseUrl}}/posters/{{ movie.movielens_id }}.jpg"
+                    <img src="{{baseUrl}}posters/{{ movie.movielens_id }}.jpg"
                          style="height: 206px; width: 144px" alt="Mountain View"
                          class="noresize img-responsive centerBlock">
                 </a>
@@ -82,7 +84,7 @@
                             <b>{{ similar_movie.title }}({{ similar_movie.year }})</b>
                         </div>
                         <a>
-                            <img src="{{baseUrl}}/posters/{{ similar_movie.movielens_id }}.jpg"
+                            <img src="{{baseUrl}}posters/{{ similar_movie.movielens_id }}.jpg"
                                  style="height: 206px; width: 144px" alt="Mountain View"
                                  class="noresize img-responsive centerBlock">
                         </a>
