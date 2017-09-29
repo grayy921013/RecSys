@@ -55,7 +55,7 @@ ROOT_URLCONF = 'Web.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
+        'DIRS': [os.path.join(BASE_DIR, 'mainsite/../templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -124,7 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = "/home/ubuntu/RecSys/Web/mainsite/static/"
+STATIC_ROOT = "/home/caleb/RecSys/Web/static/"
 
 # Add static folder to STATIC_DIRS
 STATICFILES_DIRS = [

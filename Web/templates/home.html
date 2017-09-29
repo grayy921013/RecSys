@@ -36,12 +36,11 @@
 {% block content %}
     <div role="tabpanel" class="tab-pane fade in active" id="randomMovieList">
         {% load static %}
-        {% static "" as baseUrl %}
         {% for movie in movie_list %}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                 <div class="movie-poster-div">
                     <a href="{% url 'label' movie.movielens_id %}">
-                        <img src="{{ baseUrl }}/posters/{{ movie.movielens_id }}.jpg"
+                        <img src="{% with 'posters/'|add:movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              alt="Mountain View"
                              name="movie-poster"
                              class="resize img-responsive centerBlock">
