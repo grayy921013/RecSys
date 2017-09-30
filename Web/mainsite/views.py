@@ -174,7 +174,7 @@ def label(request, movielens_id):
     errors = " "
     try:
         # get the random movie
-        temp_similar_list = get_random_movie(request.user.id)
+        temp_similar_list = Movie.objects.order_by('?')[:30]
         movie_obj = Movie.objects.get(movielens_id=movielens_id)
         context = {
             'movie': movie_obj,

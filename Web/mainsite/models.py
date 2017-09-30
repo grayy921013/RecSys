@@ -10,9 +10,9 @@ class Genre(models.Model):
 
 class Movie(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
-    imdb_id = models.CharField(max_length=10, unique=True)
-    movielens_id = models.CharField(max_length=10, unique=True)
-    tmdb_id = models.CharField(max_length=10, unique=True, null=True)
+    imdb_id = models.CharField(max_length=10, unique=True, db_index=True)
+    movielens_id = models.CharField(max_length=10, unique=True, db_index=True)
+    tmdb_id = models.CharField(max_length=10, unique=True, null=True, db_index=True)
     title = models.CharField(max_length=500)
     year = models.IntegerField()
     rating = models.FloatField(null=True)

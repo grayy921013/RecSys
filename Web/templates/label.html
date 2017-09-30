@@ -42,7 +42,7 @@
     <div class="container-fluid">
 
         <div class="col-sm-4 col-md-3 sidebar profile-container">
-            <h4 style="text-align: center;">{{ movie.title }}({{ movie.year }})</h4>
+            <h4 style="text-align: center;">{{ movie.title }} ({{ movie.year }})</h4>
             <div class="movie-poster">
                 <a>
                     <img src="{% with 'posters/'|add:movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
@@ -74,12 +74,12 @@
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 similar-main">
-                <h4 class="label-instruction">Vote for movie similar to {{ movie.title }}({{ movie.year }})</h4>
+                <h4 class="label-instruction">Vote for movie similar to {{ movie.title }} ({{ movie.year }})</h4>
                 {% load static %}
                 {% for similar_movie in similar_list %}
                     <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                         <div class="similar-title" id="title{{ similar_movie.imdb_id }}">
-                            <b>{{ similar_movie.title }}({{ similar_movie.year }})</b>
+                            <b>{{ similar_movie.title }} ({{ similar_movie.year }})</b>
                         </div>
                         <a>
                             <img src="{% with 'posters/'|add:similar_movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
