@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^profile/(?P<id>\d+)$', views.profile, name='profile'),
     url(r'^register$', views.register, name='register'),
     url(r'^resetpwd', views.reset_pwd, name='resetpwd'),
-    url(r'^modifypwd/(?P<uid>\d+)/(?P<token>.+)', views.modify_pwd, name='modifypwd')
+    url(r'^modifypwd/(?P<uid>\d+)/(?P<token>.+)', views.modify_pwd, name='modifypwd'),
+    url(r'^search$', views.search, name='search')
 ]

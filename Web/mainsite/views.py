@@ -243,14 +243,13 @@ def home(request):
     start = time.time()
     random_movie_list = get_random_movie(request.user.id)
     end = time.time()
-    print("time:", end - start)
 
     errors = " "
     if request.method == "GET":
         context = {
             'errors': errors,
             'movie_list': random_movie_list,
-            'titile': 'Home Page'
+            'title': 'Home Page'
         }
         return render(request, 'home.html', context)
 
@@ -295,7 +294,19 @@ def profile(request, id):
         context = {'current_user': current_user}
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:
-        return render(request, "home.html", context)
+        return render(request, "home.html", {})
+
+@login_required
+def search(request):
+    if not 'keyword' in request.POST or not request.POST['keyword']:
+        return render(request, "home.html", {})
+    keyword = request.POST['keyword']
+    movie_list = Movie.objects.filter(title__search=keyword)
+    context = {
+        'movie_list': movie_list,
+        'title': 'Search'
+    }
+    return render(request, 'home.html', context)
 
 
 @login_required
