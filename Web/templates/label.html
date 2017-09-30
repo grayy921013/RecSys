@@ -8,6 +8,7 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <link href="{% static 'css/label.css' %}" rel="stylesheet">
+    <script src="{% static 'js/label.js' %}"></script>
 
 {% endblock %}
 
@@ -54,11 +55,11 @@
                 <ul>
                     <li>
                         <b>Genre:</b>
-                        {% if movie.genres.name %}
-                            {{ movie.genres }}
-                        {% else %}
+                        {% for genre in movie.genres.all %}
+                            {{ genre.name }}
+                        {% empty %}
                             N/A
-                        {% endif %}
+                        {% endfor %}
                     </li>
                     <li>
                         <b>Director:</b> {{ movie.director }}
@@ -81,7 +82,7 @@
                         <div class="similar-title" id="title{{ similar_movie.imdb_id }}">
                             <b>{{ similar_movie.title }} ({{ similar_movie.year }})</b>
                         </div>
-                        <a>
+                        <a class="popoverData" href="#" data-content="{{ similar_movie.plot }}" rel="popover" data-placement="left" data-trigger="hover">
                             <img src="{% with 'posters/'|add:similar_movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                  style="height: 206px; width: 144px" alt="Mountain View"
                                  class="noresize img-responsive centerBlock">
