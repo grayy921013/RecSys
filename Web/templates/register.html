@@ -58,6 +58,7 @@
                 <label for="gender" class="col-sm-3 control-label optional-label">Gender</label>
                 <div class="col-sm-7">
                     <select name="gender" value="{{ gender }}" class="form-control">
+                        <option value="">Select gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                         <option value="other">Other</option>
@@ -75,6 +76,7 @@
                 <label for="education" class="col-sm-3 control-label optional-label">Education Level</label>
                 <div class="col-sm-7">
                     <select name="education" value="{{ education }}" class="form-control">
+                        <option value="">Select education level</option>
                         <option value="low">Less than a high school diploma</option>
                         <option value="high">High school degree or equivalent (e.g. GED)</option>
                         <option value="college">Bachelor’s or Associate degree</option>
@@ -87,6 +89,7 @@
                 <label for="employment" class="col-sm-3 control-label optional-label">Employment</label>
                 <div class="col-sm-7">
                     <select name="employment" value="{{ employment }}" class="form-control">
+                        <option value="">Select employment</option>
                         <option value="student">Student</option>
                         <option value="self">Self-employed</option>
                         <option value="homemaker">Homemaker</option>
@@ -95,6 +98,30 @@
                         <option value="retired">Retired</option>
                         <option value="unable">Unable to work</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group form-element">
+                <label for="security-question" class="col-sm-3 control-label optional-label">*Security Question</label>
+                <div class="col-sm-7">
+                    <select name="security-question" class="form-control" required>
+                        <option value="">Select a question</option>
+                        <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                        <option value="What is the name of your favorite childhood friend?">What is the name of your favorite childhood friend?</option>
+                        <option value="What is your favorite movie?">What is your favorite movie?</option>
+                        <option value="What was your favorite sport in high school?">What was your favorite sport in high school?</option>
+                        <option value="What school did you attend for sixth grade?">What school did you attend for sixth grade?</option>
+                        <option value="In what town was your first job?">In what town was your first job?</option>
+                        <option value="What was the name of the company where you had your first job?">What was the name of the company where you had your first job?</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group form-element">
+                <label for="security-answer" class="col-sm-3 control-label">*Security Answer</label>
+                <div class="col-sm-7">
+                    <input id="security-answer" name="security-answer"
+                           placeholder="Answer" class="form-control" required>
                 </div>
             </div>
 

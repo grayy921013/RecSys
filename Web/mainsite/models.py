@@ -98,6 +98,8 @@ class Userinfo(models.Model):
     gender = models.CharField(max_length=10, default='', blank=True)
     education = models.CharField(max_length=100, default='', blank=True)
     employment = models.CharField(max_length=100, default='', blank=True)
+    security_question = models.CharField(max_length=100, default='', blank=True)
+    security_answer = models.CharField(max_length=100, default='', blank=True)
 
     def __unicode__(self):
         return self.user
@@ -108,3 +110,9 @@ class UserVote(models.Model):
     movie1 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie1")
     movie2 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie2")
     is_similar = models.BooleanField()
+
+
+class PasswordReset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
