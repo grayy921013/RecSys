@@ -27,6 +27,15 @@ body {
     font-family: 'Comic Sans MS' !important;
 }
 
+.navbar-blockbuster {
+    color: white !important;
+    font-size: 1.3em !important;
+    height: 60px;
+    width: 160px;
+    padding: 15px;
+    float: left;
+}
+
 .navbar-fixed-bottom {
     background-color: black !important;
 }
@@ -179,5 +188,4 @@ img.noresize {
 a:hover {
     color: #fff;
 }
-
 

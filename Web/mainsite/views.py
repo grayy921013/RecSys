@@ -15,6 +15,7 @@ import hashlib
 import string
 from django.http import Http404
 from django.utils import timezone
+from random import shuffle
 
 def get_metadata(request, imdb_id):
     try:
@@ -258,6 +259,11 @@ def home(request):
 def blockbuster(request):
     # get the random movie
     random_movie_list = Movie.objects.exclude(popularity__isnull=True).order_by('-popularity')[:30]
+    tmp = []
+    for movie in random_movie_list:
+        tmp.append(movie)
+    shuffle(tmp)
+    random_movie_list = tmp
 
     errors = " "
     if request.method == "GET":
