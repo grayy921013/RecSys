@@ -71,9 +71,9 @@ def main(argv):
 
     user_ratings, deleted_registers  = trainer.get_user_rating(r'./Data/groundtruth.exp1.csv')
     result = trainer.evaluate(user_ratings)
-    print '\n -*- Metrics -*-'
+    print('\n -*- Metrics -*-')
     for key in result:
-        print '%s %f' % (key.ljust(10), result[key])
+        print('%s %f' % (key.ljust(10), result[key]))
     bar.finish()
 
 if __name__ == "__main__":

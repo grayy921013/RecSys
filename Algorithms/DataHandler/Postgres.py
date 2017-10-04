@@ -112,7 +112,7 @@ class PostgresDataHandler(DataHandler):
 
     def save_similarity_batch(self, batch_size=None):
         if batch_size is not None:
-            chunks = [self.batch[x:x+batch_size] for x in xrange(0, len(self.batch), batch_size)]
+            chunks = [self.batch[x:x+batch_size] for x in range(0, len(self.batch), batch_size)]
         else:
             chunks = [self.batch]
 
@@ -208,11 +208,11 @@ class PostgresDataHandler(DataHandler):
 
         SimilarityPair.objects.all().delete()
         logger.debug('Truncated')
-        batch = map(lambda x: SimilarityPair(id1_id=x[0], id2_id=x[1]), similarity_pair_batch)
+        batch = list(map(lambda x: SimilarityPair(id1_id=x[0], id2_id=x[1]), similarity_pair_batch))
         logger.debug('Parsed')
         
         if batch_size is not None:
-            chunks = [batch[x:x+batch_size] for x in xrange(0, len(batch), batch_size)]
+            chunks = [batch[x:x+batch_size] for x in range(0, len(batch), batch_size)]
         else:
             chunks = [batch]
 

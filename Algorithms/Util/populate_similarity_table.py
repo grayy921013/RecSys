@@ -6,7 +6,7 @@ import pandas
 import pickle
 from time import time
 from DataHandler import PostgresDataHandler
-from enums import Field
+from .enums import Field
 from mainsite.models import SimilarityGenre
 from CB import CBRecommender, CBAlgorithmTMDB, CBAlgorithmTFIDF, CBAlgorithmBM25, CBAlgorithmJACCARD, CBAlgorithmTMDB, CBAlgorithmTFIDF2
 
@@ -147,7 +147,7 @@ def main(movies_ids_tagged, fields = None, algorithms = None):
 
             # Parse panda Dataframe to an array of django object
             initializer(field.name.lower() + '_', dataset.SimilarityClass, algorithms)
-            dataset.batch = map(parse, p_prev.values)        
+            dataset.batch = list(map(parse, p_prev.values))
             
             # Save to Database
             t_db = time()

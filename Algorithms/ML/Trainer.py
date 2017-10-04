@@ -146,7 +146,7 @@ class Trainer(object):
         movie_pairs_db_id = np.zeros(shape=movie_pairs.shape).astype(str)
         movie_pairs_db_id[:, 0] = self.from_movielens_to_db_id(movie_pairs[:, 0])
         movie_pairs_db_id[:, 1] = self.from_movielens_to_db_id(movie_pairs[:, 1])
-        features = self.dataset.get_features(movie_pairs_db_id, self.features)
+        features = self.dataset.get_features(movie_pairs_db_id.tolist(), self.features)
 
         features_df = pandas.DataFrame(features, columns=['movieid1', 'movieid2'] + self.features)
         logger.debug('User Ratings with Features: %d', features_df.shape[0])
@@ -315,7 +315,7 @@ class Trainer(object):
         '''
 
         # Concat predictions with test set
-        x_movie_pairs_test = pandas.DataFrame(user_ratings_test[:, [0, 1]].astype(long),
+        x_movie_pairs_test = pandas.DataFrame(user_ratings_test[:, [0, 1]].astype(int),
                                               columns=['movieid1', 'movieid2'])
         x_movie_pairs_test_scored = pandas.merge(x_movie_pairs_test, top_movie_pairs, how='left')
 
@@ -353,7 +353,7 @@ class Trainer(object):
         # split into train and test set
         cv = model_selection.GroupKFold(2)
 
-        train_idx, test_idx = iter(cv.split(x, y, blocks)).next()
+        train_idx, test_idx = next(iter(cv.split(x, y, blocks)))
         user_ratings_train, y_train, b_train = x[train_idx], y[train_idx], blocks[train_idx]
         user_ratings_test, y_test, b_test = x[test_idx], y[test_idx], blocks[test_idx]
 

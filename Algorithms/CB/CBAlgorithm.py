@@ -52,7 +52,7 @@ class CBAlgorithm(object):
         :return: Sparse matrix NxN where every cell is the similarity of its indexes
         '''
         if not isinstance(index, np.ndarray) and not isinstance(index, sp.sparse.spmatrix):
-            print type(index)
+            logger.error(type(index))
             raise AttributeError("The parameter index should be an numpy matrix")
 
     def add_similarity(self, index=None):
@@ -213,7 +213,6 @@ class CBAlgorithm(object):
         for i in xrange(len(related_movies_set)):
             counter += len(related_movies_set[i].intersection(top[i]))
             total += len(related_movies_set[i])
-            # print 'Inter %d - %d' % (counter, total)
 
         if total == 0:
             return -1
