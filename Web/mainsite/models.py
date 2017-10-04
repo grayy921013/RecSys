@@ -116,3 +116,102 @@ class PasswordReset(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=100, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+# Temporary Tables #
+
+# we define id1 as the smaller id
+
+class SimilarityPair(models.Model):
+    id1_id = models.CharField(max_length=10)
+    id2_id = models.CharField(max_length=10)
+
+class SimilarityTitle(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    title_tfitf = models.FloatField(null=True)
+    title_bm25 = models.FloatField(null=True)
+    title_jaccard = models.FloatField(null=True)
+    
+class SimilarityGenre(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    genre_tfitf = models.FloatField(null=True)
+    genre_bm25 = models.FloatField(null=True)
+    genre_jaccard = models.FloatField(null=True)
+
+class SimilarityReleased(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    released_tfitf = models.FloatField(null=True)
+    released_bm25 = models.FloatField(null=True)
+    released_jaccard = models.FloatField(null=True)
+
+class SimilarityDirector(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    director_tfitf = models.FloatField(null=True)
+    director_bm25 = models.FloatField(null=True)
+    director_jaccard = models.FloatField(null=True)
+
+class SimilarityWriter(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    writer_tfitf = models.FloatField(null=True)
+    writer_bm25 = models.FloatField(null=True)
+    writer_jaccard = models.FloatField(null=True)
+
+class SimilarityCast(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    cast_tfitf = models.FloatField(null=True)
+    cast_bm25 = models.FloatField(null=True)
+    cast_jaccard = models.FloatField(null=True)
+
+class SimilarityMetacritic(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    metacritic_tfitf = models.FloatField(null=True)
+    metacritic_bm25 = models.FloatField(null=True)
+    metacritic_jaccard = models.FloatField(null=True)
+
+class SimilarityPlot(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    plot_tfitf = models.FloatField(null=True)
+    plot_bm25 = models.FloatField(null=True)
+    plot_jaccard = models.FloatField(null=True)
+
+class SimilarityFull_plot(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    full_plot_tfitf = models.FloatField(null=True)
+    full_plot_bm25 = models.FloatField(null=True)
+    full_plot_jaccard = models.FloatField(null=True)
+
+class SimilarityLanguage(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    language_tfitf = models.FloatField(null=True)
+    language_bm25 = models.FloatField(null=True)
+    language_jaccard = models.FloatField(null=True)
+
+class SimilarityCountry(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    country_tfitf = models.FloatField(null=True)
+    country_bm25 = models.FloatField(null=True)
+    country_jaccard = models.FloatField(null=True)
+
+class SimilarityAwards(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    awards_tfitf = models.FloatField(null=True)
+    awards_bm25 = models.FloatField(null=True)
+    awards_jaccard = models.FloatField(null=True)
+
+class SimilarityLast_updated(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    last_updated_tfitf = models.FloatField(null=True)
+    last_updated_bm25 = models.FloatField(null=True)
+    last_updated_jaccard = models.FloatField(null=True)
