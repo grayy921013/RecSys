@@ -25,6 +25,9 @@ class CBAlgorithm(object):
         self.ids = None
         self.similarity_matrix = None
 
+    def __str__(self):
+        return self.__name__
+        
     @abstractmethod
     def index(self, data):
         '''
@@ -72,8 +75,8 @@ class CBAlgorithm(object):
         duration = time() - t0
         # TODO: Figure out how to 0 out main diagonal on sparse matrix
         # np.fill_diagonal(score, 0)
-        logger.info("n_samples: %d, n_related_samples: %d" % score.shape)
-        logger.info("duration: %f\n" % duration)
+        logger.debug("n_samples: %d, n_related_samples: %d" % score.shape)
+        logger.debug("duration: %f\n" % duration)
 
         self.similarity_matrix = score
 
@@ -95,14 +98,16 @@ class CBAlgorithm(object):
         duration = time() - t0
         # TODO: Figure out how to 0 out main diagonal on sparse matrix
         # np.fill_diagonal(score, 0)
-        logger.info("n_samples: %d, n_related_samples: %d" % score.shape)
-        logger.info("duration: %f\n" % duration)
+        logger.debug("n_samples: %d, n_related_samples: %d" % score.shape)
+        logger.debug("duration: %f\n" % duration)
 
         self.similarity_matrix = score
 
         return score
 
     def ranking(self, similarity_matrix=None, rank_length=21, flag=False):
+        # TODO: remove ranking itself
+
         # Reference:
         # https://stackoverflow.com/questions/6910641/how-to-get-indices-of-n-maximum-values-in-a-numpy-array
         if similarity_matrix is None:
@@ -116,7 +121,7 @@ class CBAlgorithm(object):
         j = 0
         for i in xrange(n_movies):
             if i % 10000 == 0:
-                logger.info('ranking at position %d' % i)
+                logger.debug('ranking at position %d' % i)
 
             # Only get the data
             related_movies_scores_for_i = similarity_matrix[i, :].data
@@ -126,17 +131,25 @@ class CBAlgorithm(object):
             if len(related_movies_id_for_i) < rank_length:
                 # If it already only has fewer possible similars, just pick the whole set
                 top_n_ids = related_movies_id_for_i
+                top_n_scores = related_movies_scores_for_i
                 j += 1
             else:
                 # Split the whole thing
                 top_n = np.argpartition(related_movies_scores_for_i, -rank_length, axis=0)[-rank_length:]
                 top_n_ids = related_movies_id_for_i[top_n]
+                top_n_scores = related_movies_scores_for_i[top_n]
 
+            # Transform Index to DB ids
             r = set()
             for i in top_n_ids:
                 r.add(self.ids[i])
-            top.append(r)
-        logger.info('Movies Processed: %d Movies without enough Related Movies: %d' % (len(top), j))
+            # top.append(r)
+
+            # TODO: Check if I really should have r as a set
+            r2 = zip(list(r), top_n_scores)
+            top.append(r2)
+
+        logger.debug('Movies Processed: %d Movies without enough Related Movies: %d' % (len(top), j))
 
         if flag:
             top = zip(list(self.ids), top)
@@ -167,7 +180,7 @@ class CBAlgorithm(object):
                 if movie_id1 in top[index2]:
                     counter_fp += 0.5
 
-        logger.info('TP %d FP %d Total %d' % (counter_tp, counter_fp, len(test_data)))
+        logger.debug('TP %d FP %d Total %d' % (counter_tp, counter_fp, len(test_data)))
 
         return counter_tp, counter_fp
 
@@ -193,7 +206,7 @@ class CBAlgorithm(object):
                 j += 1
             idx += 1
 
-        logger.info('Movies %d Skipped %d' % (size_ids, j))
+        logger.debug('Movies %d Skipped %d' % (size_ids, j))
 
         counter = 0
         total = 0
