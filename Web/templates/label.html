@@ -8,6 +8,7 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <link href="{% static 'css/label.css' %}" rel="stylesheet">
+    <script src="{% static 'js/label.js' %}"></script>
 
 {% endblock %}
 
@@ -37,14 +38,15 @@
 {% endblock %}
 
 {% block content %}
+    {% load static %}
 
     <div class="container-fluid">
 
         <div class="col-sm-4 col-md-3 sidebar profile-container">
-            <h4 style="text-align: center;">{{ movie.title }}({{ movie.year }})</h4>
+            <h4 style="text-align: center;">{{ movie.title }} ({{ movie.year }})</h4>
             <div class="movie-poster">
                 <a>
-                    <img src="{{baseUrl}}/posters/{{ movie.movielens_id }}.jpg"
+                    <img src="{% with 'posters/'|add:movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                          style="height: 206px; width: 144px" alt="Mountain View"
                          class="noresize img-responsive centerBlock">
                 </a>
@@ -53,11 +55,11 @@
                 <ul>
                     <li>
                         <b>Genre:</b>
-                        {% if movie.genres.name %}
-                            {{ movie.genres }}
-                        {% else %}
+                        {% for genre in movie.genres.all %}
+                            {{ genre.name }}
+                        {% empty %}
                             N/A
-                        {% endif %}
+                        {% endfor %}
                     </li>
                     <li>
                         <b>Director:</b> {{ movie.director }}
@@ -73,16 +75,15 @@
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 similar-main">
-                <h4 class="label-instruction">Vote for movie similar to {{ movie.title }}({{ movie.year }})</h4>
+                <h4 class="label-instruction">Vote for movie similar to {{ movie.title }} ({{ movie.year }})</h4>
                 {% load static %}
-                {% static "" as baseUrl %}
                 {% for similar_movie in similar_list %}
                     <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                         <div class="similar-title" id="title{{ similar_movie.imdb_id }}">
-                            <b>{{ similar_movie.title }}({{ similar_movie.year }})</b>
+                            <b>{{ similar_movie.title }} ({{ similar_movie.year }})</b>
                         </div>
-                        <a>
-                            <img src="{{baseUrl}}/posters/{{ similar_movie.movielens_id }}.jpg"
+                        <a class="popoverData" href="#" data-content="{% if similar_movie.plot  %} {{similar_movie.plot}} {% else %} No plot available {% endif %}" rel="popover" data-placement="left" data-trigger="hover">
+                            <img src="{% with 'posters/'|add:similar_movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                  style="height: 206px; width: 144px" alt="Mountain View"
                                  class="noresize img-responsive centerBlock">
                         </a>

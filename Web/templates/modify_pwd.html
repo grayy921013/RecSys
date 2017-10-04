@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+    <title>Reset password</title>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/register.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block navbar %}
+
+    <a class="btn btn-md btn-return-login" href="{% url 'userlogin' %}">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+    </a>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="register-container">
+        <form class="form-horizontal" method="post">
+            {% csrf_token %}
+
+            {% for error in errors %}
+                <div class="col-sm-7 col-sm-offset-3">
+                    <p>{{ error }}</p>
+                </div>
+            {% endfor %}
+
+            <div class="form-group form-element">
+                <label for="password" class="col-sm-3 control-label">*Password</label>
+                <div class="col-sm-7">
+                    <input type="password" id="password" name="password" value="{{ password }}"
+                           placeholder="Password" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group form-element">
+                <label for="password" class="col-sm-3 control-label">*Confirm Password</label>
+                <div class="col-sm-7">
+                    <input type="password" id="confirm_password" name="confirm_password"
+                           value="{{ confirm_password }}" placeholder="Password" class="form-control" required>
+                </div>
+            </div>
+
+            <h class="col-sm-4 control-label">* Required fields</h>
+            <br>
+
+            <div class="form-group form-element reg-btn-div">
+                <div class="col-sm-7 col-sm-offset-3">
+                    <button type="submit" class="btn btn-register">Modify Password</button>
+                </div>
+            </div>
+        </form> <!-- /form -->
+    </div>
+
+
+{% endblock %}

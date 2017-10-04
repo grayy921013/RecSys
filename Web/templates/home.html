@@ -36,63 +36,17 @@
 {% block content %}
     <div role="tabpanel" class="tab-pane fade in active" id="randomMovieList">
         {% load static %}
-        {% static "" as baseUrl %}
-        <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-            <div class="movie-poster-div">
-                <a>
-                    <img src="{{ baseUrl }}/posters/88129.jpg"
-                         alt="Mountain View"
-                         class="resize img-responsive centerBlock">
-                </a>
-            </div>
-            <div class="movie-title" id="title1682">Sample Resize Movie</div>
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-            <div class="movie-poster-div">
-                <a>
-                    <img src="{{ baseUrl }}/posters/100008.jpg"
-                         alt="Mountain View"
-                         name="movie-poster"
-                         class="resize img-responsive centerBlock">
-                </a>
-            </div>
-            <div class="movie-title" id="title1682">Sample Resize Movie</div>
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-            <div class="movie-poster-div">
-                <a>
-                    <img src="{{ baseUrl }}/posters/127180.jpg"
-                         alt="Mountain View"
-                         name="movie-poster"
-                         class="resize img-responsive centerBlock">
-                </a>
-            </div>
-            <div class="movie-title" id="title1682">Sample Resize Movie</div>
-        </div>
-        <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-            <div class="movie-poster-div">
-                <a>
-                    <img src="{{ baseUrl }}/posters/608.jpg"
-                         alt="Mountain View"
-                         name="movie-poster"
-                         class="resize img-responsive centerBlock">
-                </a>
-            </div>
-            <div class="movie-title" id="title1682">Sample Resize Movie</div>
-        </div>
-        {% load static %}
-        {% static "" as baseUrl %}
         {% for movie in movie_list %}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                 <div class="movie-poster-div">
                     <a href="{% url 'label' movie.movielens_id %}">
-                        <img src="{{ baseUrl }}/posters/{{ movie.movielens_id }}.jpg"
+                        <img src="{% with 'posters/'|add:movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              alt="Mountain View"
                              name="movie-poster"
                              class="resize img-responsive centerBlock">
                     </a>
                 </div>
-                <div class="movie-title" id="title1682">{{ movie.title }}</div>
+                <div class="movie-title" id="title1682">{{ movie.title }} ({{ movie.year }})</div>
             </div>
         {% endfor %}
         <div id="wrap"></div>
