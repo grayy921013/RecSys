@@ -7,6 +7,7 @@ import Util.populate_similarity_table as populate_sim
 from collections import OrderedDict
 from DataHandler import PostgresDataHandler
 from sklearn import svm, linear_model, model_selection, metrics
+from sklearn.preprocessing import StandardScaler
 from Util import Field
 
 logger = logging.getLogger('root')
@@ -133,7 +134,7 @@ class Trainer(object):
 
         return movie_ids.values.ravel().astype(int).astype(str).tolist()
 
-    def append_features(self, movie_pairs):
+    def append_features(self, movie_pairs, standardized_flag):
         '''
         Given an array of movie pairs, it goes to the table mainsite_similarity and extract the specified features
         for each of the pairs. Finally it appends the features to the each movie pair
@@ -151,11 +152,17 @@ class Trainer(object):
         features_df = pandas.DataFrame(features, columns=['movieid1', 'movieid2'] + self.features)
         logger.debug('User Ratings with Features: %d', features_df.shape[0])
 
+        # -*- Standardize Coefficients -*-
+        if standardized_flag:
+            scaler = StandardScaler()
+            scaler.fit(features_df.values[:,2:])
+            features_df.iloc[:,2:] = scaler.transform(features_df.values[:,2:])
+            
         movie_pairs_df = pandas.DataFrame(movie_pairs, columns=['movieid1', 'movieid2'])
 
         return pandas.merge(movie_pairs_df, features_df, how='left')
 
-    def train(self, user_ratings_train, y_train):
+    def train(self, user_ratings_train, y_train, standardized_flag):
         '''
         Given an array of movies, and its respective booleans label trained the instance model
         :param user_ratings_train: numpy array with dimensions 2xN where the values are movielens ids
@@ -164,7 +171,7 @@ class Trainer(object):
         '''
 
         # Get Features
-        x_train = self.append_features(user_ratings_train[:, [0, 1]])
+        x_train = self.append_features(user_ratings_train[:, [0, 1]], standardized_flag)
         logger.debug('Training with %d rows', x_train.shape[0])
         logger.debug('Training Data')
         logger.debug(x_train.head())
@@ -175,7 +182,7 @@ class Trainer(object):
 
         return self.model
 
-    def predict(self, movielens_ids, user_ratings, k):
+    def predict(self, movielens_ids, user_ratings, k, standardized_flag):
         '''
         1- Given an array of movielens ids, and user ratings, look for each combination of the ids, with the ids
         in the user ratings.
@@ -199,7 +206,7 @@ class Trainer(object):
         logger.debug('Predicting Combinations: %d', len(lista))
 
         # Look for the features for this pairs
-        x_test = self.append_features(np.array(lista))
+        x_test = self.append_features(np.array(lista), standardized_flag)
         logger.debug('Predict Features')
         logger.debug(x_test.head())
 
@@ -331,7 +338,7 @@ class Trainer(object):
         # Get metrics
         return Trainer.get_metrics(y_test > 0.5, y_predicted, b_test)
 
-    def evaluate(self, user_ratings, k = 20):
+    def evaluate(self, user_ratings, k = 20, standardized_flag=True):
         '''
         Given an aggregate panda dataframe of user ratings.
         - Split the dataset into TRAIN and TEST (50/50)
@@ -368,11 +375,11 @@ class Trainer(object):
 
         # -*- Train -*-
         logger.info('Training')
-        self.train(user_ratings_train, y_train)
+        self.train(user_ratings_train, y_train, standardized_flag)
 
         # -*- Predict -*-
         logger.info('Predicting')
-        top_movie_pairs = self.predict(set(b_test), user_ratings, k)
+        top_movie_pairs = self.predict(set(b_test), user_ratings, k, standardized_flag)
 
         # -*- Test -*-
         logger.info('Testing')
