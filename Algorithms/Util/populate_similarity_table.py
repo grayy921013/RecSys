@@ -41,7 +41,7 @@ def parse(row):
 
     return similarityItem
 
-def main(movies_ids_tagged, fields = None, algorithms = None):
+def main(movies_ids_tagged, fields, algorithms):
     
     # Get the recommender
     rec = CBRecommender()

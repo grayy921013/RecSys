@@ -22,7 +22,7 @@ class Trainer(object):
             self.model = model
 
     @staticmethod
-    def generate_features(filepath):
+    def generate_features(filepath, fields = None, algorithms = None):
         '''
         Given the file path of a CSV with at least the following two columns:
             movieid1, movieid2,...
@@ -47,7 +47,7 @@ class Trainer(object):
         logger.debug('No. of unique tagged IDs in ground_truth: %d', len(movies_ids_tagged))
 
         # Generate features
-        populate_sim.main(movies_ids_tagged)
+        populate_sim.main(movies_ids_tagged, fields, algorithms)
     
     @staticmethod
     def get_user_rating(filepath):
