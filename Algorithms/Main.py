@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
                Recomender Engine
 ===================================================
@@ -12,49 +13,68 @@ This module implements recommendations algorithms:
 
 # Author: Caleb De La Cruz P. <cdelacru>
 
-import sys
 import logging
 
-#~~~                                    Do a basic silly run                                 ~~~#
+logger = logging.getLogger('root')
+FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+logging.basicConfig(format=FORMAT)
+logger.setLevel(logging.INFO)
+
+import sys
+import logging
+import numpy as np
 from DataHandler import PostgresDataHandler
 from Util import Field
+from ML.Trainer import Trainer
+from progressbar import ProgressBar, Bar, Percentage, Timer
 
 
-
-
-from CB import CBRecommender, CBAlgorithmTFIDF, CBAlgorithmBM25, CBAlgorithmJACCARD
+logger.info('Start')
 
 def main(argv):
-    logging.basicConfig(level=logging.WARN)
+    features_field = ['title_tfitf',
+        'title_bm25',
+        'title_jaccard',
+        'genre_tfitf',
+        'genre_bm25',
+        'genre_jaccard',
+        'director_tfitf',
+        'director_bm25',
+        'director_jaccard',
+        'writer_tfitf',
+        'writer_bm25',
+        'writer_jaccard',
+        'cast_tfitf',
+        'cast_bm25',
+        'cast_jaccard',
+        'plot_tfitf',
+        'plot_bm25',
+        'plot_jaccard',
+        'full_plot_tfitf',
+        'full_plot_bm25',
+        'full_plot_jaccard',
+        'language_tfitf',
+        'language_bm25',
+        'language_jaccard',
+        'country_tfitf',
+        'country_bm25',
+        'country_jaccard',
+        'awards_tfitf',
+        'awards_bm25',
+        'awards_jaccard']
 
-    # Get the recommender
-    rec = CBRecommender()
+    bar = ProgressBar(widgets=[Timer()]).start()
+    trainer = Trainer(features_field)
 
-    # Get the connection with the 'database'
-    dataset = PostgresDataHandler()
+    # WARNING: This takes 10 minutes
+    # trainer.generate_features(r'./Data/groundtruth.exp1.csv')
 
-
-    # Single Field
-    data = dataset.get_data(Field.CAST)
-
-    logging.warn("%d records retrieved", len(data))
-    for algo in [CBAlgorithmTFIDF(), CBAlgorithmBM25(), CBAlgorithmJACCARD()]:
-        # Train the recommender using the given algorithm and dataset
-        result = rec.train(data, algo)
-
-        # Report similarity score for every single pair that has a score > 0
-        logging.warning('\nAlgorithm: %s\nComparisons: %s\nExample Data%s' % (algo.__name__, format(result.nnz, ",d"), str(result[0,0:10])))
-
-    # Multiple Field
-
-    logging.warn("%d records retrieved", len(data))
-    for algo in [CBAlgorithmTFIDF(), CBAlgorithmBM25(), CBAlgorithmJACCARD()]:
-        # Train the recommender using the given algorithm and dataset
-        result = rec.train_several_fields([Field.CAST, Field.TITLE, Field.PLOT], algo, dataset, [0.3, 0.3, 0.4])
-
-        # Report similarity score for every single pair that has a score > 0
-        logging.warning('\nAlgorithm: %s\nComparisons: %s\nExample Data%s' % (algo.__name__, format(result.nnz, ",d"), str(result[0,0:10])))
-
+    user_ratings, deleted_registers  = trainer.get_user_rating(r'./Data/groundtruth.exp1.csv')
+    result = trainer.evaluate(user_ratings)
+    print '\n -*- Metrics -*-'
+    for key in result:
+        print '%s %f' % (key.ljust(10), result[key])
+    bar.finish()
 
 if __name__ == "__main__":
     main(sys.argv)
