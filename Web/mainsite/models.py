@@ -1,16 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+
 class Movie(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
-    imdb_id = models.CharField(max_length=10, unique=True)
-    movielens_id = models.CharField(max_length=10, unique=True)
-    tmdb_id = models.CharField(max_length=10, unique=True, null=True)
+    imdb_id = models.CharField(max_length=10, unique=True, db_index=True)
+    movielens_id = models.CharField(max_length=10, unique=True, db_index=True)
+    tmdb_id = models.CharField(max_length=10, unique=True, null=True, db_index=True)
     title = models.CharField(max_length=500)
     year = models.IntegerField()
     rating = models.FloatField(null=True)
@@ -30,9 +32,10 @@ class Movie(models.Model):
     country = models.CharField(max_length=500)
     awards = models.CharField(max_length=500)
     last_updated = models.CharField(max_length=40)
-    popularity = models.FloatField(null=True)
+    popularity = models.FloatField(null=True, db_index=True)
     budget = models.BigIntegerField(null=True)
     revenue = models.BigIntegerField(null=True)
+
 
 # we define id1 as the smaller id
 class Similarity(models.Model):
@@ -91,16 +94,25 @@ class Userinfo(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    age = models.IntegerField(default=0,blank=True)
-    gender = models.CharField(max_length=10, default='',blank=True)
-    education = models.CharField(max_length=100, default='',blank=True)
-    employment = models.CharField(max_length=100, default='',blank=True)
+    age = models.IntegerField(default=0, blank=True)
+    gender = models.CharField(max_length=10, default='', blank=True)
+    education = models.CharField(max_length=100, default='', blank=True)
+    employment = models.CharField(max_length=100, default='', blank=True)
+    security_question = models.CharField(max_length=100, default='', blank=True)
+    security_answer = models.CharField(max_length=100, default='', blank=True)
 
     def __unicode__(self):
         return self.user
+
 
 class UserVote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie1 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie1")
     movie2 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie2")
     is_similar = models.BooleanField()
+
+
+class PasswordReset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, db_index=True)
+    updated_at = models.DateTimeField(auto_now=True)
