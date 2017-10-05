@@ -84,7 +84,7 @@
                         <div class="similar-title" id="title{{ similar_movie.imdb_id }}">
                             <b>{{ similar_movie.title }} ({{ similar_movie.year }})</b>
                         </div>
-                        <a class="popoverData" href="#" data-content="{{ similar_movie.plot }}" rel="popover" data-placement="left" data-trigger="hover">
+                        <a class="popoverData" href="#" data-content="{% if similar_movie.plot  %} {{similar_movie.plot}} {% else %} No plot available {% endif %}" rel="popover" data-placement="left" data-trigger="hover">
                             {% with id=similar_movie.movielens_id|stringformat:"i" %}
                             <img src="{% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                  style="height: 206px; width: 144px" alt="Mountain View"

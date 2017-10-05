@@ -17,7 +17,7 @@ def get_data():
     movies = pd.read_csv(r'Data\ml-20m\movies.csv', sep=',').values
 
     size = len(movies)
-    print 'Read %d rows' % size
+    logger.debug('Read %d rows', size)
 
     c_id_field = [None] * size
     c_title_field = [None] * size
@@ -36,8 +36,7 @@ def get_data():
             i += 1
         else:
             pass
-    # print 'Skipped', title
-    print "Processed %d rows" % i
+    logger.debug("Processed %d rows", i)
 
     c_id_field = c_id_field[:i]
     c_title_field = c_title_field[:i]
@@ -53,7 +52,7 @@ def get_data():
 def get_tags(c_id_field):
     df_tags = pd.read_csv(r'Data\ml-20m\tags.csv', sep=',', encoding='utf-8')
 
-    print 'Read %d rows' % len(df_tags)
+    logger.debug('Read %d rows', len(df_tags))
 
     c_tags_field = [None] * len(c_id_field)
 
@@ -69,14 +68,14 @@ def get_tags(c_id_field):
             if isinstance(tag[2], basestring):
                 string += tag[2].replace(' ', '_') + ' '
             else:
-                print tag
+                pass
+                # print tag
 
         if string != '':
             j += 1
 
         c_tags_field[i - 1] = string
 
-    print "Processed: %d rows %d tagged" % (i, j)
 
     return c_tags_field
 
@@ -114,7 +113,7 @@ def from_tmdb_to_movielens_id2(links, ids, tmdbid):
 
     if not isinstance(movie_id, numbers.Number):
         # TODO: Handle tmdbid collisions
-        print 'hey'
+        # print 'hey'
         return -1
 
     # print tmdbid, '...', link, '>>>', movie_id
@@ -155,7 +154,6 @@ def get_related_tmdb(rank_length):
 
         match = re.match(r'.*"id": (\d+),"imdb_id".*', line)
         if not match:
-            print 'Skipped %s' % line
             continue
 
         tmdbid = int(match.group(1))
@@ -232,7 +230,6 @@ def get_related_tmdb2(c_id_field):
     for line in file:
         match = re.match(r'.*"id": (\d+),"imdb_id".*', line)
         if not match:
-            print 'Skipped %s' % line
             continue
 
         tmdbid = int(match.group(1))
@@ -272,7 +269,6 @@ def get_related_tmdb2(c_id_field):
             related_movies_set[idx] = related_movies[i]
         else:
             related_movies_set[idx] = set()
-            #         print 'Skipped', i
             j += 1
         idx += 1
 

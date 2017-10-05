@@ -37,8 +37,8 @@ class CBAlgorithmTFIDF2(CBAlgorithm):
         self.vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english')
         self.indexed = self.vectorizer.fit_transform(data)
         duration = time() - t0
-        logger.info("n_samples: %d, n_features: %d" % self.indexed.shape)
-        logger.info("duration: %d\n" % duration)
+        logger.debug("n_samples: %d, n_features: %d" % self.indexed.shape)
+        logger.debug("duration: %d\n" % duration)
         return self.indexed
 
     def similarity(self, index=None):

@@ -41,8 +41,8 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         self.vectorizer = CountVectorizer(max_df=0.5, stop_words='english')
         self.indexed = self.vectorizer.fit_transform(data)
         duration = time() - t0
-        logger.info("n_samples: %d, n_features: %d" % self.indexed.shape)
-        logger.info("duration: %d" % duration)
+        logger.debug("n_samples: %d, n_features: %d" % self.indexed.shape)
+        logger.debug("duration: %d" % duration)
         return self.indexed
 
     def similarity(self, index=None):
@@ -73,8 +73,8 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         result.data = np.divide(intersection.data, union.data)
 
         duration = time() - t0
-        logger.info("n_samples: %d, n_related_samples: %d" % result.shape)
-        logger.info("duration: %d" % duration)
+        logger.debug("n_samples: %d, n_related_samples: %d" % result.shape)
+        logger.debug("duration: %d" % duration)
 
         # TODO: Check the effect of using only the intersection score instead of the JACCARD score
         return  result
@@ -95,7 +95,7 @@ class CBAlgorithmJACCARD(CBAlgorithm):
 
         union = matrix_2.dot(matrix_1)
         union = union.compute()
-        logger.info("Dot Product")
+        logger.debug("Dot Product")
 
         # cache = Chest(path='c:/temp', available_memory=13e9)
         # union = matrix_2.dot(matrix_1)#.compute(cache=cache)
@@ -106,11 +106,11 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         #           Cells without intersection
 
         indexes = intersection.nonzero()
-        logger.info("Data")
+        logger.debug("Data")
         sparse_union = csr_matrix((union[indexes], indexes), shape=intersection.shape)
-        logger.info("Sparse")
+        logger.debug("Sparse")
         # Step 4.2: Remove Intersection
         sparse_union.data = sparse_union.data - intersection.data
-        logger.info(sparse_union.data[0:10])
+        logger.debug(sparse_union.data[0:10])
         return sparse_union
 
