@@ -66,6 +66,7 @@ def main(movies_ids_tagged, fields, algorithms):
             Field.LANGUAGE,
             Field.COUNTRY,
             Field.AWARDS,
+            Field.FILTERED_PLOT
         ]
 
     # For each field caculate the similarity

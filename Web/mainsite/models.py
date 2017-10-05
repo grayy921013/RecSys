@@ -35,6 +35,7 @@ class Movie(models.Model):
     popularity = models.FloatField(null=True, db_index=True)
     budget = models.BigIntegerField(null=True)
     revenue = models.BigIntegerField(null=True)
+    filtered_plot = models.CharField(max_length=2000,null=True)
 
 
 # we define id1 as the smaller id
@@ -83,6 +84,9 @@ class Similarity(models.Model):
     last_updated_tfitf = models.FloatField(null=True)
     last_updated_bm25 = models.FloatField(null=True)
     last_updated_jaccard = models.FloatField(null=True)
+    filtered_plot_tfitf = models.FloatField(null=True)
+    filtered_plot_bm25 = models.FloatField(null=True)
+    filtered_plot_jaccard = models.FloatField(null=True)
 
     class Meta:
         unique_together = (('id1', 'id2'),)
@@ -181,6 +185,13 @@ class SimilarityPlot(models.Model):
     plot_bm25 = models.FloatField(null=True)
     plot_jaccard = models.FloatField(null=True)
 
+class SimilarityFiltered_plot(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    filtered_plot_tfitf = models.FloatField(null=True)
+    filtered_plot_bm25 = models.FloatField(null=True)
+    filtered_plot_jaccard = models.FloatField(null=True)
+
 class SimilarityFull_plot(models.Model):
     id1_id = models.CharField(max_length=10, default='0')
     id2_id = models.CharField(max_length=10, default='0')
@@ -215,3 +226,7 @@ class SimilarityLast_updated(models.Model):
     last_updated_tfitf = models.FloatField(null=True)
     last_updated_bm25 = models.FloatField(null=True)
     last_updated_jaccard = models.FloatField(null=True)
+
+class MovieFiltered_Plot(models.Model):
+    id = models.CharField(max_length=10, default='0', primary_key=True)
+    filtered_plot = models.CharField(max_length=2000,null=True)

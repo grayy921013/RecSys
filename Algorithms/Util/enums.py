@@ -21,3 +21,4 @@ class Field(Enum):
     IMDB_RATING = 16
     IMDB_VOTES = 17
     MOVIELENS_ID = 18
+    FILTERED_PLOT = 19

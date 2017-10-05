@@ -46,7 +46,10 @@ BEGIN
             awards_jaccard,
             last_updated_tfitf,
             last_updated_bm25,
-            last_updated_jaccard
+            last_updated_jaccard,
+            filtered_plot_tfitf,
+            filtered_plot_bm25,
+            filtered_plot_jaccard
     FROM mainsite_SimilarityFull_plot as a
     LEFT OUTER JOIN mainsite_SimilarityGenre        as c on a.id1_id = c.id1_id and a.id2_id = c.id2_id
     LEFT OUTER JOIN mainsite_SimilarityReleased     as d on a.id1_id = d.id1_id and a.id2_id = d.id2_id
@@ -59,12 +62,13 @@ BEGIN
     LEFT OUTER JOIN mainsite_SimilarityLanguage     as j on a.id1_id = j.id1_id and a.id2_id = j.id2_id
     LEFT OUTER JOIN mainsite_SimilarityCountry      as k on a.id1_id = k.id1_id and a.id2_id = k.id2_id
     LEFT OUTER JOIN mainsite_SimilarityAwards       as l on a.id1_id = l.id1_id and a.id2_id = l.id2_id
-    LEFT OUTER JOIN mainsite_SimilarityLast_updated as m on a.id1_id = m.id1_id and a.id2_id = m.id2_id;
+    LEFT OUTER JOIN mainsite_SimilarityLast_updated as m on a.id1_id = m.id1_id and a.id2_id = m.id2_id
+    LEFT OUTER JOIN SimilarityFiltered_plot         as n on a.id1_id = n.id1_id and a.id2_id = n.id2_id;
 
     -- Insert data into legit table
     INSERT INTO mainsite_similarity(
-           id1_id, id2_id, title_tfitf, title_bm25, title_jaccard, genre_tfitf, genre_bm25, genre_jaccard, released_tfitf, released_bm25, released_jaccard, director_tfitf, director_bm25, director_jaccard, writer_tfitf, writer_bm25, writer_jaccard, cast_tfitf, cast_bm25, cast_jaccard, metacritic_tfitf, metacritic_bm25, metacritic_jaccard, plot_tfitf, plot_bm25, plot_jaccard, full_plot_tfitf, full_plot_bm25, full_plot_jaccard, language_tfitf, language_bm25, language_jaccard, country_tfitf, country_bm25, country_jaccard, awards_tfitf, awards_bm25, awards_jaccard, last_updated_tfitf, last_updated_bm25, last_updated_jaccard)  
-    SELECT id1_id, id2_id, title_tfitf, title_bm25, title_jaccard, genre_tfitf, genre_bm25, genre_jaccard, released_tfitf, released_bm25, released_jaccard, director_tfitf, director_bm25, director_jaccard, writer_tfitf, writer_bm25, writer_jaccard, cast_tfitf, cast_bm25, cast_jaccard, metacritic_tfitf, metacritic_bm25, metacritic_jaccard, plot_tfitf, plot_bm25, plot_jaccard, full_plot_tfitf, full_plot_bm25, full_plot_jaccard, language_tfitf, language_bm25, language_jaccard, country_tfitf, country_bm25, country_jaccard, awards_tfitf, awards_bm25, awards_jaccard, last_updated_tfitf, last_updated_bm25, last_updated_jaccard
+           id1_id, id2_id, title_tfitf, title_bm25, title_jaccard, genre_tfitf, genre_bm25, genre_jaccard, released_tfitf, released_bm25, released_jaccard, director_tfitf, director_bm25, director_jaccard, writer_tfitf, writer_bm25, writer_jaccard, cast_tfitf, cast_bm25, cast_jaccard, metacritic_tfitf, metacritic_bm25, metacritic_jaccard, plot_tfitf, plot_bm25, plot_jaccard, full_plot_tfitf, full_plot_bm25, full_plot_jaccard, language_tfitf, language_bm25, language_jaccard, country_tfitf, country_bm25, country_jaccard, awards_tfitf, awards_bm25, awards_jaccard, last_updated_tfitf, last_updated_bm25, last_updated_jaccard,filtered_plot_tfitf,filtered_plot_bm25,filtered_plot_jaccard)
+    SELECT id1_id, id2_id, title_tfitf, title_bm25, title_jaccard, genre_tfitf, genre_bm25, genre_jaccard, released_tfitf, released_bm25, released_jaccard, director_tfitf, director_bm25, director_jaccard, writer_tfitf, writer_bm25, writer_jaccard, cast_tfitf, cast_bm25, cast_jaccard, metacritic_tfitf, metacritic_bm25, metacritic_jaccard, plot_tfitf, plot_bm25, plot_jaccard, full_plot_tfitf, full_plot_bm25, full_plot_jaccard, language_tfitf, language_bm25, language_jaccard, country_tfitf, country_bm25, country_jaccard, awards_tfitf, awards_bm25, awards_jaccard, last_updated_tfitf, last_updated_bm25, last_updated_jaccard,filtered_plot_tfitf,filtered_plot_bm25,filtered_plot_jaccard
         FROM public.tmp;
 
     -- Delete fake table

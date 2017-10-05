@@ -73,6 +73,8 @@ class PostgresDataHandler(DataHandler):
             SimilarityClass = SimilarityAwards
         elif Field.LAST_UPDATED == field:
             SimilarityClass = SimilarityLast_updated
+        elif Field.FILTERED_PLOT == field:
+            SimilarityClass = SimilarityFiltered_plot
         return SimilarityClass
 
     def clear_similarity(self, field=None):
