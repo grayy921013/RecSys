@@ -30,7 +30,7 @@ from mainsite.models import Movie,MovieFiltered_Plot
 
 
 def main(argv):
-    snert = StanfordNERTagger('/Users/Momina/PycharmProjects/NLP/Stanford-NER/stanford-ner-2017-06-09/classifiers/english.all.3class.distsim.crf.ser.gz', '/Users/Momina/PycharmProjects/NLP/Stanford-NER/stanford-ner-2017-06-09/stanford-ner.jar')
+    snert = StanfordNERTagger('../nerTools/Stanford-NER/stanford-ner-2017-06-09/classifiers/english.all.3class.distsim.crf.ser.gz', '../nerTools/Stanford-NER/stanford-ner-2017-06-09/stanford-ner.jar')
     logging.basicConfig(level=logging.WARN)
     # Get the connection with the 'database'
     dataset = PostgresDataHandler()
@@ -43,7 +43,7 @@ def main(argv):
     bulk = []
     bulk_count = 0
     t = time()
-    print t
+    print(t)
     for value in values:
         tokens = nltk.word_tokenize(value.encode('utf-8').decode('utf-8'))
         tagged = snert.tag(tokens)
@@ -56,8 +56,8 @@ def main(argv):
         bulk.append(MovieFiltered_Plot(id = ids[movie_index], filtered_plot=sentence))
         bulk_count = bulk_count + 1
         if bulk_count >= 1000:
-            print time() - t
-            print "Saved Bulk"
+            print(time() - t)
+            print("Saved Bulk")
             t = time()
             MovieFiltered_Plot.objects.bulk_create(bulk)
             bulk_count = 0
