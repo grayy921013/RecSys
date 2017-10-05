@@ -80,7 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'recsys',
-        'USER': 'Momina',
+        'USER': 'recsysuser',
         'PASSWORD': '123',
         'HOST': 'localhost',
         'PORT': '',
