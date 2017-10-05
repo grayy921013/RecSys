@@ -13,8 +13,7 @@ from Util import Field
 logger = logging.getLogger('root')
 
 class Trainer(object):
-    def \
-            __init__(self, features, model=None):
+    def __init__(self, features, model=None):
         self.dataset = PostgresDataHandler()
         self.features = features
         if model is None:
