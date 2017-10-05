@@ -18,8 +18,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from scipy.sparse import csr_matrix
 
 from .CBAlgorithm import CBAlgorithm
-#import dask.array as da
-#from chest import Chest
 
 logger = logging.getLogger(__name__)
 
@@ -45,9 +43,11 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         logger.debug("duration: %d" % duration)
         return self.indexed
 
-    def similarity(self, index=None):
+    def similarity(self, index=None, epsilon=1):
         '''
         Given a index (Matrix NxM) With N items and M features, calculates the similarity between each pair of items
+
+        reference: https://stackoverflow.com/a/32885931/1354478
         :param index: Numpy matrix
         :return: Sparse matrix NxN where every cell is the similarity of its indexes
         '''
@@ -56,61 +56,50 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         super(CBAlgorithmJACCARD, self).similarity(index)
 
         t0 = time()
+        
+        assert(0 < epsilon <= 1)
+        
         # Transform index to be a binary index
-        binary_index = index
-        binary_index[binary_index != 0] = 1
+        csr = index
+        csr = csr.astype(bool).astype(float)
 
-        # Calculate intersection in a vectorized way
-        intersection = binary_index.dot(binary_index.T)
+        csr_rownnz = csr.getnnz(axis=1)
+        intrsct = csr.dot(csr.T)
+        
+        nnz_i = np.repeat(csr_rownnz, intrsct.getnnz(axis=1))
+        unions = nnz_i + csr_rownnz[intrsct.indices] - intrsct.data
+        dists = 1.0 - intrsct.data / unions
+        
+        mask = (dists > 0) | (dists <= epsilon)
+        data = dists[mask]
+        # TODO: Fix force to mantain same # of references with the
+        #       the other algorithms to avoid having to merge
+        data[data == 0] = 1e-10
+        indices = intrsct.indices[mask]
+        
+        idx = intrsct.indptr[:-1]
+        i = -1
+        while idx[i] == len(mask):
+            idx[i] -= 1
+            i -= 1
+        rownnz = np.add.reduceat(mask, idx)
+        # TODO: Fix patch that corrects a numpy error on the add.reduceat
+        #       function when the indexes are the same instead of having a
+        #       numpy is adding a 1, which leds to overflow
+        idx1 = intrsct.indptr[:-1]
+        idx2 = intrsct.indptr[1:]
+        idx3 = (idx1-idx2) == 0
+        rownnz[idx3] = 0
+        indptr = np.r_[0, np.cumsum(rownnz)]
+        
+        out = csr_matrix((data, indices, indptr), intrsct.shape)
 
-        return intersection
+        # Zero out redundant scores
+        # Ex. The movies (2,1) and (1,2) will have the same score
+        #     Thus without loosing generality 
+        #     we will only save the pairs where m1 < m2
+        lower_triangle_idx = np.tril_indices(out.shape[0])
+        out[lower_triangle_idx] = 0
+        out.eliminate_zeros()
 
-        # Calculate union in a vectorized way
-        union = self.vectorized_union(intersection, binary_index)
-
-        # Divide intersection over union to get JACCARD score
-        result = union.copy()
-        result.data = np.divide(intersection.data, union.data)
-
-        duration = time() - t0
-        logger.debug("n_samples: %d, n_related_samples: %d" % result.shape)
-        logger.debug("duration: %d" % duration)
-
-        # TODO: Check the effect of using only the intersection score instead of the JACCARD score
-        return  result
-
-    def vectorized_union(self, intersection, data):
-
-        # Step 1: Aggregate each row
-        row = np.ravel(data.sum(1))
-
-        # Step 2: Append a row/column full of ones
-        ones = np.ones(row.shape)
-        matrix_1 = np.append([row], [ones], axis=0)
-        matrix_2 = np.append([ones.T], [row.T], axis=0).T
-
-        # Step 3: Calculate the sum of each possible combination
-        matrix_1 = da.from_array(matrix_1, chunks=(1000))
-        matrix_2 = da.from_array(matrix_2, chunks=(1000))
-
-        union = matrix_2.dot(matrix_1)
-        union = union.compute()
-        logger.debug("Dot Product")
-
-        # cache = Chest(path='c:/temp', available_memory=13e9)
-        # union = matrix_2.dot(matrix_1)#.compute(cache=cache)
-
-        # Step 4: Remove intersection
-        # Step 4.1: 0 everything that does not have an intersection
-        #           This step is not for UNION, but in JACCARD we dont care about
-        #           Cells without intersection
-
-        indexes = intersection.nonzero()
-        logger.debug("Data")
-        sparse_union = csr_matrix((union[indexes], indexes), shape=intersection.shape)
-        logger.debug("Sparse")
-        # Step 4.2: Remove Intersection
-        sparse_union.data = sparse_union.data - intersection.data
-        logger.debug(sparse_union.data[0:10])
-        return sparse_union
-
+        return out
