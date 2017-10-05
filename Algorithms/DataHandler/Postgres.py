@@ -31,7 +31,8 @@ from mainsite.models import Movie, \
                             SimilarityLanguage, \
                             SimilarityCountry, \
                             SimilarityAwards, \
-                            SimilarityLast_updated
+                            SimilarityLast_updated, \
+                            SimilarityFiltered_plot
 
 
 logger = logging.getLogger(__name__)
