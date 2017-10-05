@@ -46,9 +46,11 @@
             <h4 style="text-align: center;">{{ movie.title }} ({{ movie.year }})</h4>
             <div class="movie-poster">
                 <a>
-                    <img src="{% with 'posters/'|add:movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
+                    {% with id=movie.movielens_id|stringformat:"i" %}
+                    <img src="{% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                          style="height: 206px; width: 144px" alt="Mountain View"
                          class="noresize img-responsive centerBlock">
+                    {% endwith %}
                 </a>
             </div>
             <div class="movie-info">
@@ -83,9 +85,11 @@
                             <b>{{ similar_movie.title }} ({{ similar_movie.year }})</b>
                         </div>
                         <a class="popoverData" href="#" data-content="{{ similar_movie.plot }}" rel="popover" data-placement="left" data-trigger="hover">
-                            <img src="{% with 'posters/'|add:similar_movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
+                            {% with id=similar_movie.movielens_id|stringformat:"i" %}
+                            <img src="{% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                  style="height: 206px; width: 144px" alt="Mountain View"
                                  class="noresize img-responsive centerBlock">
+                            {% endwith %}
                         </a>
                         <div class="btn-group label-bar">
                             <button class="btn-no">

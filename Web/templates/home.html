@@ -39,12 +39,14 @@
         {% for movie in movie_list %}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                 <div class="movie-poster-div">
+                    {% with id=movie.movielens_id|stringformat:"i" %}
                     <a href="{% url 'label' movie.movielens_id %}">
-                        <img src="{% with 'posters/'|add:movie.movielens_id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
+                        <img src="{% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              alt="Mountain View"
                              name="movie-poster"
                              class="resize img-responsive centerBlock">
                     </a>
+                    {% endwith %}
                 </div>
                 <div class="movie-title" id="title1682">{{ movie.title }} ({{ movie.year }})</div>
             </div>
