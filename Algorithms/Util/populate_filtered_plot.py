@@ -30,7 +30,7 @@ from mainsite.models import Movie,MovieFiltered_Plot
 
 
 def main(argv):
-    snert = StanfordNERTagger('../nerTools/Stanford-NER/stanford-ner-2017-06-09/classifiers/english.all.3class.distsim.crf.ser.gz', '../nerTools/Stanford-NER/stanford-ner-2017-06-09/stanford-ner.jar')
+    snert = StanfordNERTagger('nerTools/Stanford-NER/stanford-ner-2017-06-09/classifiers/english.all.3class.distsim.crf.ser.gz', 'nerTools/Stanford-NER/stanford-ner-2017-06-09/stanford-ner.jar')
     logging.basicConfig(level=logging.WARN)
     # Get the connection with the 'database'
     dataset = PostgresDataHandler()
