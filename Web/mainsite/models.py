@@ -20,6 +20,7 @@ class Movie(models.Model):
     released = models.CharField(max_length=2000)
     director = models.CharField(max_length=2000)
     writer = models.CharField(max_length=2000)
+    writer_processed = models.CharField(max_length=2000, default="")
     cast = models.CharField(max_length=2000)
     metacritic = models.CharField(max_length=2000)
     imdb_rating = models.FloatField(null=True)
@@ -35,6 +36,7 @@ class Movie(models.Model):
     budget = models.BigIntegerField(null=True)
     revenue = models.BigIntegerField(null=True)
     filtered_plot = models.CharField(max_length=2000,null=True)
+    tags = models.TextField(default="")
 
 
 class Userinfo(models.Model):

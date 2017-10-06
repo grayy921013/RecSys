@@ -61,7 +61,7 @@ fabric.properties
 *.pyc
 # data files
 tomatoes.txt
-links.csv
+Web/tools/*.csv
 omdbMovies.txt
 migrations/
 Algorithms/TFITF
