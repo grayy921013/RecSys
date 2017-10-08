@@ -275,12 +275,12 @@ def blockbuster(request):
         return render(request, 'home.html', context)
 
 @login_required
-def label(request, movielens_id):
+def label(request, id):
     errors = " "
     try:
         # get the random movie
         temp_similar_list = Movie.objects.order_by('?')[:30]
-        movie_obj = Movie.objects.get(movielens_id=movielens_id)
+        movie_obj = Movie.objects.get(id=id)
         context = {
             'movie': movie_obj,
             'similar_list': temp_similar_list,

@@ -8,7 +8,7 @@ body {
     opacity: 0.92;
 }
 
-button:hover{
+button:hover {
     cursor: hand;
 }
 
@@ -33,11 +33,11 @@ button:hover{
     transform: translate(-50%, 0) !important;
 }
 
-.movie-title{
+.movie-title {
 
 }
 
-.movie-info{
+.movie-info {
     position: absolute;
     z-index: 1;
     margin-top: 260px;
@@ -45,33 +45,33 @@ button:hover{
 }
 
 .movie-item {
-  margin-top: 40px;
-  margin-bottom: 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
-.similar-main{
+.similar-main {
     padding-top: 30px;
     padding-right: 10px;
     padding-left: 120px;
 }
 
-.label-instruction{
+.label-instruction {
     text-align: center;
 }
 
-.similar-title{
+.similar-title {
     height: 45px;
     text-align: center;
 }
 
-.label-bar{
+.label-bar {
     width: 100%;
     text-align: center;
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
-.btn-skip{
+.btn-skip {
     padding-left: 20px;
     padding-right: 20px;
 }
@@ -108,4 +108,8 @@ button:hover{
 .nav-glyphicon {
     color: white;
     font-size: 2em;
+}
+
+#movie-info-list{
+    margin-bottom: 70px;
 }

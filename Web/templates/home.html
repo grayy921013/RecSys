@@ -13,12 +13,9 @@
 {% block navbar %}
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <div>
-                <a href="{% url 'profile' user.id %}">
-                    <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon"
-                         width="40" height="40">
-                </a>
-            </div>
+            <a type="button" class="btn btn-default btn-md btn-icon-left" href="{% url 'profile' user.id %}">
+                <span class="glyphicon nav-glyphicon glyphicon-user" aria-hidden="true"></span>
+            </a>
         </li>
         <li>
             <a type="button" class="btn btn-default btn-md btn-icon-left" href="{% url 'home' %}">
@@ -40,12 +37,14 @@
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                 <div class="movie-poster-div">
                     {% with id=movie.movielens_id|stringformat:"i" %}
-                    <a href="{% url 'label' movie.movielens_id %}">
-                        <img src="{% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
-                             alt="Mountain View"
-                             name="movie-poster"
-                             class="resize img-responsive centerBlock">
-                    </a>
+                        <a href="{% url 'label' movie.movielens_id %}">
+                            <img src="
+
+                                    {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
+                                 alt="Mountain View"
+                                 name="movie-poster"
+                                 class="resize img-responsive centerBlock">
+                        </a>
                     {% endwith %}
                 </div>
                 <div class="movie-title" id="title1682">{{ movie.title }} ({{ movie.year }})</div>

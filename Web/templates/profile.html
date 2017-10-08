@@ -15,12 +15,9 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <div>
-                <a href="{% url 'profile' user.id %}">
-                    <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon" width="40"
-                         height="40">
-                </a>
-            </div>
+            <a type="button" href="{% url 'profile' user.id %}" class="btn btn-default btn-md btn-icon-left"><span
+                    class="glyphicon glyphicon-user nav-glyphicon" aria-hidden="true"></span>
+            </a>
         </li>
         <li>
             <a type="button" href="{% url 'home' %}" class="btn btn-default btn-md btn-icon-left"><span

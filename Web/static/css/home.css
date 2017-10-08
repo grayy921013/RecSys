@@ -36,6 +36,11 @@ body {
     font-size: 2em !important;
 }
 
+.glyphicon-user {
+    color: white !important;
+    font-size: 2em !important;
+}
+
 .globalstream-container {
     text-align: center;
     overflow: hidden;
