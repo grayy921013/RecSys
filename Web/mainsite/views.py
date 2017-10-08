@@ -344,7 +344,7 @@ def user_vote(request):
     vote = UserVote(user=request.user, movie1_id=int(request.POST["movie1_id"]),
                     movie2_id=int(request.POST["movie2_id"]), action=int(request.POST["action"]))
     vote.save()
-    return JsonResponse()
+    return JsonResponse(dict(success=True))
 
 
 
