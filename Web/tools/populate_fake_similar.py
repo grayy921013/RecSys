@@ -7,9 +7,6 @@ import django
 django.setup()
 from mainsite.models import SimilarMovie
 
-for i in range(3, 10):
-    similar = SimilarMovie(rank=i, algorithm=-1, movie_id=3, similar_movie_id=i)
-    similar.save()
-for i in range(3, 11):
-    similar = SimilarMovie(rank=i, algorithm=-2, movie_id=3, similar_movie_id=i)
+for i in range(3, 60):
+    similar = SimilarMovie(rank=i, algorithm=-3, movie_id=3, similar_movie_id=i)
     similar.save()
