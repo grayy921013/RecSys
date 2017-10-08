@@ -122,6 +122,12 @@ class PasswordReset(models.Model):
     token = models.CharField(max_length=100, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class SimilarMovie(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie")
+    similar_movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="similar_movie")
+    rank = models.IntegerField() # this may be needed
+    algorithm = models.IntegerField() # 0 for tfitf, 1 for bm25, 2 for jaccard
+
 # Temporary Tables #
 
 # we define id1 as the smaller id
