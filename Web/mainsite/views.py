@@ -323,6 +323,9 @@ def get_similar_movies(request, id):
     movie = movies[0]
     similar_movies = SimilarMovie.objects.filter(movie=movie)
     id_set = set()
+    voted_list = UserVote.objects.filter(user=request.user, movie1_id=id)
+    for voted in voted_list:
+        id_set.add(voted.movie2_id)
     for similar in similar_movies:
         if similar.similar_movie_id not in id_set:
             id_set.add(similar.similar_movie_id)
