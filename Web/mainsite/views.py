@@ -242,6 +242,7 @@ def modify_pwd(request, uid, token):
 def home(request):
     # get the random movie
     start = time.time()
+    # random_movie_list = []
     random_movie_list = get_random_movie(request.user.id)
     end = time.time()
 
@@ -297,7 +298,13 @@ def label(request, id):
 def profile(request, id):
     try:
         current_user = User.objects.get(id=id)
-        context = {'current_user': current_user}
+        num_labels = UserVote.objects.filter(user=current_user).count()
+        num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
+        context = {
+            'current_user': current_user,
+            'num_labels': num_labels,
+            'num_movies': num_movies
+        }
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:
         return render(request, "home.html", {})

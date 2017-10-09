@@ -32,6 +32,16 @@
 
 {% block content %}
     <div role="tabpanel" class="tab-pane fade in active" id="randomMovieList">
+{#         <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">#}
+{#            <div class="movie-poster-div">#}
+{#                <a>#}
+{#                    <img src="{% static 'images/88129.jpg' %}"#}
+{#                         alt="Mountain View"#}
+{#                         class="resize img-responsive centerBlock">#}
+{#                </a>#}
+{#            </div>#}
+{#            <div class="movie-title" id="title1682">Sample Resize Movie</div>#}
+{#        </div>#}
         {% load static %}
         {% for movie in movie_list %}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
@@ -53,40 +63,5 @@
         <div id="wrap"></div>
         <br>
     </div>
-
-    <script type="text/javascript">
-        (function () {
-            console.log("enter resize");
-            var max_height = 300;
-            var max_width = 200;
-            var imgs = document.getElementsByName('movie-poster');
-            for (var i = 0; i < imgs.length; i++) {
-                if (imgs[i].height <= 300) {
-                    var height = (imgs[i].height / imgs[i].width) * max_width;
-                    console.log("height resize with 200px width: ");
-                    console.log(height);
-                    imgs[i].height = height;
-                    imgs[i].width = max_width;
-                    imgs[i].style.marginTop = ((max_height - height) / 2).toString() + 'px';
-                    imgs[i].style.marginBottom = (10 + ((max_height - height) / 2)).toString() + 'px';
-                } else {
-                    var width = (imgs[i].width / imgs[i].height) * max_height;
-                    if (width > 200) {
-                        console.log("200:300")
-                        imgs[i].height = max_height;
-                        imgs[i].width = max_width;
-                        imgs[i].style.marginBottom = '10px';
-                    } else {
-                        console.log("width resize with 300px height: ");
-                        console.log(width);
-                        imgs[i].height = max_height;
-                        imgs[i].width = width;
-                        imgs[i].style.marginLeft = ((max_width - width) / 2).toString() + 'px';
-                        imgs[i].style.marginBottom = '10px';
-                    }
-                }
-            }
-        }());
-    </script>
 {% endblock %}
 

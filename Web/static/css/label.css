@@ -62,6 +62,10 @@ button:hover {
 .similar-title {
     height: 45px;
     text-align: center;
+    font-size: 1.15em;
+    object-fit: contain;
+    position: relative;
+    vertical-align: top;
 }
 
 .label-bar {

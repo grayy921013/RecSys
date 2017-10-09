@@ -55,6 +55,7 @@ class Userinfo(models.Model):
     def __unicode__(self):
         return self.user
 
+
 # we define id1 as the smaller id
 class Similarity(models.Model):
     id1 = models.ForeignKey(Movie, related_name='id1', on_delete=models.CASCADE)
