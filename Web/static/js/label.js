@@ -44,7 +44,7 @@ $(document).ready(function () {
     var movie_list = [];
 
     // Debug code.
-    target_movie_id = '3';
+    // target_movie_id = '3';
 
     var bindClickListener = function (movie_id, action) {
         console.log("click " + action + " movie Id " + movie_id);

@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^resetpwd', views.reset_pwd, name='resetpwd'),
     url(r'^modifypwd/(?P<uid>\d+)/(?P<token>.+)', views.modify_pwd, name='modifypwd'),
     url(r'^search$', views.search, name='search'),
-    url(r'^getsimilar/(?P<id>\d+)$', views.get_similar_movies, name='getsimilar')
+    url(r'^getsimilar/(?P<id>\d+)$', views.get_similar_movies, name='getsimilar'),
+    url(r'^uservote$', views.user_vote, name='uservote')
 ]
