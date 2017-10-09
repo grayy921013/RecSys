@@ -14,6 +14,7 @@ from CB import CBRecommender, CBAlgorithmTMDB, CBAlgorithmTFIDF, CBAlgorithmBM25
 logger = logging.getLogger('root')
 
 
+
 def initializer(field_name, similarity_class, algorithms):
     global globalDict
     globalDict = {}
