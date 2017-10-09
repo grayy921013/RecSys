@@ -47,7 +47,7 @@
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
                 <div class="movie-poster-div">
                     {% with id=movie.movielens_id|stringformat:"i" %}
-                        <a href="{% url 'label' movie.movielens_id %}">
+                        <a href="{% url 'label' movie.id %}">
                             <img src="
 
                                     {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
