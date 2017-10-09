@@ -235,5 +235,5 @@ class SimilarityLast_updated(models.Model):
     last_updated_jaccard = models.FloatField(null=True)
 
 class MovieFiltered_Plot(models.Model):
-    id = models.CharField(max_length=10, default='0', primary_key=True)
+    id = models.IntegerField(unique=True, db_index=True, primary_key=True)
     filtered_plot = models.CharField(max_length=2000,null=True)

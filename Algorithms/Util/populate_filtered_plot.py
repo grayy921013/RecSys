@@ -45,10 +45,11 @@ def main(argv):
     t = time()
     print(t)
     for value in values:
+        print ids[movie_index]
         tokens = nltk.word_tokenize(value.encode('utf-8').decode('utf-8'))
         tagged = snert.tag(tokens)
         #ne = nltk.ne_chunk(tagged_tokens=tagged,binary=True)
-        sentence = value
+        sentence = ""
         for word in tagged:
             if word[1] != u'PERSON':
                 sentence = sentence + " " + word[0]
@@ -66,6 +67,8 @@ def main(argv):
         #movie.filtered_plot = sentence
         #movie.save()
         movie_index = movie_index + 1
+    if bulk.size:
+        MovieFiltered_Plot.objects.bulk_create(bulk)
 
 
 if __name__ == "__main__":
