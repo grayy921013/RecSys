@@ -82,7 +82,7 @@ def train(filepath):
     model = trainer.train_with_full_dataset(user_ratings, features_field)
     print('\n -*- Features -*-')
     for i in sorted(zip(features_field, model.coef_), key=lambda x: x[1]):
-        print i
+        print(i)
 
     print('\n -*- Persisting Model -*-')
     joblib.dump(model, 'TMP_MODEL.pkl') 
@@ -140,14 +140,11 @@ if __name__ == "__main__":
     elif command == 'p' or command == 'populate':
         populate_movie_pairs(filepath)
     else:
-        print ''
-        print 'Usage: python main.py <command> [filepath]'
-        print ''
-        print 'Invalid command: \'' + command + '\' valid choices are:'
-        print ''
-        print ' test'
-        print ' train'
-        print ' p'
-        print ' populate'
-
-    # main(sys.argv)
+        print('\nUsage: python main.py <command> [filepath] \
+        \n \
+        \nInvalid command: \'' + command + '\' valid choices are: \
+        \n \
+        \n test \
+        \n train \
+        \n p \
+        \n populate ')
