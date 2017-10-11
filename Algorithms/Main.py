@@ -16,7 +16,7 @@ This module implements recommendations algorithms:
 import logging
 
 logger = logging.getLogger('root')
-FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+FORMAT = "[%(filename)s:%(lineno)3s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(format=FORMAT)
 logger.setLevel(logging.INFO)
 
@@ -27,12 +27,9 @@ from DataHandler import PostgresDataHandler
 from Util import Field
 from ML.Trainer import Trainer
 from progressbar import ProgressBar, Bar, Percentage, Timer
+from sklearn.externals import joblib
 
-
-logger.info('Start')
-
-def main(argv):
-    features_field = ['title_tfitf',
+features_field = ['title_tfitf',
         'title_bm25',
         'title_jaccard',
         'genre_tfitf',
@@ -63,18 +60,94 @@ def main(argv):
         'awards_bm25',
         'awards_jaccard']
 
+
+def test(filepath):
     bar = ProgressBar(widgets=[Timer()]).start()
     trainer = Trainer(features_field)
 
     # WARNING: This takes 10 minutes
     # trainer.generate_features(r'./Data/groundtruth.exp1.csv')
 
-    user_ratings, deleted_registers  = trainer.get_user_rating(r'./Data/groundtruth.exp1.csv')
+    user_ratings, deleted_registers  = trainer.get_user_rating(filepath)
     result = trainer.evaluate(user_ratings)
     print('\n -*- Metrics -*-')
     for key in result:
         print('%s %f' % (key.ljust(10), result[key]))
     bar.finish()
 
+def train(filepath):
+    bar = ProgressBar(widgets=[Timer()]).start()
+    trainer = Trainer(features_field)
+    user_ratings, deleted_registers  = trainer.get_user_rating(filepath)
+    model = trainer.train_with_full_dataset(user_ratings, features_field)
+    print('\n -*- Features -*-')
+    for i in sorted(zip(features_field, model.coef_), key=lambda x: x[1]):
+        print i
+
+    print('\n -*- Persisting Model -*-')
+    joblib.dump(model, 'TMP_MODEL.pkl') 
+    
+    print('\n -*- Model succesfully trained -*-')
+    bar.finish()
+
+def populate_movie_pairs(filepath):
+
+    model = joblib.load('TMP_MODEL.pkl') 
+    print('-*- model loaded -*-')
+    trainer = Trainer(features_field, model)
+
+    minimum = 3
+    maximum = 27001
+
+    step = 300
+    trainer.dataset.clear_similar_movies()
+    for i in range(0,27301,step):
+        print('Update: ', i, '/', 27300)
+
+        features = trainer.dataset.get_pairs(low=i, high=i+step)
+
+        features = np.array(features)
+        print('Pairs being predicted: ', len(features))
+
+        # -*- Predict -*-
+        standardized_flag = False
+        k = 20
+
+        print('-*- predicting -*-')
+        top_movie_pairs = trainer.predict_from_pairs(features, k, standardized_flag)
+        print('Predicted pairs: ', len(top_movie_pairs))
+        # -*- Persist -*-
+        trainer.dataset.save_similar_movies(top_movie_pairs.values.tolist())
+        print('-*- similar movies succesfully save -*-')
+        
+
 if __name__ == "__main__":
-    main(sys.argv)
+
+    if len(sys.argv) > 1:
+        command = sys.argv[1]
+    else:
+        command = 'test'
+    
+    if len(sys.argv) > 2:
+        filepath = sys.argv[2]
+    else:
+        filepath = r'./Data/groundtruth.exp1.csv'
+    
+    if command == 'test':
+        test(filepath)
+    elif command == 'train':
+        train(filepath)
+    elif command == 'p' or command == 'populate':
+        populate_movie_pairs(filepath)
+    else:
+        print ''
+        print 'Usage: python main.py <command> [filepath]'
+        print ''
+        print 'Invalid command: \'' + command + '\' valid choices are:'
+        print ''
+        print ' test'
+        print ' train'
+        print ' p'
+        print ' populate'
+
+    # main(sys.argv)
