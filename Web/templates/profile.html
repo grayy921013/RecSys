@@ -15,12 +15,9 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <div>
-                <a href="{% url 'profile' user.id %}">
-                    <img src="{% static 'images/user_image.jpg' %}" class="img-circle" alt="personal icon" width="40"
-                         height="40">
-                </a>
-            </div>
+            <a type="button" href="{% url 'profile' user.id %}" class="btn btn-default btn-md btn-icon-left"><span
+                    class="glyphicon glyphicon-user nav-glyphicon" aria-hidden="true"></span>
+            </a>
         </li>
         <li>
             <a type="button" href="{% url 'home' %}" class="btn btn-default btn-md btn-icon-left"><span
@@ -39,7 +36,7 @@
 {% block content %}
 
     <div class="container-fluid">
-
+        <!-- User profile -->
         <div class="col-sm-4 col-md-3 sidebar profile-container">
             <div class="profile-image">
                 <img src="{% static 'images/user_image.jpg' %}" class="img-rounded" alt="personal icon" width="120"
@@ -48,9 +45,74 @@
             <div class="profile-username">
                 <label>{{ current_user.username }}</label>
             </div>
+            <div class="profile-content">
+                <label>Labels: {{ num_labels }}</label>
+                <br>
+                <label>Movies: {{ num_movies }}</label>
+            </div>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
+        <!-- User finished and unfinished work -->
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main movies-container">
+            <div class="unfinished-container">
+                <h4>Unfinished Movies: </h4>
+                <div class="horizontal-movie-list">
+                    {% load static %}
+                    {% for i in "x"|rjust:"5" %}
+                        <div class="movie-item">
+                            <div class="movie-poster-div">
+                                <a>
+                                    <img src="{% static 'images/100008.jpg' %}"
+                                         alt="Mountain View"
+                                         name="movie-poster"
+                                         class="resize img-responsive centerBlock">
+                                </a>
+                            </div>
+                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                        </div>
+                        <div class="movie-item">
+                            <div class="movie-poster-div">
+                                <a>
+                                    <img src="{% static 'images/608.jpg' %}"
+                                         alt="Mountain View"
+                                         name="movie-poster"
+                                         class="resize img-responsive centerBlock">
+                                </a>
+                            </div>
+                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="finished-container">
+                <h4>Finished Movies: </h4>
+                <div class="horizontal-movie-list">
+                    {% load static %}
+                    {% for i in "x"|rjust:"5" %}
+                        <div class="movie-item">
+                            <div class="movie-poster-div">
+                                <a>
+                                    <img src="{% static 'images/100008.jpg' %}"
+                                         alt="Mountain View"
+                                         name="movie-poster"
+                                         class="resize img-responsive centerBlock">
+                                </a>
+                            </div>
+                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                        </div>
+                        <div class="movie-item">
+                            <div class="movie-poster-div">
+                                <a>
+                                    <img src="{% static 'images/608.jpg' %}"
+                                         alt="Mountain View"
+                                         name="movie-poster"
+                                         class="resize img-responsive centerBlock">
+                                </a>
+                            </div>
+                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div> <!-- /container -->
 

@@ -32,8 +32,8 @@ from mainsite.models import Movie, \
                             SimilarityLanguage, \
                             SimilarityCountry, \
                             SimilarityAwards, \
-                            SimilarityLast_updated#, \
-                            # SimilarityFiltered_plot
+                            SimilarityLast_updated, \
+                            SimilarityFiltered_plot
 
 
 logger = logging.getLogger(__name__)
@@ -73,10 +73,8 @@ class PostgresDataHandler(DataHandler):
             SimilarityClass = SimilarityCountry
         elif Field.AWARDS == field:
             SimilarityClass = SimilarityAwards
-        elif Field.LAST_UPDATED == field:
-            SimilarityClass = SimilarityLast_updated
-        # elif Field.FILTERED_PLOT == field:
-        #     SimilarityClass = SimilarityFiltered_plot
+        elif Field.FILTERED_PLOT == field:
+            SimilarityClass = SimilarityFiltered_plot
         return SimilarityClass
 
     def clear_similarity(self, field=None):

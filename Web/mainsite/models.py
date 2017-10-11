@@ -7,12 +7,11 @@ from django.contrib.auth.models import User
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-
 class Movie(models.Model):
-    id = models.CharField(max_length=10, primary_key=True)
-    imdb_id = models.CharField(max_length=10, unique=True, db_index=True)
-    movielens_id = models.CharField(max_length=10, unique=True, db_index=True)
-    tmdb_id = models.CharField(max_length=10, unique=True, null=True, db_index=True)
+    omdb_id = models.IntegerField(unique=True, db_index=True)
+    imdb_id = models.IntegerField(unique=True, db_index=True)
+    movielens_id = models.IntegerField(unique=True, db_index=True)
+    tmdb_id = models.IntegerField(unique=True, null=True, db_index=True)
     title = models.CharField(max_length=500)
     year = models.IntegerField()
     rating = models.FloatField(null=True)
@@ -21,6 +20,7 @@ class Movie(models.Model):
     released = models.CharField(max_length=2000)
     director = models.CharField(max_length=2000)
     writer = models.CharField(max_length=2000)
+    writer_processed = models.CharField(max_length=2000, default="")
     cast = models.CharField(max_length=2000)
     metacritic = models.CharField(max_length=2000)
     imdb_rating = models.FloatField(null=True)
@@ -35,6 +35,25 @@ class Movie(models.Model):
     popularity = models.FloatField(null=True, db_index=True)
     budget = models.BigIntegerField(null=True)
     revenue = models.BigIntegerField(null=True)
+    filtered_plot = models.CharField(max_length=2000,null=True)
+    tags = models.TextField(default="")
+
+
+class Userinfo(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    age = models.IntegerField(default=0, blank=True)
+    gender = models.CharField(max_length=10, default='', blank=True)
+    education = models.CharField(max_length=100, default='', blank=True)
+    employment = models.CharField(max_length=100, default='', blank=True)
+    security_question = models.CharField(max_length=100, default='', blank=True)
+    security_answer = models.CharField(max_length=100, default='', blank=True)
+
+    def __unicode__(self):
+        return self.user
 
 
 # we define id1 as the smaller id
@@ -83,39 +102,32 @@ class Similarity(models.Model):
     last_updated_tfitf = models.FloatField(null=True)
     last_updated_bm25 = models.FloatField(null=True)
     last_updated_jaccard = models.FloatField(null=True)
+    filtered_plot_tfitf = models.FloatField(null=True)
+    filtered_plot_bm25 = models.FloatField(null=True)
+    filtered_plot_jaccard = models.FloatField(null=True)
 
     class Meta:
         unique_together = (('id1', 'id2'),)
-
-
-class Userinfo(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
-    age = models.IntegerField(default=0, blank=True)
-    gender = models.CharField(max_length=10, default='', blank=True)
-    education = models.CharField(max_length=100, default='', blank=True)
-    employment = models.CharField(max_length=100, default='', blank=True)
-    security_question = models.CharField(max_length=100, default='', blank=True)
-    security_answer = models.CharField(max_length=100, default='', blank=True)
-
-    def __unicode__(self):
-        return self.user
 
 
 class UserVote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie1 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie1")
     movie2 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie2")
-    is_similar = models.BooleanField()
+    action = models.IntegerField() # -1 for not similar, 0 for skip, 1 for similar
+
 
 
 class PasswordReset(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=100, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class SimilarMovie(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie")
+    similar_movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="similar_movie")
+    rank = models.IntegerField() # this may be needed
+    algorithm = models.IntegerField() # 0 for tfitf, 1 for bm25, 2 for jaccard
 
 # Temporary Tables #
 
@@ -181,6 +193,13 @@ class SimilarityPlot(models.Model):
     plot_bm25 = models.FloatField(null=True)
     plot_jaccard = models.FloatField(null=True)
 
+class SimilarityFiltered_plot(models.Model):
+    id1_id = models.CharField(max_length=10, default='0')
+    id2_id = models.CharField(max_length=10, default='0')
+    filtered_plot_tfitf = models.FloatField(null=True)
+    filtered_plot_bm25 = models.FloatField(null=True)
+    filtered_plot_jaccard = models.FloatField(null=True)
+
 class SimilarityFull_plot(models.Model):
     id1_id = models.CharField(max_length=10, default='0')
     id2_id = models.CharField(max_length=10, default='0')
@@ -215,3 +234,7 @@ class SimilarityLast_updated(models.Model):
     last_updated_tfitf = models.FloatField(null=True)
     last_updated_bm25 = models.FloatField(null=True)
     last_updated_jaccard = models.FloatField(null=True)
+
+class MovieFiltered_Plot(models.Model):
+    id = models.CharField(max_length=10, default='0', primary_key=True)
+    filtered_plot = models.CharField(max_length=2000,null=True)

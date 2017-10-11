@@ -15,7 +15,7 @@ body {
 }
 
 .navbar {
-    min-height: 15px !important;
+    min-height: 10px !important;
     background-color: #FFD220
     /* background-color: rgba(51, 122, 183, 0.89) !important; */
     /*background-color:#B13B3B !important;*/

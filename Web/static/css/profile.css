@@ -13,6 +13,12 @@ body {
 
 .profile-container{
   opacity:0.95;
+  overflow-y: hidden;
+}
+
+.movies-container{
+  padding-left: 130px !important;
+  height: inherit !important;
 }
 
 .profile-image{
@@ -34,9 +40,85 @@ body {
 .profile-content{
   position:absolute;
   z-index:1;
-  top:250px;
+  top:270px;
   left:50%;
   transform:translate(-50%,0);
+}
+
+.unfinished-container{
+  position: relative;
+  margin-top: 20px;
+  height: 50%;
+  min-height: 300px;
+  z-index:1;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.horizontal-movie-list{
+  margin-top: 10px;
+  min-height: 260px;
+  z-index:1;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.finished-container{
+  position: relative;
+  top: 50%;
+  min-height: 300px;
+  z-index:1;
+  width: 100%;
+  white-space: nowrap;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.movie-item {
+    top: 90px;
+    margin-left: 40px;
+    margin-right: 40px;
+    margin-bottom: 30px;
+    max-width: 200px;
+    max-height: 250px;
+    position: relative;
+    display: inline-block;
+}
+
+.movie-title {
+    line-height: 1em;
+    height: 2em;
+    text-align: center;
+    font-size: 14px;
+    top: 120px;
+    position: relative;
+}
+
+.movie-poster-div {
+    max-width: 100%;
+    max-height: 100%;
+    position: inherit;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.movie-poster-div>img{
+    vertical-align: middle;
+}
+
+.centerBlock {
+    max-height: 210px !important;
+    max-width: 200px !important;
+    margin-bottom: 10px;
+    text-align: center;
+    object-fit: contain;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
 }
 
 .img-circle{
@@ -75,39 +157,4 @@ body {
 
 log.container{
    background-image:url("https://static.pexels.com/photos/26135/pexels-photo-26135.jpg");
-}
-
-.form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
-}
-.form-signin .form-signin-heading,
-.form-signin .checkbox {
-  margin-bottom: 10px;
-}
-.form-signin .checkbox {
-  font-weight: normal;
-}
-.form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
-}
-.form-signin .form-control:focus {
-  z-index: 2;
-}
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 }

@@ -38,7 +38,7 @@ body {
   background-size:cover;
   padding-left: 2%;
   padding-right: 2%;
-  height:300px;
+  min-height:300px;
   width:40%;
   margin-left:30%;
   margin-right: 30%;

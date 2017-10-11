@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from mainsite.models import Movie, Userinfo, Genre, PasswordReset
+from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -19,7 +19,7 @@ from random import shuffle
 
 def get_metadata(request, imdb_id):
     try:
-        movie = Movie.objects.get(imdb_id="tt" + imdb_id)
+        movie = Movie.objects.get(imdb_id)
         return JsonResponse(dict(result=movie_to_json(movie)))
     except:
         return HttpResponse("No result found.")
@@ -242,6 +242,7 @@ def modify_pwd(request, uid, token):
 def home(request):
     # get the random movie
     start = time.time()
+    # random_movie_list = []
     random_movie_list = get_random_movie(request.user.id)
     end = time.time()
 
@@ -275,12 +276,12 @@ def blockbuster(request):
         return render(request, 'home.html', context)
 
 @login_required
-def label(request, movielens_id):
+def label(request, id):
     errors = " "
     try:
         # get the random movie
         temp_similar_list = Movie.objects.order_by('?')[:30]
-        movie_obj = Movie.objects.get(movielens_id=movielens_id)
+        movie_obj = Movie.objects.get(id=id)
         context = {
             'movie': movie_obj,
             'similar_list': temp_similar_list,
@@ -297,7 +298,13 @@ def label(request, movielens_id):
 def profile(request, id):
     try:
         current_user = User.objects.get(id=id)
-        context = {'current_user': current_user}
+        num_labels = UserVote.objects.filter(user=current_user).count()
+        num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
+        context = {
+            'current_user': current_user,
+            'num_labels': num_labels,
+            'num_movies': num_movies
+        }
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:
         return render(request, "home.html", {})
@@ -313,6 +320,39 @@ def search(request):
         'title': 'Search'
     }
     return render(request, 'home.html', context)
+
+@login_required
+def get_similar_movies(request, id):
+    movies = Movie.objects.filter(id=id)
+    movie_list = []
+    if not movies:
+        return JsonResponse(dict(data=movie_list))
+    movie = movies[0]
+    similar_movies = SimilarMovie.objects.filter(movie=movie)
+    id_set = set()
+    voted_list = UserVote.objects.filter(user=request.user, movie1_id=id)
+    for voted in voted_list:
+        id_set.add(voted.movie2_id)
+    for similar in similar_movies:
+        if similar.similar_movie_id not in id_set:
+            id_set.add(similar.similar_movie_id)
+            similar_movie = similar.similar_movie
+            record = {"id": similar_movie.id, "poster": "/static/posters/" + str(similar_movie.movielens_id) + ".jpg",
+                      "plot": similar_movie.plot, "title": similar_movie.title, "year": similar_movie.year}
+            movie_list.append(record)
+    return JsonResponse(dict(data=movie_list))
+
+@login_required
+def user_vote(request):
+    if request.method == "GET":
+        raise Http404
+    if not request.POST["movie1_id"] or not request.POST["movie2_id"] or not request.POST["action"]:
+        return JsonResponse(dict(error="wrong format"))
+    vote = UserVote(user=request.user, movie1_id=int(request.POST["movie1_id"]),
+                    movie2_id=int(request.POST["movie2_id"]), action=int(request.POST["action"]))
+    vote.save()
+    return JsonResponse(dict(success=True))
+
 
 
 @login_required
