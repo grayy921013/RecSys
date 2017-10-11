@@ -41,8 +41,12 @@ def parse(row):
 
     return similarityItem
 
-def main(movies_ids_tagged, fields, algorithms):
-    
+def main(movies_ids_tagged, fields, algorithms, k):
+    if k is None:
+        TOP_K = 1e5
+    else:
+        TOP_K = 100
+
     # Get the recommender
     rec = CBRecommender()
     dataset = PostgresDataHandler()
@@ -92,33 +96,36 @@ def main(movies_ids_tagged, fields, algorithms):
 
             # Train the recommender using the given algorithm and dataset
             result = rec.train(data, algo)
-            logger.info('%s was trained', algo.__name__)
-
+            
             # Extract the data from the sparse matrix
             rows, cols = result.nonzero()
             rows_movielens = algo.ids[rows]
             cols_movielens = algo.ids[cols]
             scores = result.data
-            logger.info('%d relations found', len(scores))
-            
+            # logger.info('%s: %d relations found', algo.__name__, len(scores))
+
             p = None
             db_fieldname = field.name+'_'+algo.__name__
 
-            if algo_idx == 1:
-                # Only save the ids of the movies for the first
-                # algorithm, because next one will have the same id
-                # pre_frame = np.stack((rows_movielens, cols_movielens, scores)).T
-                
-                pre_frame = np.rec.fromarrays((rows_movielens, cols_movielens, scores), \
-                    names=('id1_id','id2_id',db_fieldname))
+            # Only save the ids of the movies for the first
+            # algorithm, because next one will have the same id
+            db_fieldname = field.name+'_'+algo.__name__
+            pre_frame = np.rec.fromarrays((rows_movielens, cols_movielens, scores), \
+                names=('id1_id','id2_id',db_fieldname))
 
-                p = pandas.DataFrame(pre_frame)
-                
-                # p = pandas.DataFrame(pre_frame,\
-                #                      columns=['movieid1','movieid2',db_fieldname])
-            else:
-                p = pandas.DataFrame(scores,\
-                                     columns=[field.name+'_'+algo.__name__])
+            p = pandas.DataFrame(pre_frame)
+            
+            # Get top K elements for each movieid1 set 1
+            p = p \
+                .sort_values(by=['id1_id', db_fieldname], ascending=False) \
+                .groupby('id1_id') \
+                .head(TOP_K) \
+                .reset_index(drop=True)
+            
+            p = p.sort_values(by=['id1_id'], ascending=True)
+            
+            # Temporarily save to a local file
+            logger.info('%s\t %d/%d found/saved', algo.__name__, p.shape[0], len(scores))
             
             # Temporarily save to a local file
             p.to_pickle(algo.__name__)
@@ -137,36 +144,69 @@ def main(movies_ids_tagged, fields, algorithms):
             
             p_prev = None
             p_s = [None]*len(algorithms)
-            
+            p_s = None
+            end_idx = 0
+
+            # Look for the score for each algorithms
+            # the scores were previously saved in a temporary file
             for i in range(len(algorithms)):
                 algo = algorithms[i]
-                logger.info('Merging algorithm: %s', algo.__name__)
-                p_s[i] = pandas.read_pickle(algo.__name__)[pickle_batch:pickle_batch+batch_size]
-                if p_s[i].shape[0] == 0:
-                    # Exit when the next batch of data is empty
-                    break
+                logger.info('Merge: algorithm %s', algo.__name__)
+                
+                # If it's the first algorithm we will use him as standard to obtain min and max
+                # TO DO: we should get id1, id2 for each file and then use that 
+                if i == 0:
+                    p_s = pandas.read_pickle(algo.__name__)[pickle_batch:pickle_batch+batch_size]
+                    
+                    # TODO: Look for a better way to do this. in the case where the first
+                    #       algo is something like 1mm*N record and the second is > than that
+                    if p_s.shape[0] == 0:
+                        # Exit when the batch of data is empty
+                        break
 
-            if p_s[0].shape[0] == 0:
+                    if p_s.shape[0] == batch_size:
+                        # Do not execute on the last batch
+                        start = p_s.id1_id.iloc[0]
+                        end_idx = batch_size
+                        end = p_s.id1_id.iloc[end_idx-1]
+                        while p_s.id1_id.iloc[end_idx-1] == end:
+                            end_idx -= 1
+                        end = p_s.id1_id.iloc[end_idx-1]
+                        p_s = p_s[:end_idx]
+                    else:
+                        end_idx = p_s.shape[0] 
+                        start = p_s.id1_id.iloc[0]
+                        end = -1
+
+                    pickle_batch = pickle_batch+end_idx
+                else:
+                    p_s = pandas.read_pickle(algo.__name__)
+                    
+                    s_idx = p_s.id1_id.searchsorted(start)[0]
+                    if end == -1:
+                        e_idx = p_s.shape[0]
+                    else:
+                        e_idx = p_s.id1_id.searchsorted(end, side='right')[0]
+                    p_s = p_s[s_idx:e_idx]
+                    
+                if p_prev is None:
+                    p_prev = p_s
+                else:
+                    p_prev = pandas.merge(p_prev, p_s, how="outer")
+
+            if p_prev is None:
                 # Exit when the batch of data is empty
                 break
 
-            p_prev = pandas.concat(p_s, axis=1)
             logger.info('Duration Merge: %f', time()-t_merge)
 
-            # Parse panda Dataframe to an array of django object
-            initializer(field.name.lower() + '_', dataset.SimilarityClass, algorithms)
-            # dataset.batch = list(map(parse, p_prev.values))
-            
             # Save to Database
             t_db = time()
-            dataset.save_similarity_batch2(p_prev, \
-               'mainsite_similarity%s'% field.name, \
-               1000)
-            # dataset.save_similarity_batch(1000)
+            # initializer(field.name.lower() + '_', dataset.SimilarityClass, algorithms)
+            table_name = 'mainsite_similarity%s'% field.name
+            dataset.save_similarity_batch2(p_prev, table_name, 1000)
             logger.info('Duration DB: %f', time()-t_db)
             logger.info('Duration: %f', time()-t)
-
-            pickle_batch += batch_size
     
     logger.info('DB JOIN: Started')
     t = time()

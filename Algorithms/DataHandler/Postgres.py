@@ -18,6 +18,7 @@ django.setup()
 
 from django.contrib.postgres.aggregates.general import StringAgg
 from mainsite.models import Movie, \
+                            SimilarMovie, \
                             Similarity, \
                             SimilarityPair, \
                             SimilarityTitle, \
@@ -196,10 +197,27 @@ class PostgresDataHandler(DataHandler):
         return list(map(lambda x: [x[0], x[1] or ''], cursor))
 
 
-    def get_features(self, ids, features = []):
+    def get_features(self, ids=None, features=None, low=None, high=None, flag_db_ids=False):
         logger.debug('Getting features')
-        if len(features) == 0:
+        if features is None:
             return Similarity.objects.all()
+        elif ids is None:
+            #TODO: Analyse if necessary
+            t = time()
+            solution = []
+            fields_str = ','.join(map(lambda x: 'coalesce(%s,0)' % x, features))
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT m1.movielens_id, \
+                                       m2.movielens_id, %s \
+                                  FROM mainsite_similarity s \
+                                  LEFT JOIN mainsite_movie m1 ON s.id1_id =  m1.id \
+                                  LEFT JOIN mainsite_movie m2 ON s.id2_id =  m2.id \
+                                 WHERE m1.id >= %d and m1.id < %d \
+                                " % (fields_str, low, high))
+                solution = cursor.fetchall()
+
+            logger.debug('Time Retrieving Features: %f', time()-t)
+            return solution
         else:
             t = time()
             self.save_similarity_pair_batch(ids)
@@ -208,21 +226,42 @@ class PostgresDataHandler(DataHandler):
             t = time()
             solution = []
             fields_str = ','.join(map(lambda x: 'coalesce(%s,0)' % x, features))
-            with connection.cursor() as cursor:
-                cursor.execute("select cast(m1.movielens_id as int) movielens_id, \
-                                       cast(m2.movielens_id as int) movielens_id, %s \
-                                FROM mainsite_similaritypair p \
-                                LEFT JOIN mainsite_similarity s ON p.id1_id =  s.id1_id AND p.id2_id =  s.id2_id \
-                                LEFT JOIN mainsite_movie m1 ON p.id1_id =  m1.id \
-                                LEFT JOIN mainsite_movie m2 ON p.id2_id =  m2.id \
-                                " % fields_str)
-                solution = cursor.fetchall()
+            if flag_db_ids:
+                #TODO: Analyse if this is the best place to do this
+                #      or if it should be in a different function
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT p.id1_id, p.id2_id, %s \
+                                      FROM mainsite_similaritypair p \
+                                      LEFT JOIN mainsite_similarity s ON p.id1_id =  s.id1_id AND p.id2_id =  s.id2_id \
+                                    " % (fields_str))
+                    solution = cursor.fetchall()
+            else:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT cast(m1.movielens_id as int) movielens_id, \
+                                           cast(m2.movielens_id as int) movielens_id, %s \
+                                      FROM mainsite_similaritypair p \
+                                      LEFT JOIN mainsite_similarity s ON p.id1_id =  s.id1_id AND p.id2_id =  s.id2_id \
+                                      LEFT JOIN mainsite_movie m1 ON p.id1_id =  m1.id \
+                                      LEFT JOIN mainsite_movie m2 ON p.id2_id =  m2.id \
+                                    " % (fields_str))
+                    solution = cursor.fetchall()
 
             logger.debug('Time Retrieving Features: %f', time()-t)
             return solution
 
+    def get_pairs(self, low=None, high=None):
+        t = time()
+        solution = []
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT id1_id, id2_id \
+                              FROM mainsite_similarity s \
+                             WHERE s.id1_id >= %d and s.id1_id < %d \
+                            " % (low, high))
+            solution = cursor.fetchall()
 
-
+        logger.debug('Time Retrieving Features: %f', time()-t)
+        return solution
+    
     def similarity_join(self):
         '''
         Executes stored procedure in the database 
@@ -270,21 +309,26 @@ class PostgresDataHandler(DataHandler):
             )
         logger.info('Duration INSERT: %f', time()-t_db)
         return None
-        # batch = list(map(lambda x: SimilarityPair(id1_id=x[0], id2_id=x[1]), similarity_pair_batch))
-        # logger.debug('Parsed')
-        
-        # if batch_size is not None:
-        #     chunks = [batch[x:x+batch_size] for x in range(0, len(batch), batch_size)]
-        # else:
-        #     chunks = [batch]
-        # logger.debug("Size: %d, Chunks %d", len(batch), len(chunks))
-        # bar = ProgressBar(maxval=len(chunks)+1, \
-        #     widgets=['DB: Similarity Pair', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
-        # bar.start()
-        # counter = 0
-        # for chunk in chunks:
-        #     SimilarityPair.objects.bulk_create(chunk)
-        #     counter += 1
-        #     bar.update(counter)
-        # bar.finish()
 
+    def clear_similar_movies(self):
+        SimilarMovie.objects.all().delete()
+
+    def save_similar_movies(self, pairs, batch_size=1000):
+        batch = list(map(lambda x: SimilarMovie(movie_id = x[0], similar_movie_id=x[1], rank=0, algorithm=0), pairs))
+        logger.debug('Parsed')
+
+        if batch_size is not None:
+            chunks = [batch[x:x+batch_size] for x in range(0, len(batch), batch_size)]
+        else:
+            chunks = [batch]
+        logger.debug("Size: %d, Chunks %d", len(batch), len(chunks))
+        
+        bar = ProgressBar(maxval=len(chunks)+1, \
+            widgets=['DB: Similar Movie', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
+        bar.start()
+        counter = 0
+        for chunk in chunks:
+            SimilarMovie.objects.bulk_create(chunk)
+            counter += 1
+            bar.update(counter)
+        bar.finish()

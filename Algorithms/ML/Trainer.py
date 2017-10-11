@@ -22,7 +22,7 @@ class Trainer(object):
             self.model = model
 
     @staticmethod
-    def generate_features(filepath, fields = None, algorithms = None):
+    def generate_features(filepath, fields = None, algorithms = None, k = None):
         '''
         Given the file path of a CSV with at least the following two columns:
             movieid1, movieid2,...
@@ -47,7 +47,7 @@ class Trainer(object):
         logger.debug('No. of unique tagged IDs in ground_truth: %d', len(movies_ids_tagged))
 
         # Generate features
-        populate_sim.main(movies_ids_tagged, fields, algorithms)
+        populate_sim.main(movies_ids_tagged, fields, algorithms, k)
     
     @staticmethod
     def get_user_rating(filepath):
@@ -162,6 +162,33 @@ class Trainer(object):
 
         return pandas.merge(movie_pairs_df, features_df, how='left')
 
+    # TODO: Find a more appropiate name for this function
+    def append_features2(self, movie_pairs, standardized_flag):
+        '''
+        Given an array of movie pairs, it goes to the table mainsite_similarity and extract the specified features
+        for each of the pairs. Finally it appends the features to the each movie pair
+        :param movie_pairs: numpy matrix of 2 columns and N rows. Where the values are movielens movieid
+        :return: A panda Data Frame with dimensions (2+K) x N. Where K is the number of features that the class was
+                 initialized with and N is the original number of rows of the movie_pairs array.
+        '''
+        logger.debug('User Ratings: %d', len(movie_pairs))
+
+        features = self.dataset.get_features(movie_pairs, self.features, flag_db_ids=True)
+        logger.debug("features retrieved")
+
+        features_df = pandas.DataFrame(features, columns=['movieid1', 'movieid2'] + self.features)
+        logger.debug('User Ratings with Features: %d', features_df.shape[0])
+
+        # -*- Standardize Coefficients -*-
+        if standardized_flag:
+            scaler = StandardScaler()
+            scaler.fit(features_df.values[:,2:])
+            features_df.iloc[:,2:] = scaler.transform(features_df.values[:,2:])
+            
+        movie_pairs_df = pandas.DataFrame(movie_pairs, columns=['movieid1', 'movieid2'])
+
+        return pandas.merge(movie_pairs_df, features_df, how='left')
+
     def train(self, user_ratings_train, y_train, standardized_flag):
         '''
         Given an array of movies, and its respective booleans label trained the instance model
@@ -205,8 +232,24 @@ class Trainer(object):
         lista = list(itertools.product(movie1_ids, movie2_ids))
         logger.debug('Predicting Combinations: %d', len(lista))
 
+        return self.predict_from_pairs(lista, k, standardized_flag)
+
+    def predict_from_pairs(self, lista, k, standardized_flag):
+        '''
+        1- Given an array of movielens ids, and user ratings, look for each combination of the ids, with the ids
+        in the user ratings.
+        2- Predict a score with the previously fitted model.
+        3- Retrieves only the top K elements for each movielen id
+        :param movielens_ids: Int array of movilens ids
+        :param user_ratings: Numpy array with the following columns (movieid1, movieid2, ...)
+        :param k: Integer, with the wanted number of related movies
+        :return: A panda data frame of dimensions (N * K, 2) where N is the size of the movilens id.
+                 The first column will have the movielens id
+                 The second column will have in descending order the best K movies for the id in the first column
+        '''
+        
         # Look for the features for this pairs
-        x_test = self.append_features(np.array(lista), standardized_flag)
+        x_test = self.append_features2(lista, standardized_flag)
         logger.debug('Predict Features')
         logger.debug(x_test.head())
 
@@ -385,3 +428,15 @@ class Trainer(object):
         logger.info('Testing')
         return self.test(user_ratings_test, y_test, b_test, top_movie_pairs)
 
+    def train_with_full_dataset(self, user_ratings, features_field, k=20, standardized_flag=False):
+
+        # Data
+        y = user_ratings['rating']
+        x = user_ratings.values
+        
+        # -*- Train -*-
+        self.train(x, y, standardized_flag)
+
+        return self.model
+
+        
