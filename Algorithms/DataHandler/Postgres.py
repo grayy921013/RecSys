@@ -2,7 +2,7 @@ import os
 import sys
 import django
 import logging
-from cStringIO import StringIO
+from io import StringIO
 from progressbar import ProgressBar, Bar, Percentage, Timer
 from time import time, sleep
 from django.db import connection
