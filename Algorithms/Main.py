@@ -101,7 +101,7 @@ def populate_movie_pairs(filepath):
 
     step = 300
     trainer.dataset.clear_similar_movies()
-    for i in range(0,27301,step):
+    for i in range(0,27300,step):
         print('Update: ', i, '/', 27300)
 
         features = trainer.dataset.get_pairs(low=i, high=i+step)
