@@ -100,9 +100,9 @@ class CBAlgorithm(object):
         # Ex. The movies (2,1) and (1,2) will have the same score
         #     Thus without loosing generality 
         #     we will only save the pairs where m1 < m2
-        lower_triangle_idx = np.tril_indices(score.shape[0])
-        score[lower_triangle_idx] = 0
-        score.eliminate_zeros()
+        # lower_triangle_idx = np.tril_indices(score.shape[0])
+        # score[lower_triangle_idx] = 0
+        # score.eliminate_zeros()
 
         # TODO: Figure out how to 0 out main diagonal on sparse matrix
         # np.fill_diagonal(score, 0)

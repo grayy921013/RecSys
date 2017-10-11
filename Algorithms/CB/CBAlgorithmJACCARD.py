@@ -65,7 +65,7 @@ class CBAlgorithmJACCARD(CBAlgorithm):
 
         csr_rownnz = csr.getnnz(axis=1)
         intrsct = csr.dot(csr.T)
-        
+        return intrsct
         nnz_i = np.repeat(csr_rownnz, intrsct.getnnz(axis=1))
         unions = nnz_i + csr_rownnz[intrsct.indices] - intrsct.data
         dists = 1.0 - intrsct.data / unions

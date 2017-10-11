@@ -2,6 +2,7 @@ import os
 import sys
 import django
 import logging
+from cStringIO import StringIO
 from progressbar import ProgressBar, Bar, Percentage, Timer
 from time import time, sleep
 from django.db import connection
@@ -31,7 +32,8 @@ from mainsite.models import Movie, \
                             SimilarityLanguage, \
                             SimilarityCountry, \
                             SimilarityAwards, \
-                            SimilarityLast_updated
+                            SimilarityLast_updated#, \
+                            # SimilarityFiltered_plot
 
 
 logger = logging.getLogger(__name__)
@@ -73,6 +75,8 @@ class PostgresDataHandler(DataHandler):
             SimilarityClass = SimilarityAwards
         elif Field.LAST_UPDATED == field:
             SimilarityClass = SimilarityLast_updated
+        # elif Field.FILTERED_PLOT == field:
+        #     SimilarityClass = SimilarityFiltered_plot
         return SimilarityClass
 
     def clear_similarity(self, field=None):
@@ -110,6 +114,35 @@ class PostgresDataHandler(DataHandler):
             self.batch.append(s)
 
 
+    def save_similarity_batch2(self, data, table, batch_size=None):
+        from django.db import connection
+        from contextlib import closing
+
+        stream = StringIO()
+        t_db = time()
+        data.to_csv(stream,
+                    sep='\t',
+                    header=False, 
+                    index=False,
+                    chunksize=batch_size,
+                    na_rep='N')
+        logger.info('Duration CSV: %f', time()-t_db)
+            
+        t_db = time()
+        stream.seek(0)
+
+        with closing(connection.cursor()) as cursor:
+            cursor.copy_from(
+                file=stream,
+                table=table,
+                sep='\t',
+                null='N',
+                columns=list(data.columns),
+                size=8192,
+            )
+        logger.info('Duration INSERT: %f', time()-t_db)
+
+
     def save_similarity_batch(self, batch_size=None):
         if batch_size is not None:
             chunks = [self.batch[x:x+batch_size] for x in range(0, len(self.batch), batch_size)]
@@ -124,7 +157,6 @@ class PostgresDataHandler(DataHandler):
 
         counter = 0
         for chunk in chunks:
-            logger.debug('Chunk %d', counter)
             self.SimilarityClass.objects.bulk_create(chunk)
             counter += 1
             bar.update(counter)
@@ -165,6 +197,7 @@ class PostgresDataHandler(DataHandler):
         
         return list(map(lambda x: [x[0], x[1] or ''], cursor))
 
+
     def get_features(self, ids, features = []):
         logger.debug('Getting features')
         if len(features) == 0:
@@ -191,6 +224,7 @@ class PostgresDataHandler(DataHandler):
             return solution
 
 
+
     def similarity_join(self):
         '''
         Executes stored procedure in the database 
@@ -203,30 +237,56 @@ class PostgresDataHandler(DataHandler):
            cursor.callproc('SIMILARITY_JOIN', [])
         bar.finish()
 
-    def save_similarity_pair_batch(self, similarity_pair_batch, batch_size=1000):
-        
-
+    def save_similarity_pair_batch(self, data, batch_size=1000):
         SimilarityPair.objects.all().delete()
         logger.debug('Truncated')
-        batch = list(map(lambda x: SimilarityPair(id1_id=x[0], id2_id=x[1]), similarity_pair_batch))
-        logger.debug('Parsed')
         
-        if batch_size is not None:
-            chunks = [batch[x:x+batch_size] for x in range(0, len(batch), batch_size)]
-        else:
-            chunks = [batch]
+        from django.db import connection
+        from contextlib import closing
+        import pandas as pd
 
-        logger.debug("Size: %d, Chunks %d", len(batch), len(chunks))
-        bar = ProgressBar(maxval=len(chunks)+1, \
-            widgets=['DB: Similarity Pair', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
-        bar.start()
+        stream = StringIO()
+        t_db = time()
+        
+        data = pd.DataFrame(data, columns=['id1_id', 'id2_id'], dtype=int)
 
-        counter = 0
-        for chunk in chunks:
-            logger.debug('Chunk %d', counter)
-            SimilarityPair.objects.bulk_create(chunk)
-            counter += 1
-            bar.update(counter)
+        data.to_csv(stream,
+                    sep='\t',
+                    header=False, 
+                    index=False,
+                    chunksize=batch_size,
+                    na_rep='N')
+        logger.info('Duration CSV: %f', time()-t_db)
+            
+        t_db = time()
+        stream.seek(0)
 
-        bar.finish()
+        with closing(connection.cursor()) as cursor:
+            cursor.copy_from(
+                file=stream,
+                table='mainsite_SimilarityPair',
+                sep='\t',
+                null='N',
+                columns=list(data.columns),
+                size=8192,
+            )
+        logger.info('Duration INSERT: %f', time()-t_db)
+        return None
+        # batch = list(map(lambda x: SimilarityPair(id1_id=x[0], id2_id=x[1]), similarity_pair_batch))
+        # logger.debug('Parsed')
+        
+        # if batch_size is not None:
+        #     chunks = [batch[x:x+batch_size] for x in range(0, len(batch), batch_size)]
+        # else:
+        #     chunks = [batch]
+        # logger.debug("Size: %d, Chunks %d", len(batch), len(chunks))
+        # bar = ProgressBar(maxval=len(chunks)+1, \
+        #     widgets=['DB: Similarity Pair', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
+        # bar.start()
+        # counter = 0
+        # for chunk in chunks:
+        #     SimilarityPair.objects.bulk_create(chunk)
+        #     counter += 1
+        #     bar.update(counter)
+        # bar.finish()
 

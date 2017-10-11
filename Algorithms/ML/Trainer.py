@@ -132,7 +132,7 @@ class Trainer(object):
         not_found = movie_ids[movie_ids.isnull().any(axis=1)]
         logger.debug('Records not found: %d', not_found.shape[0])
 
-        return movie_ids.values.ravel().astype(int).astype(str).tolist()
+        return movie_ids.values.ravel().astype(int).tolist()
 
     def append_features(self, movie_pairs, standardized_flag):
         '''
@@ -144,7 +144,7 @@ class Trainer(object):
         '''
         logger.debug('User Ratings: %d', movie_pairs.shape[0])
 
-        movie_pairs_db_id = np.zeros(shape=movie_pairs.shape).astype(str)
+        movie_pairs_db_id = np.zeros(shape=movie_pairs.shape).astype(int)
         movie_pairs_db_id[:, 0] = self.from_movielens_to_db_id(movie_pairs[:, 0])
         movie_pairs_db_id[:, 1] = self.from_movielens_to_db_id(movie_pairs[:, 1])
         features = self.dataset.get_features(movie_pairs_db_id.tolist(), self.features)

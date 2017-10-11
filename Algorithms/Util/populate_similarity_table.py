@@ -11,7 +11,7 @@ from mainsite.models import SimilarityGenre
 from CB import CBRecommender, CBAlgorithmTMDB, CBAlgorithmTFIDF, CBAlgorithmBM25, CBAlgorithmJACCARD, CBAlgorithmTMDB, CBAlgorithmTFIDF2
 
 
-logger = logging.getLogger()
+logger = logging.getLogger('root')
 
 
 def initializer(field_name, similarity_class, algorithms):
@@ -74,7 +74,7 @@ def main(movies_ids_tagged, fields, algorithms):
         
         # Get an array of (id,string) for the field requested
         # Filtering only for the movies in the groundtruth
-        data = dataset.get_data(field, movies_ids_tagged.tolist())
+        data = dataset.get_data(field, movies_ids_tagged)
         size = len(data)
         logger.info("%d records retrieved", size)
 
@@ -101,13 +101,20 @@ def main(movies_ids_tagged, fields, algorithms):
             logger.info('%d relations found', len(scores))
             
             p = None
+            db_fieldname = field.name+'_'+algo.__name__
+
             if algo_idx == 1:
                 # Only save the ids of the movies for the first
                 # algorithm, because next one will have the same id
-                pre_frame = np.stack((rows_movielens, cols_movielens, scores)).T
-                db_fieldname = field.name+'_'+algo.__name__
-                p = pandas.DataFrame(pre_frame,\
-                                     columns=['movieid1','movieid2',db_fieldname])
+                # pre_frame = np.stack((rows_movielens, cols_movielens, scores)).T
+                
+                pre_frame = np.rec.fromarrays((rows_movielens, cols_movielens, scores), \
+                    names=('id1_id','id2_id',db_fieldname))
+
+                p = pandas.DataFrame(pre_frame)
+                
+                # p = pandas.DataFrame(pre_frame,\
+                #                      columns=['movieid1','movieid2',db_fieldname])
             else:
                 p = pandas.DataFrame(scores,\
                                      columns=[field.name+'_'+algo.__name__])
@@ -147,11 +154,14 @@ def main(movies_ids_tagged, fields, algorithms):
 
             # Parse panda Dataframe to an array of django object
             initializer(field.name.lower() + '_', dataset.SimilarityClass, algorithms)
-            dataset.batch = list(map(parse, p_prev.values))
+            # dataset.batch = list(map(parse, p_prev.values))
             
             # Save to Database
             t_db = time()
-            dataset.save_similarity_batch(1000)
+            dataset.save_similarity_batch2(p_prev, \
+               'mainsite_similarity%s'% field.name, \
+               1000)
+            # dataset.save_similarity_batch(1000)
             logger.info('Duration DB: %f', time()-t_db)
             logger.info('Duration: %f', time()-t)
 
