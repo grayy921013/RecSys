@@ -39,7 +39,7 @@ def main(argv):
     matrix = np.array(data)
     ids = matrix[:, 0].astype(int)
     values = matrix[:, 1]
-    movie_index = 26000
+    movie_index = 25999
     bulk = []
     bulk_count = 0
     t = time()
