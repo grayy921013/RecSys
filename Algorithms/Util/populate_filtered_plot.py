@@ -39,12 +39,13 @@ def main(argv):
     matrix = np.array(data)
     ids = matrix[:, 0].astype(int)
     values = matrix[:, 1]
-    movie_index = 25999
+    movie_index = 26000
     bulk = []
     bulk_count = 0
     t = time()
     print(t)
     for value in values[-999:]:
+        print ids[movie_index]
         tokens = nltk.word_tokenize(value.encode('utf-8').decode('utf-8'))
         tagged = snert.tag(tokens)
         #ne = nltk.ne_chunk(tagged_tokens=tagged,binary=True)
