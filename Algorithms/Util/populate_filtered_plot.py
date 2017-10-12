@@ -55,7 +55,7 @@ def main(argv):
         sentence = sentence.lstrip()
         bulk.append(MovieFiltered_Plot(id = ids[movie_index], filtered_plot=sentence))
         bulk_count = bulk_count + 1
-        if bulk_count >= 1:
+        if bulk_count >= 1000:
             print(time() - t)
             print("Saved Bulk")
             t = time()
