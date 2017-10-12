@@ -44,7 +44,7 @@ def main(argv):
     bulk_count = 0
     t = time()
     print(t)
-    for value in values[-1000:]:
+    for value in values[-999:]:
         tokens = nltk.word_tokenize(value.encode('utf-8').decode('utf-8'))
         tagged = snert.tag(tokens)
         #ne = nltk.ne_chunk(tagged_tokens=tagged,binary=True)
@@ -55,7 +55,7 @@ def main(argv):
         sentence = sentence.lstrip()
         bulk.append(MovieFiltered_Plot(id = ids[movie_index], filtered_plot=sentence))
         bulk_count = bulk_count + 1
-        if bulk_count >= 1000:
+        if bulk_count >= 999:
             print(time() - t)
             print("Saved Bulk")
             t = time()
