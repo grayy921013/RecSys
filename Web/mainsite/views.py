@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote
+from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -319,6 +319,7 @@ def search(request):
         'movie_list': movie_list,
         'title': 'Search'
     }
+    SearchAction.objects.create(user=request.user, keyword=keyword)
     return render(request, 'home.html', context)
 
 @login_required
@@ -329,16 +330,22 @@ def get_similar_movies(request, id):
         return JsonResponse(dict(data=movie_list))
     movie = movies[0]
     similar_movies = SimilarMovie.objects.filter(movie=movie)
+    vote_status = {}
     id_set = set()
     voted_list = UserVote.objects.filter(user=request.user, movie1_id=id)
     for voted in voted_list:
-        id_set.add(voted.movie2_id)
+        vote_status[voted.movie2_id] = voted.action
     for similar in similar_movies:
         if similar.similar_movie_id not in id_set:
             id_set.add(similar.similar_movie_id)
             similar_movie = similar.similar_movie
+            status = 2
+            if similar.similar_movie_id in vote_status:
+                status = vote_status[similar.similar_movie_id]
+            # status: -1 for not similar, 0 for skip, 1 for similar, 2 for not yet voted
             record = {"id": similar_movie.id, "poster": "/static/posters/" + str(similar_movie.movielens_id) + ".jpg",
-                      "plot": similar_movie.plot, "title": similar_movie.title, "year": similar_movie.year}
+                      "plot": similar_movie.plot, "title": similar_movie.title, "year": similar_movie.year,
+                      "status": status}
             movie_list.append(record)
     return JsonResponse(dict(data=movie_list))
 
@@ -348,8 +355,14 @@ def user_vote(request):
         raise Http404
     if not request.POST["movie1_id"] or not request.POST["movie2_id"] or not request.POST["action"]:
         return JsonResponse(dict(error="wrong format"))
-    vote = UserVote(user=request.user, movie1_id=int(request.POST["movie1_id"]),
-                    movie2_id=int(request.POST["movie2_id"]), action=int(request.POST["action"]))
+    vote_set = UserVote.objects.filter(user=request.user, movie1_id=int(request.POST["movie1_id"]),
+                                       movie2_id=int(request.POST["movie2_id"]))
+    if vote_set:
+        vote = vote_set[0]
+    else:
+        vote = UserVote(user=request.user, movie1_id=int(request.POST["movie1_id"]),
+                        movie2_id=int(request.POST["movie2_id"]))
+    vote.action = int(request.POST["action"])
     vote.save()
     return JsonResponse(dict(success=True))
 
