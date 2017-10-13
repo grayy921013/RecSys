@@ -115,6 +115,16 @@ class UserVote(models.Model):
     movie1 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie1")
     movie2 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="movie2")
     action = models.IntegerField() # -1 for not similar, 0 for skip, 1 for similar
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (('user', 'movie1', 'movie2'),)
+
+
+class SearchAction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    keyword = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 
