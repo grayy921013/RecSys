@@ -139,6 +139,11 @@ class SimilarMovie(models.Model):
     rank = models.IntegerField() # this may be needed
     algorithm = models.IntegerField() # 0 for tfitf, 1 for bm25, 2 for jaccard
 
+class VotedMovie(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="voted_movie")
+    finished = models.BooleanField()
+    updated_at = models.DateTimeField(auto_now=True)
 # Temporary Tables #
 
 # we define id1 as the smaller id

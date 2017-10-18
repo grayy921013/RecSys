@@ -57,28 +57,21 @@
                 <h4>Unfinished Movies: </h4>
                 <div class="horizontal-movie-list">
                     {% load static %}
-                    {% for i in "x"|rjust:"5" %}
+                    {% for movie in voting_movies %}
                         <div class="movie-item">
                             <div class="movie-poster-div">
-                                <a>
-                                    <img src="{% static 'images/100008.jpg' %}"
+                            {% with id=movie.movielens_id|stringformat:"i" %}
+                                <a href="{% url 'label' movie.id %}">
+                                    <img src="
+
+                                            {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                          alt="Mountain View"
                                          name="movie-poster"
                                          class="resize img-responsive centerBlock">
                                 </a>
-                            </div>
-                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                            {% endwith %}
                         </div>
-                        <div class="movie-item">
-                            <div class="movie-poster-div">
-                                <a>
-                                    <img src="{% static 'images/608.jpg' %}"
-                                         alt="Mountain View"
-                                         name="movie-poster"
-                                         class="resize img-responsive centerBlock">
-                                </a>
-                            </div>
-                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                            <div class="movie-title" id="title1682">{{ movie.title }} ({{ movie.year }})</div>
                         </div>
                     {% endfor %}
                 </div>
@@ -87,28 +80,21 @@
                 <h4>Finished Movies: </h4>
                 <div class="horizontal-movie-list">
                     {% load static %}
-                    {% for i in "x"|rjust:"5" %}
+                    {% for movie in finished_movies %}
                         <div class="movie-item">
                             <div class="movie-poster-div">
-                                <a>
-                                    <img src="{% static 'images/100008.jpg' %}"
+                            {% with id=movie.movielens_id|stringformat:"i" %}
+                                <a href="{% url 'label' movie.id %}">
+                                    <img src="
+
+                                            {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                          alt="Mountain View"
                                          name="movie-poster"
                                          class="resize img-responsive centerBlock">
                                 </a>
-                            </div>
-                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                            {% endwith %}
                         </div>
-                        <div class="movie-item">
-                            <div class="movie-poster-div">
-                                <a>
-                                    <img src="{% static 'images/608.jpg' %}"
-                                         alt="Mountain View"
-                                         name="movie-poster"
-                                         class="resize img-responsive centerBlock">
-                                </a>
-                            </div>
-                            <div class="movie-title" id="title1682">Sample Resize Movie</div>
+                            <div class="movie-title" id="title1682">{{ movie.title }} ({{ movie.year }})</div>
                         </div>
                     {% endfor %}
                 </div>

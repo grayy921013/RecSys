@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction
+from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction, VotedMovie
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -300,10 +300,16 @@ def profile(request, id):
         current_user = User.objects.get(id=id)
         num_labels = UserVote.objects.filter(user=current_user).count()
         num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
+        voting_list = VotedMovie.objects.filter(user=current_user, finished=False)
+        voting_movies = Movie.objects.filter(pk__in=voting_list.values('movie_id'))
+        finished_list = VotedMovie.objects.filter(user=current_user, finished=True)
+        finished_movies = Movie.objects.filter(pk__in=finished_list.values('movie_id'))
         context = {
             'current_user': current_user,
             'num_labels': num_labels,
-            'num_movies': num_movies
+            'num_movies': num_movies,
+            'voting_movies': voting_movies,
+            'finished_movies': finished_movies,
         }
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:
@@ -364,6 +370,26 @@ def user_vote(request):
                         movie2_id=int(request.POST["movie2_id"]))
     vote.action = int(request.POST["action"])
     vote.save()
+
+    movie_id = int(request.POST["movie1_id"])
+    similar_movies = SimilarMovie.objects.filter(movie_id=movie_id)
+    voted_list = UserVote.objects.filter(user=request.user, movie1_id=movie_id)
+    voted_ids = set()
+    all_voted = True
+    for voted in voted_list:
+        voted_ids.add(voted.movie2_id)
+    for similar_movie in similar_movies:
+        if similar_movie.similar_movie_id not in voted_ids:
+            all_voted = False
+            break
+
+    voted_movie_set = VotedMovie.objects.filter(user=request.user, movie_id=movie_id)
+    if not voted_movie_set:
+        voted_movie = VotedMovie(user=request.user, movie_id=movie_id)
+    else:
+        voted_movie = voted_movie_set[0]
+    voted_movie.finished = all_voted
+    voted_movie.save()
     return JsonResponse(dict(success=True))
 
 
