@@ -59,6 +59,10 @@
                 </div>
                 <div class="movie-title" id="title1682">{{ movie.title }} ({{ movie.year }})</div>
             </div>
+        {% empty %}
+            <h3>
+            No result found
+            </h3>
         {% endfor %}
         <div id="wrap"></div>
         <br>
