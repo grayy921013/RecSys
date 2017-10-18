@@ -54,21 +54,6 @@
             <div class="movie-info">
                 <ul id="movie-info-list">
                     <li>
-                        <b>Genre:</b>
-                        {% for genre in movie.genres.all %}
-                            {{ genre.name }}
-                        {% empty %}
-                            N/A
-                        {% endfor %}
-                    </li>
-                    <li>
-                        <b>Director:</b> {{ movie.director }}
-                    </li>
-                    <li>
-                        <b>Cast:</b> {{ movie.cast }}
-                    </li>
-                    <br>
-                    <li>
                         <b>Plot:</b> {{ movie.plot }}
                     </li>
                 </ul>
