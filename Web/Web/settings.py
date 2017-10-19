@@ -129,7 +129,7 @@ STATIC_ROOT = "/home/caleb/RecSys/Web/static/"
 
 # Add static folder to STATIC_DIRS
 STATICFILES_DIRS = [
-os.path.join(BASE_DIR, "static"),
+# os.path.join(BASE_DIR, "static"),
 ]
 
 LOGIN_REDIRECT_URL = '/'
