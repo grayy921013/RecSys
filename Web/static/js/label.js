@@ -67,9 +67,6 @@ $(document).ready(function () {
     var refreshMovie = function (movie_id) {
         for (var i = 0; i < ui_movie_list.length; i++) {
             var uiHolder = ui_movie_list[i];
-            var uiTitle = $($(uiHolder).find(".similar-title")).find("b");
-            var uiPopoverData = $(uiHolder).find(".popoverData");
-            var uiImage = $(uiPopoverData).find("img");
             var uiButtonHolder = $(uiHolder).find(".label-bar");
             var uiButtonNo = $(uiButtonHolder).find(".btn-no");
             var uiButtonSkip = $(uiButtonHolder).find(".btn-skip");
@@ -114,8 +111,8 @@ $(document).ready(function () {
         for (var i = 0; i < ui_movie_list.length; i++) {
             var uiHolder = ui_movie_list[i];
             var uiTitle = $($(uiHolder).find(".similar-title")).find("b");
-            var uiPopoverData = $(uiHolder).find(".popoverData");
-            var uiImage = $(uiPopoverData).find("img");
+            var uiPopoverData = $(uiHolder).find(".movie-hover-text");
+            var uiImage = $(uiHolder).find("img");
             var uiButtonHolder = $(uiHolder).find(".label-bar");
             var uiButtonNo = $(uiButtonHolder).find(".btn-no");
             var uiButtonSkip = $(uiButtonHolder).find(".btn-skip");
@@ -131,9 +128,9 @@ $(document).ready(function () {
 
                 uiTitle.text(movie.title + " (" + movie.year + ")");
                 if (movie.plot) {
-                    uiPopoverData.attr("data-content", movie.plot);
+                    uiPopoverData.text(movie.plot)
                 } else {
-                    uiPopoverData.attr("data-content", "No plot available");
+                    uiPopoverData.text("No plot available");
                 }
                 uiImage.attr("src", movie.poster);
 
