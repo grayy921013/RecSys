@@ -300,6 +300,11 @@ def profile(request, id):
         current_user = User.objects.get(id=id)
         num_labels = UserVote.objects.filter(user=current_user).count()
         num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
+        # for badging layout
+        top_percent = 5
+        num_level = 1 + (num_movies//10)
+        badge_level = "glyphicon-knight"
+
         voting_list = VotedMovie.objects.filter(user=current_user, finished=False)
         voting_movies = Movie.objects.filter(pk__in=voting_list.values('movie_id'))
         finished_list = VotedMovie.objects.filter(user=current_user, finished=True)
@@ -310,6 +315,9 @@ def profile(request, id):
             'num_movies': num_movies,
             'voting_movies': voting_movies,
             'finished_movies': finished_movies,
+            'top_percent': top_percent,
+            'num_level': num_level,
+            'badge_level': badge_level,
         }
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:
@@ -391,8 +399,6 @@ def user_vote(request):
     voted_movie.finished = all_voted
     voted_movie.save()
     return JsonResponse(dict(success=True))
-
-
 
 @login_required
 def userlogout(request):

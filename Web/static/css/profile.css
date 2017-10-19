@@ -3,8 +3,8 @@ body {
   padding-bottom: 40px;
   background-color: #eee;
   /*background-image:url(../images/background.jpg);*/
-  background-size: cover;  
-  height:auto; 
+  background-size: cover;
+  height:auto;
   opacity:0.92;
 }
 
@@ -118,39 +118,52 @@ body {
 }
 
 .img-circle{
-  margin-top:10%; 
+  margin-top:10%;
   margin-right:10px;
 }
 
 .btn-icon-left{
-  background-color:transparent; 
-  border:none; 
-  outline:none; 
-  margin-top:10%; 
+  background-color:transparent;
+  border:none;
+  outline:none;
+  margin-top:10%;
   margin-right:2px;
 }
 
 .btn-icon-mid{
-  background-color:transparent; 
-  border:none; 
-  outline:none; 
-  margin-top:10%; 
+  background-color:transparent;
+  border:none;
+  outline:none;
+  margin-top:10%;
   margin-right:6px;
 }
 
 .btn-icon-right{
-  background-color:transparent; 
-  border:none; 
-  outline:none; 
-  margin-top:6%; 
+  background-color:transparent;
+  border:none;
+  outline:none;
+  margin-top:6%;
   margin-right:30px;
 }
 
 .nav-glyphicon{
-  color:white; 
+  color:white;
   font-size:2em;
 }
 
 log.container{
    background-image:url("https://static.pexels.com/photos/26135/pexels-photo-26135.jpg");
+}
+
+.profile-metrics-list{
+    list-style: none;
+}
+
+.profile-level {
+    color: rgba(26, 112, 185, 0.9);
+    font-size: 1.1em;
+}
+
+.profile-badge {
+    margin-left: 5px;
 }

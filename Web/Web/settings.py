@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mainsite',
     'django.contrib.postgres',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

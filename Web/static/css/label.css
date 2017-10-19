@@ -12,6 +12,10 @@ button:hover {
     cursor: hand;
 }
 
+.btn-label:hover {
+    color: #fbc402;
+}
+
 .navbar-nav > li > a {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
