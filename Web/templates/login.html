@@ -19,7 +19,7 @@
 
 {% block content %}
     <div class="container-fluid">
-        <div class="login-container">
+        <div class="container login-container">
             <form class="form-signin" method="post" action="{% url 'userlogin' %}">
                 {% csrf_token %}
                 <h2 class="form-signin-heading">Hi.</h2>
@@ -37,12 +37,13 @@
                     <label>
                         <input type="checkbox" value="remember-me"> Remember me
                     </label>
+                    <a href="{% url 'resetpwd' %}" class="btn btn-reset">Reset password</a>
                 </div>
                 <ul>
                     <button type="submit" class="btn btn-login btn-primary">Log in</button>
                     <a href="{% url 'register' %}" class="btn btn-signup btn-primary">Sign up</a>
                 </ul>
-                    <a href="{% url 'resetpwd' %}" class="btn">Reset password</a>
+
                 <input type="hidden" name="next" value="{{ next }}"/>
             </form>
         </div>
