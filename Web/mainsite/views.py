@@ -43,6 +43,9 @@ def get_random_movie(user_id):
         if not movie_qs.exists():
             continue
         movie = movie_qs[0]
+        # Filter out movies that has been voted by more than four users.
+        if UserVote.objects.filter(movie1=movie).distinct('user').count() > 4:
+            continue
         if movie.id in movie_id_set:
             continue
         movie_id_set.add(movie.id)
