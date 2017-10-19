@@ -1,86 +1,109 @@
 body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #eee;
-  background-image:url(../images/movie_night.jpg);
-  background-size: cover;
-  height:680px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+    background-image: url(../images/movie_night.jpg);
+    background-size: cover;
+    height: 680px;
 }
 
-.btn-login{
-  background: none;
-  padding: 6px 8%;
-  border: 2px solid #337ab7;
-  color: #337ab7;
-  margin-left: -6%;
+.btn-login {
+    background: none;
+    padding: 6px 8%;
+    border: 2px solid #337ab7;
+    color: #337ab7;
 }
 
-.btn-signup{
-  background: #337ab7;
-  padding: 6px 5%;
-  border: 2px solid #337ab7;
-  color: white;
-  margin-left: 15%;
+.btn-signup {
+    background: #337ab7;
+    padding: 6px 5%;
+    border: 2px solid #337ab7;
+    color: white;
+    margin-left: 20%;
 }
 
-.glyphicon-bell{
-  color:white !important; 
-  font-size:2em !important;
+.btn-reset{
+    position: relative;
+    margin-left: 15%;
 }
 
-.login-container{
-  border-radius: 6px;
-  overflow:hidden;
-  position:absolute;
-  background-color: white;
-  z-index:1;
-  opacity: 0.94;
-  background-size:cover;
-  padding-left: 2%;
-  padding-right: 2%;
-  min-height:300px;
-  width:40%;
-  margin-left:30%;
-  margin-right: 30%;
-  margin-top: 15%;
-  margin-bottom: 15%;
+.glyphicon-bell {
+    color: white !important;
+    font-size: 2em !important;
+}
+
+.login-container {
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    background-color: white;
+    z-index: 1;
+    opacity: 0.94;
+    background-size: cover;
+    padding-left: 2%;
+    padding-right: 2%;
+    min-height: 300px;
+    width: 40%;
+    margin-left: 30%;
+    margin-top: 15%;
+}
+
+@media (max-width: 700px) {
+    .login-container {
+        border-radius: 6px;
+        overflow: hidden;
+        position: relative;
+        background-color: white;
+        z-index: 1;
+        opacity: 0.94;
+        background-size: cover;
+        width: auto;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
 }
 
 .form-signin {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
 }
+
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
+
 .form-signin .checkbox {
-  font-weight: normal;
+    font-weight: normal;
 }
+
 .form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
 }
+
 .form-signin .form-control:focus {
-  z-index: 2;
+    z-index: 2;
 }
+
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
 }
+
 .form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .navbar-login {
-  margin-right: 5px !important;
+    margin-right: 5px !important;
 }

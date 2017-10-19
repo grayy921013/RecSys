@@ -8,6 +8,15 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover({
+                placement : 'right',
+                container: 'body',
+                trigger : 'hover'
+            });
+        });
+    </script>
 
 {% endblock %}
 
@@ -45,10 +54,23 @@
             <div class="profile-username">
                 <label>{{ current_user.username }}</label>
             </div>
+            {% load mathfilters %}
             <div class="profile-content">
-                <label>Labels: {{ num_labels }}</label>
-                <br>
-                <label>Movies: {{ num_movies }}</label>
+                <ul class="profile-metrics-list" style="list-style: none;">
+                    <li class="profile-level"
+                        data-toggle="popover"
+                        title="Just 3 Movies away to next Level"
+                        data-content="Congratulations!
+                        You submitted more labels than {{ 100|sub:top_percent }}% users : )">
+                        <label>Level - {{ num_level }}</label>
+                        <img class="profile-badge glyphicon {{ badge_level }}" src="">
+                    </li>
+                    <br>
+                    <li>
+                        <label>Labels: {{ num_labels }}</label>
+                        <label>Movies: {{ num_movies }}</label>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- User finished and unfinished work -->
