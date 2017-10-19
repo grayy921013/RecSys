@@ -328,7 +328,7 @@ def search(request):
     if not 'keyword' in request.POST or not request.POST['keyword']:
         return render(request, "home.html", {})
     keyword = request.POST['keyword']
-    movie_list = Movie.objects.filter(title__search=keyword)
+    movie_list = Movie.objects.filter(title__icontains=keyword).order_by('-popularity')
     context = {
         'movie_list': movie_list,
         'title': 'Search'
