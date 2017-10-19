@@ -36,12 +36,32 @@ var setupCSRF = function () {
 $(document).ready(function () {
     setupCSRF();
 
-    $(".popoverData").popover();
-
     var ui_movie_list = $(".movie-item");
     var target_movie_id = $(".target-movie-holder").attr('id');
+    var label_progress_text = $("#label-progress")
+    var label_progress_bar = $("#label-progress-bar")
 
     var movie_list = [];
+
+    var refreshLabelProgress = function (movie_list) {
+        var total = 0;
+        var labeled = 0;
+        for (var i = 0; i < movie_list.length; i++) {
+            var movie = movie_list[i];
+            total += 1;
+            if (movie.status != 2) {
+                labeled += 1;
+            }
+        }
+
+        label_progress_text.text("Progress: " + labeled + "/" + total);
+        var percent = 100;
+        if (total > 0) {
+            percent = labeled / total * 100;
+        }
+        label_progress_bar.attr('style', "width: " + percent + "%");
+    }
+
 
     var bindClickListener = function (movie_id, action) {
         console.log("click " + action + " movie Id " + movie_id);
@@ -59,6 +79,7 @@ $(document).ready(function () {
                     if (movie_list[i].id == movie_id) {
                         movie_list[i].status = action;
                         refreshMovie(movie_id)
+                        refreshLabelProgress(movie_list);
                     }
                 }
             });
@@ -199,6 +220,7 @@ $(document).ready(function () {
             console.log(data);
             movie_list = data.data;
             bindMovie(data.data);
+            refreshLabelProgress(movie_list);
         });
     };
 

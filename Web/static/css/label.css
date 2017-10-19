@@ -152,6 +152,12 @@ button:hover {
     font-size: 12px;
 }
 
+#container-progress{
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+
 .animation-target {
     -webkit-animation: animation 1000ms linear both;
     animation: animation 1000ms linear both;
