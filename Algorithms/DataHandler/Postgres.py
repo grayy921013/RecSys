@@ -2,19 +2,23 @@ import os
 import sys
 import django
 import logging
+# from io import BytesIO as StringIO # Python 2.7
 from io import StringIO
 from progressbar import ProgressBar, Bar, Percentage, Timer
 from time import time, sleep
+
+sys.path.append('../')
+sys.path.append('../Web')
+os.environ['DJANGO_SETTINGS_MODULE']='Web.settings'
+django.setup()
+
+
 from django.db import connection
 from django.db.models import Aggregate, CharField, Value as V
 from django.db.models.functions import Concat
 from DataHandler.Base import DataHandler
 from Util import Field
 
-sys.path.append('../')
-sys.path.append('../Web')
-os.environ['DJANGO_SETTINGS_MODULE']='Web.settings'
-django.setup()
 
 from django.contrib.postgres.aggregates.general import StringAgg
 from mainsite.models import Movie, \
@@ -188,7 +192,8 @@ class PostgresDataHandler(DataHandler):
 
         else:
             field_name = field.name.lower()
-
+            if field_name == 'full_plot':
+                field_name = 'tags'
             if len(movielens_ids):
                 cursor = Movie.objects.filter(movielens_id__in=movielens_ids).values_list('id', field_name)
             else:
@@ -225,7 +230,7 @@ class PostgresDataHandler(DataHandler):
 
             t = time()
             solution = []
-            fields_str = ','.join(map(lambda x: 'coalesce(%s,0)' % x, features))
+            fields_str = ','.join(map(lambda x: 'coalesce(s.%s,0)' % x, features))
             if flag_db_ids:
                 #TODO: Analyse if this is the best place to do this
                 #      or if it should be in a different function
@@ -332,3 +337,30 @@ class PostgresDataHandler(DataHandler):
             counter += 1
             bar.update(counter)
         bar.finish()
+
+
+    def save_als(self, data):
+        t = time()
+        solution = []
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("DROP TABLE mainsite_similarityals;")
+                # solution = cursor.fetchall()
+                # print solution
+            except Exception as e:
+                print(e)
+            cursor.execute("""CREATE TABLE public.mainsite_similarityals
+                            (
+                                id1_id integer,
+                                id2_id integer,
+                                als_cosine double precision
+                            );""")
+            
+            # solution = cursor.fetchall()
+            # print solution
+
+        logger.debug('Time Retrieving Features: %f', time()-t)
+        self.save_similarity_batch2(data,
+            'mainsite_similarityals',
+            1000)
+        return solution

@@ -8,54 +8,26 @@ from time import time
 from DataHandler import PostgresDataHandler
 from .enums import Field
 from mainsite.models import SimilarityGenre
-from CB import CBRecommender, CBAlgorithmTMDB, CBAlgorithmTFIDF, CBAlgorithmBM25, CBAlgorithmJACCARD, CBAlgorithmTMDB, CBAlgorithmTFIDF2
+from CB import CBRecommender, CBAlgorithmTMDB, CBAlgorithmTFIDF, CBAlgorithmBM25, CBAlgorithmJACCARD, CBAlgorithmTFIDF2
 
 
 logger = logging.getLogger('root')
 
 
-
-def initializer(field_name, similarity_class, algorithms):
-    global globalDict
-    globalDict = {}
-    globalDict['field_name'] = field_name
-    globalDict['SimilarityClass'] = similarity_class
-    globalDict['algorithms'] = algorithms
-    
-def parse(row):
-    global globalDict
-    field_name = globalDict['field_name']
-    SimilarityClass = globalDict['SimilarityClass']
-    algorithms = globalDict['algorithms']
-
-    id1 = str(int(row[0]))
-    id2 = str(int(row[1]))
-
-    similarityItem = SimilarityClass(id1_id=id1, id2_id=id2)
-
-    i = 2
-    for algorithm in algorithms:
-        algo = algorithm.__name__.lower()
-        db_fieldname = ("%s%s" % (field_name, algo))
-        setattr(similarityItem, db_fieldname, row[i])
-        i += 1
-
-    return similarityItem
-
 def main(movies_ids_tagged, fields, algorithms, k):
     if k is None:
-        TOP_K = 1e5
-    else:
         TOP_K = 100
+    else:
+        TOP_K = k
 
     # Get the recommender
     rec = CBRecommender()
     dataset = PostgresDataHandler()
     if algorithms is None:
         algorithms = [
-            CBAlgorithmJACCARD(), 
-            CBAlgorithmTFIDF(), 
-            CBAlgorithmBM25(),
+            CBAlgorithmJACCARD, 
+            CBAlgorithmTFIDF, 
+            CBAlgorithmBM25,
         ]
 
     # Get the connection with the 'database'
@@ -91,11 +63,14 @@ def main(movies_ids_tagged, fields, algorithms, k):
         dataset.set_field_algo(field, CBAlgorithmJACCARD())
 
         # For each algorithm
-        for algo in [CBAlgorithmJACCARD(), CBAlgorithmTFIDF(), CBAlgorithmBM25()]:
+        algos = list(map(lambda x: x(), algorithms))
+        for algo in algos:
+            print(algo)
             algo_idx += 1
             dataset.set_field_algo(field, algo)
 
             # Train the recommender using the given algorithm and dataset
+            
             result = rec.train(data, algo)
             
             # Extract the data from the sparse matrix
@@ -103,10 +78,12 @@ def main(movies_ids_tagged, fields, algorithms, k):
             rows_movielens = algo.ids[rows]
             cols_movielens = algo.ids[cols]
             scores = result.data
-            # logger.info('%s: %d relations found', algo.__name__, len(scores))
 
-            p = None
-            db_fieldname = field.name+'_'+algo.__name__
+            # Filter Out 
+            mask = rows_movielens != cols_movielens
+            rows_movielens = rows_movielens[mask]
+            cols_movielens = cols_movielens[mask]
+            scores = scores[mask]
 
             # Only save the ids of the movies for the first
             # algorithm, because next one will have the same id
@@ -151,7 +128,7 @@ def main(movies_ids_tagged, fields, algorithms, k):
             # Look for the score for each algorithms
             # the scores were previously saved in a temporary file
             for i in range(len(algorithms)):
-                algo = algorithms[i]
+                algo = algorithms[i]()
                 logger.info('Merge: algorithm %s', algo.__name__)
                 
                 # If it's the first algorithm we will use him as standard to obtain min and max
@@ -203,7 +180,6 @@ def main(movies_ids_tagged, fields, algorithms, k):
 
             # Save to Database
             t_db = time()
-            # initializer(field.name.lower() + '_', dataset.SimilarityClass, algorithms)
             table_name = 'mainsite_similarity%s'% field.name
             dataset.save_similarity_batch2(p_prev, table_name, 1000)
             logger.info('Duration DB: %f', time()-t_db)

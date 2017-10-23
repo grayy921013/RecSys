@@ -28,6 +28,7 @@ from Util import Field
 from ML.Trainer import Trainer
 from progressbar import ProgressBar, Bar, Percentage, Timer
 from sklearn.externals import joblib
+from Util.populate_similarityals import als
 
 features_field = ['title_tfitf',
         'title_bm25',
@@ -137,6 +138,8 @@ if __name__ == "__main__":
         test(filepath)
     elif command == 'train':
         train(filepath)
+    elif command == 'als':
+        als()
     elif command == 'p' or command == 'populate':
         populate_movie_pairs(filepath)
     else:
