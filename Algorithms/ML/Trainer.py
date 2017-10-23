@@ -232,9 +232,9 @@ class Trainer(object):
         lista = list(itertools.product(movie1_ids, movie2_ids))
         logger.debug('Predicting Combinations: %d', len(lista))
 
-        return self.predict_from_pairs(lista, k, standardized_flag)
+        return self.predict_from_pairs(np.array(lista), k, standardized_flag, remove=True)
 
-    def predict_from_pairs(self, lista, k, standardized_flag):
+    def predict_from_pairs(self, lista, k, standardized_flag, remove=False):
         '''
         1- Given an array of movielens ids, and user ratings, look for each combination of the ids, with the ids
         in the user ratings.
@@ -249,7 +249,10 @@ class Trainer(object):
         '''
         
         # Look for the features for this pairs
-        x_test = self.append_features2(lista, standardized_flag)
+        if remove:
+            x_test = self.append_features(lista, standardized_flag)
+        else:
+            x_test = self.append_features2(lista, standardized_flag)
         logger.debug('Predict Features')
         logger.debug(x_test.head())
 
@@ -372,8 +375,12 @@ class Trainer(object):
         # TODO: Remove this line
         test = pandas.merge(x_movie_pairs_test, top_movie_pairs, how='inner')
         if test.shape[0] == 0:
-            logger.debug(x_movie_pairs_test.head())
+            logger.error('!!!Could not find any related movie!!!')
+            logger.debug('test data %s', x_movie_pairs_test.dtypes)
+            logger.debug(x_movie_pairs_test.head(20))
+            logger.debug('predicted data %s', top_movie_pairs.dtypes)
             logger.debug(top_movie_pairs.head())
+            logger.debug(top_movie_pairs[top_movie_pairs.movieid1 == 81834].values)
             return None
 
         y_predicted = x_movie_pairs_test_scored['Score'].notnull().values
