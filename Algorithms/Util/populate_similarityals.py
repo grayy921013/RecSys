@@ -14,9 +14,9 @@ logger.setLevel(logging.DEBUG)
 def als(batch_size=2500, cap=0.5, k=100):
     db_fieldname = 'als_cosine'
     generate_als()
+    return
     transform()
     matrix = genfromtxt('model_movies.csv', delimiter=',')
-    print 'Matrix Read', matrix.shape
     data = cosine_similarity(matrix, batch_size, cap, k)
     data = pandas.read_pickle(db_fieldname)
     dataset = PostgresDataHandler()
@@ -29,12 +29,11 @@ def generate_als():
 
     if os.name == 'nt':
         raise Exception('There is no a MyMediaLite-3.11 executable for windows')
-        # executable = '.\\CF\\MyMediaLite-3.11\\bin\\rating_prediction '
     else:
         executable = './CF/MyMediaLite-3.11/bin/rating_prediction '
 
     command = ''' %s
-        --training-file=ratings.csv 
+        --training-file=./Algorithms/Data/ml-20m/ratings.csv 
         --recommender=MatrixFactorization 
         --test-ratio=0.1  
         --save-user-mapping=user_mapping.txt 
@@ -67,7 +66,6 @@ def cosine_similarity(matrix, batch_size, cap, k):
         frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
     result = pandas.concat(frames, axis=0)
     result.to_pickle(db_fieldname)
-    print result.shape
     return result
     
 def cosine_similarity_batch(m1, m2, cap, k, db_fieldname):
