@@ -188,7 +188,8 @@ class PostgresDataHandler(DataHandler):
 
         else:
             field_name = field.name.lower()
-
+            if field_name == 'full_plot':
+                field_name = 'tags'
             if len(movielens_ids):
                 cursor = Movie.objects.filter(movielens_id__in=movielens_ids).values_list('id', field_name)
             else:
