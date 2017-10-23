@@ -13,7 +13,7 @@ logger.setLevel(logging.DEBUG)
 
 def als(batch_size=2500, cap=0.5, k=100):
     db_fieldname = 'als_cosine'
-    # generate_als()
+    generate_als()
     transform()
     matrix = genfromtxt('model_movies.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
@@ -31,13 +31,7 @@ def generate_als():
     else:
         executable = './CF/MyMediaLite-3.11/bin/rating_prediction '
 
-    command = ''' %s
-        --training-file=./Algorithms/Data/ml-20m/ratings.csv 
-        --recommender=MatrixFactorization 
-        --test-ratio=0.1  
-        --save-user-mapping=user_mapping.txt 
-        --save-item-mapping=item_mapping.txt 
-        --save-model=model.txt''' % executable
+    command = '''%s --training-file=./Algorithms/Data/ml-20m/ratings.csv --recommender=MatrixFactorization --test-ratio=0.1 --save-model=model.txt --no-id-mapping''' % executable
     output = os.system(command)
     print(output)
 
