@@ -98,8 +98,8 @@ BEGIN
     LEFT OUTER JOIN mainsite_SimilarityCountry      as k on a.id1_id = k.id1_id and a.id2_id = k.id2_id
     LEFT OUTER JOIN mainsite_SimilarityAwards       as l on a.id1_id = l.id1_id and a.id2_id = l.id2_id
     LEFT OUTER JOIN mainsite_SimilarityLast_updated as m on a.id1_id = m.id1_id and a.id2_id = m.id2_id
-    LEFT OUTER JOIN SimilarityFiltered_plot         as n on a.id1_id = n.id1_id and a.id2_id = n.id2_id;
-    LEFT OUTER JOIN mainsite_SimilarityFull_plot    as o on a.id1_id = o.id1_id and a.id2_id = o.id2_id;
+    LEFT OUTER JOIN SimilarityFiltered_plot         as n on a.id1_id = n.id1_id and a.id2_id = n.id2_id
+    LEFT OUTER JOIN mainsite_SimilarityFull_plot    as o on a.id1_id = o.id1_id and a.id2_id = o.id2_id
     LEFT OUTER JOIN mainsite_Similarityals          as p on a.id1_id = p.id1_id and a.id2_id = p.id2_id;
 
     -- Insert data into legit table
