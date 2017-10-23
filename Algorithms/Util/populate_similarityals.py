@@ -31,7 +31,7 @@ def generate_als():
     else:
         executable = './CF/MyMediaLite-3.11/bin/rating_prediction '
 
-    command = '''%s --training-file=./Algorithms/Data/ml-20m/ratings.csv --recommender=MatrixFactorization --test-ratio=0.1 --save-model=model.txt --no-id-mapping''' % executable
+    command = '''%s --training-file=./Data/ml-20m/ratings.csv --recommender=MatrixFactorization --test-ratio=0.1 --save-model=model.txt --no-id-mapping''' % executable
     output = os.system(command)
     print(output)
 
