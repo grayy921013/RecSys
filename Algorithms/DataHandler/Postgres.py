@@ -337,3 +337,30 @@ class PostgresDataHandler(DataHandler):
             counter += 1
             bar.update(counter)
         bar.finish()
+
+
+    def save_als(self, data):
+        t = time()
+        solution = []
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("DROP TABLE mainsite_similarityals;")
+                # solution = cursor.fetchall()
+                # print solution
+            except Exception as e:
+                print(e)
+            cursor.execute("""CREATE TABLE public.mainsite_similarityals
+                            (
+                                id1_id integer,
+                                id2_id integer,
+                                als_cosine double precision
+                            );""")
+            
+            # solution = cursor.fetchall()
+            # print solution
+
+        logger.debug('Time Retrieving Features: %f', time()-t)
+        self.save_similarity_batch2(data,
+            'mainsite_similarityals',
+            1000)
+        return solution

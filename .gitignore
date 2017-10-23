@@ -71,3 +71,7 @@ Web/myprojectenv/
 Algorithms - Copy/
 Algorithms/.ipynb_checkpoints/
 *.ipynb
+Algorithms/als_cosine_*
+Algorithms/als_cosine
+Algorithms/model.txt
+Algorithms/model_movies.csv
