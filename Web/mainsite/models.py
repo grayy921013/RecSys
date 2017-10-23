@@ -105,6 +105,7 @@ class Similarity(models.Model):
     filtered_plot_tfitf = models.FloatField(null=True)
     filtered_plot_bm25 = models.FloatField(null=True)
     filtered_plot_jaccard = models.FloatField(null=True)
+    als_cosine = models.FloatField(null=True)
 
     class Meta:
         unique_together = (('id1', 'id2'),)
