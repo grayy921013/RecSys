@@ -42,6 +42,11 @@
 {#            </div>#}
 {#            <div class="movie-title" id="title1682">Sample Resize Movie</div>#}
 {#        </div>#}
+        {% if notice %}
+            <div class="alert alert-info">
+                {{ notice }}
+            </div>
+        {% endif %}
         {% load static %}
         {% for movie in movie_list %}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
@@ -61,7 +66,7 @@
             </div>
         {% empty %}
             <h3>
-            No result found
+            {{ empty_msg }}
             </h3>
         {% endfor %}
         <div id="wrap"></div>

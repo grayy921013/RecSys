@@ -145,6 +145,10 @@ class VotedMovie(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="voted_movie")
     finished = models.BooleanField()
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class SearchStopword(models.Model):
+    word = models.CharField(max_length=255)
 # Temporary Tables #
 
 # we define id1 as the smaller id

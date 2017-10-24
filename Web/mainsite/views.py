@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
-from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction, VotedMovie
+from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction, VotedMovie,\
+    SearchStopword
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -331,10 +332,34 @@ def search(request):
     if not 'keyword' in request.POST or not request.POST['keyword']:
         return render(request, "home.html", {})
     keyword = request.POST['keyword']
-    movie_list = Movie.objects.filter(title__icontains=keyword).order_by('-popularity')
+    keyword_list = keyword.strip().split(" ")
+    query_set = Movie.objects
+    stopword_set = set()
+    stopwords = SearchStopword.objects.all()
+    for stopword in stopwords:
+        stopword_set.add(stopword.word)
+    filtered_set = set()
+    query_valid = False
+    for word in keyword_list:
+        if word not in stopword_set:
+            query_set = query_set.filter(title__icontains=word)
+            query_valid = True
+        else:
+            filtered_set.add(word)
+    if query_valid:
+        movie_list = query_set.order_by('-popularity')[:30]
+    else:
+        movie_list = []
+    notice = ""
+    if filtered_set:
+        for filtered in filtered_set:
+            notice += '"' + filtered + '"' + ","
+            notice = notice[:-1] + (" is filtered." if len(filtered_set) == 1 else "are filtered.")
     context = {
         'movie_list': movie_list,
-        'title': 'Search'
+        'title': 'Search',
+        'empty_msg': "No result found! ",
+        'notice': notice
     }
     SearchAction.objects.create(user=request.user, keyword=keyword)
     return render(request, 'home.html', context)
