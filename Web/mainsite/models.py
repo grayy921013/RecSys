@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
 class Movie(models.Model):
     omdb_id = models.IntegerField(unique=True, db_index=True)
     imdb_id = models.IntegerField(unique=True, db_index=True)
@@ -38,6 +41,9 @@ class Movie(models.Model):
     filtered_plot = models.CharField(max_length=2000,null=True)
     tags = models.TextField(default="")
 
+    def __str__(self):
+        return self.title + " (" + str(self.year) + ")"
+
 
 class Userinfo(models.Model):
     user = models.OneToOneField(
@@ -52,7 +58,7 @@ class Userinfo(models.Model):
     security_question = models.CharField(max_length=100, default='', blank=True)
     security_answer = models.CharField(max_length=100, default='', blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user
 
 
@@ -110,6 +116,9 @@ class Similarity(models.Model):
     class Meta:
         unique_together = (('id1', 'id2'),)
 
+    def __str__(self):
+        return "Similarity between " + str(self.id1) + " and " + str(self.id2)
+
 
 class UserVote(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -121,11 +130,17 @@ class UserVote(models.Model):
     class Meta:
         unique_together = (('user', 'movie1', 'movie2'),)
 
+    def __str__(self):
+        return str(self.user) + " label of " + str(self.movie1) + " and " + str(self.movie2)
+
 
 class SearchAction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     keyword = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "Search " + self.keyword
 
 
 
@@ -140,15 +155,25 @@ class SimilarMovie(models.Model):
     rank = models.IntegerField() # this may be needed
     algorithm = models.IntegerField() # 0 for tfitf, 1 for bm25, 2 for jaccard
 
+    def __str__(self):
+        return str(self.movie) + " and " + str(self.similar_movie)
+
 class VotedMovie(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name="voted_movie")
     finished = models.BooleanField()
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return str(self.user) + " labels on " + str(self.movie)
+
 
 class SearchStopword(models.Model):
     word = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.word
+
 # Temporary Tables #
 
 # we define id1 as the smaller id
