@@ -1,0 +1,8 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+    <ul>
+{% for key, value in precision.items %}
+    <li>Algorithm {{key}}: {{value}}</li>
+{% endfor %}
+    </ul>
+{% endblock %}
