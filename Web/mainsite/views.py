@@ -313,10 +313,21 @@ def profile(request, id):
         current_user = User.objects.get(id=id)
         num_labels = UserVote.objects.filter(user=current_user).count()
         num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
+
         # for badging layout
         top_percent = 5
         num_level = 1 + (num_movies//10)
-        badge_level = "glyphicon-knight"
+        dist_next_level = (num_level * 10) - num_movies
+        if num_level == 1:
+            badge_level = "glyphicon-pawn"
+        elif num_level == 2:
+            badge_level = "glyphicon-knight"
+        elif num_level == 3:
+            badge_level = "glyphicon-bishop"
+        elif num_level == 3:
+            badge_level = "glyphicon-queen"
+        else:
+            badge_level = "glyphicon-king"
 
         voting_list = VotedMovie.objects.filter(user=current_user, finished=False)
         voting_movies = Movie.objects.filter(pk__in=voting_list.values('movie_id'))
@@ -331,6 +342,7 @@ def profile(request, id):
             'top_percent': top_percent,
             'num_level': num_level,
             'badge_level': badge_level,
+            'dist_next_level': dist_next_level,
         }
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:

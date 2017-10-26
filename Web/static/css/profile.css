@@ -17,7 +17,7 @@ body {
 }
 
 .movies-container{
-  padding-left: 130px !important;
+  padding-left: 10px !important;
   height: inherit !important;
 }
 
@@ -166,4 +166,5 @@ log.container{
 
 .profile-badge {
     margin-left: 5px;
+    color: #ffbd03;
 }
