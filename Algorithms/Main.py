@@ -29,7 +29,7 @@ from ML.Trainer import Trainer
 from progressbar import ProgressBar, Bar, Percentage, Timer
 from sklearn.externals import joblib
 from Util.populate_similarityals import als
-
+from Util.populate_similaritylibmf import libmf_als
 features_field = ['title_tfitf',
         'title_bm25',
         'title_jaccard',
@@ -59,8 +59,7 @@ features_field = ['title_tfitf',
         'awards_jaccard',
         'filtered_plot_tfitf',
         'filtered_plot_bm25',
-        'filtered_plot_jaccard',
-        'als_cosine']
+        'filtered_plot_jaccard']
 
 
 def test(filepath):
@@ -141,6 +140,8 @@ if __name__ == "__main__":
         train(filepath)
     elif command == 'als':
         als()
+    elif command == 'als-libmf':
+        libmf_als()
     elif command == 'p' or command == 'populate':
         populate_movie_pairs(filepath)
     else:

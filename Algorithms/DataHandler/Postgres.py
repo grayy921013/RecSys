@@ -367,6 +367,31 @@ class PostgresDataHandler(DataHandler):
             1000)
         return solution
 
+    def save_libmf(self, data):
+        t = time()
+        solution = []
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("DROP TABLE mainsite_similaritylibmf;")
+                # solution = cursor.fetchall()
+                # print solution
+            except Exception as e:
+                print(e)
+            cursor.execute("""CREATE TABLE public.mainsite_similaritylibmf
+                            (
+                                id1_id integer,
+                                id2_id integer,
+                                als_cosine double precision
+                            );""")
+
+            # solution = cursor.fetchall()
+            # print solution
+
+        logger.debug('Time Retrieving Features: %f', time() - t)
+        self.save_similarity_batch2(data,
+                                    'mainsite_similaritylibmf',
+                                    1000)
+        return solution
     def createSimilarity_Field(self,field):
 
         with connection.cursor() as cursor:
