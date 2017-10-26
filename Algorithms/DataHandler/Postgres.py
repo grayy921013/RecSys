@@ -381,7 +381,7 @@ class PostgresDataHandler(DataHandler):
                             (
                                 id1_id integer,
                                 id2_id integer,
-                                als_cosine double precision
+                                libmf_cosine double precision
                             );""")
 
             # solution = cursor.fetchall()

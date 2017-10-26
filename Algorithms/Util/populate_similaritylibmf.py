@@ -33,7 +33,7 @@ def generate_libmf_als():
     else:
         executable = './CF/libMF/mf-train-rating-predict'
 
-    command = '''%s ./Data/ml-20m/ratings.csv model.txt''' % executable
+    command = '''%s ./Data/ml-20m/ratings.csv model1.txt''' % executable
     output = os.system(command)
     print(output)
 
@@ -138,7 +138,7 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
 
 
 def libmf_transform():
-    f = open('model.txt')
+    f = open('model1.txt')
     f_movies = open('model_movies.csv', 'w')
 
     # Skip top of the model and user matrix
