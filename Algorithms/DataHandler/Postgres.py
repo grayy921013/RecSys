@@ -6,6 +6,8 @@ import logging
 from io import StringIO
 from progressbar import ProgressBar, Bar, Percentage, Timer
 from time import time, sleep
+import psycopg2
+from psycopg2.extensions import AsIs
 
 sys.path.append('../')
 sys.path.append('../Web')
@@ -364,3 +366,64 @@ class PostgresDataHandler(DataHandler):
             'mainsite_similarityals',
             1000)
         return solution
+
+    def createSimilarity_Field(self,field):
+
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""DROP TABLE mainsite_similarity%s""",AsIs(field));
+            except Exception as e:
+                print(e)
+            print("Creating Similarity Field")
+            cursor.execute("""CREATE TABLE public.mainsite_similarity%s
+                            (
+                                id1_id integer,
+                                id2_id integer,
+                                %s_tfitf double precision,
+                                %s_bm25 double precision,
+                                %s_jaccard double precision
+                            );""",(AsIs(field),AsIs(field),AsIs(field),AsIs(field)));
+
+    def addSimilarityColumn(self,field):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""ALTER TABLE mainsite_similarity ADD COLUMN %s_tfitf double precision;""", (AsIs(field),));
+
+            except Exception as e:
+                print(e)
+            try:
+                cursor.execute("""ALTER TABLE mainsite_similarity ADD COLUMN %s_bm25 double precision;""",
+                               (AsIs(field),));
+            except Exception as e:
+                print(e)
+            try:
+                cursor.execute("""ALTER TABLE mainsite_similarity ADD COLUMN %s_jaccard double precision;""",
+                               (AsIs(field),));
+            except Exception as e:
+                print(e)
+    def addMovieField(self,field,datatype):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""ALTER TABLE mainsite_movie ADD COLUMN %s %s;""",
+                               (AsIs(field),AsIs(datatype)));
+            except Exception as e:
+                print(e)
+    def createFieldTmpTable(self,field,datatype):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""CREATE TABLE public.mainsite_movie%s
+                            (
+                                %s %s,
+                                id integer
+                                
+                            );""",(AsIs(field),AsIs(field),AsIs(datatype)));
+            except Exception as e:
+                print(e)
+
+    def updateMainsiteMovieField(self,field):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""UPDATE mainsite_movie t2 SET %s = t1.%s FROM mainsite_movie%s t1 WHERE t2.id = t1.id;""",
+                               (AsIs(field),AsIs(field),AsIs(field)));
+            except Exception as e:
+                print(e)
