@@ -174,6 +174,13 @@ class SearchStopword(models.Model):
     def __str__(self):
         return self.word
 
+
+class GroundTruth(models.Model):
+    movielens_id = models.IntegerField(unique=True, db_index=True)
+
+    def __str__(self):
+        return str(self.movielens_id)
+
 # Temporary Tables #
 
 # we define id1 as the smaller id

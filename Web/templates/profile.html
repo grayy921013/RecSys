@@ -46,7 +46,7 @@
 
     <div class="container-fluid">
         <!-- User profile -->
-        <div class="col-sm-4 col-md-3 sidebar profile-container">
+        <div class="col-md-3 sidebar profile-container">
             <div class="profile-image">
                 <img src="{% static 'images/user_image.jpg' %}" class="img-rounded" alt="personal icon" width="120"
                      height="120">
@@ -59,7 +59,7 @@
                 <ul class="profile-metrics-list" style="list-style: none;">
                     <li class="profile-level"
                         data-toggle="popover"
-                        title="Just 3 Movies away to next Level"
+                        title="Just {{ dist_next_level }} Movies away to next Level"
                         data-content="Congratulations!
                         You submitted more labels than {{ 100|sub:top_percent }}% users : )">
                         <label>Level - {{ num_level }}</label>
@@ -68,13 +68,15 @@
                     <br>
                     <li>
                         <label>Labels: {{ num_labels }}</label>
+                    </li>
+                    <li>
                         <label>Movies: {{ num_movies }}</label>
                     </li>
                 </ul>
             </div>
         </div>
         <!-- User finished and unfinished work -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main movies-container">
+        <div class="col-md-10 col-md-offset-3 main movies-container">
             <div class="unfinished-container">
                 <h4>Incompleted Movies: </h4>
                 <div class="horizontal-movie-list">

@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction, VotedMovie,\
-    SearchStopword
+    SearchStopword, GroundTruth
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -33,14 +33,20 @@ def movie_to_json(movie):
 
 
 def get_random_movie(user_id):
-    genre = random_genre()
-    popularity_range = random_popularity_range()
 
     movie_list = []
     movie_id_set = set()
+    groundtruth_movielens_ids = GroundTruth.objects.all().values("movielens_id")
     while True:
-        movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
-                                 popularity__lte=popularity_range[0]).order_by("?")[:1]
+        from_groundtruth = random_groundtruth()
+        if from_groundtruth:
+            print("from ground truth!")
+            movie_qs = Movie.objects.filter(movielens_id__in=groundtruth_movielens_ids).exclude(id__in=movie_id_set)[:1]
+        else:
+            genre = random_genre()
+            popularity_range = random_popularity_range()
+            movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
+                                     popularity__lte=popularity_range[0]).order_by("?").exclude(id__in=movie_id_set)[:1]
         if not movie_qs.exists():
             continue
         movie = movie_qs[0]
@@ -279,6 +285,7 @@ def blockbuster(request):
         }
         return render(request, 'home.html', context)
 
+
 @login_required
 def label(request, id):
     errors = " "
@@ -286,6 +293,7 @@ def label(request, id):
         # get the random movie
         temp_similar_list = Movie.objects.order_by('?')[:30]
         movie_obj = Movie.objects.get(id=id)
+
         context = {
             'movie': movie_obj,
             'similar_list': temp_similar_list,
@@ -298,16 +306,28 @@ def label(request, id):
         }
         return render(request, "home.html", context)
 
+
 @login_required
 def profile(request, id):
     try:
         current_user = User.objects.get(id=id)
         num_labels = UserVote.objects.filter(user=current_user).count()
         num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
+
         # for badging layout
         top_percent = 5
         num_level = 1 + (num_movies//10)
-        badge_level = "glyphicon-knight"
+        dist_next_level = (num_level * 10) - num_movies
+        if num_level == 1:
+            badge_level = "glyphicon-pawn"
+        elif num_level == 2:
+            badge_level = "glyphicon-knight"
+        elif num_level == 3:
+            badge_level = "glyphicon-bishop"
+        elif num_level == 3:
+            badge_level = "glyphicon-queen"
+        else:
+            badge_level = "glyphicon-king"
 
         voting_list = VotedMovie.objects.filter(user=current_user, finished=False)
         voting_movies = Movie.objects.filter(pk__in=voting_list.values('movie_id'))
@@ -322,6 +342,7 @@ def profile(request, id):
             'top_percent': top_percent,
             'num_level': num_level,
             'badge_level': badge_level,
+            'dist_next_level': dist_next_level,
         }
         return render(request, "profile.html", context)
     except ObjectDoesNotExist:
@@ -364,6 +385,7 @@ def search(request):
     SearchAction.objects.create(user=request.user, keyword=keyword)
     return render(request, 'home.html', context)
 
+
 @login_required
 def get_similar_movies(request, id):
     movies = Movie.objects.filter(id=id)
@@ -389,7 +411,22 @@ def get_similar_movies(request, id):
                       "plot": similar_movie.plot, "title": similar_movie.title, "year": similar_movie.year,
                       "status": status}
             movie_list.append(record)
+
+    # generating seed using movie_id and user_id
+    movie_id = id
+    user_id = request.user.id
+
+    hash_obj = hashlib.sha256()
+    hash_obj.update(('%s%s' % (str(movie_id), user_id)).encode('utf-8'))
+
+    seed = hash_obj.hexdigest()
+
+    random.seed(seed)
+
+    random.shuffle(movie_list)
+
     return JsonResponse(dict(data=movie_list))
+
 
 @login_required
 def user_vote(request):

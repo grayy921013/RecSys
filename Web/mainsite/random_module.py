@@ -89,6 +89,14 @@ def random_popularity_range():
     return popularity_ranges[-1]
 
 
+def random_groundtruth():
+    # 1/10 probability
+    random_num = random.randint(0, 9)
+    if random_num == 0:
+        return True
+    else:
+        return False
+
 if __name__ == '__main__':
     print(random_genre())
     print(random_popularity_range())
