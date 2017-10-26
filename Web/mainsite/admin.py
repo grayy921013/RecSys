@@ -33,7 +33,7 @@ class SimilarityAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Userinfo)
 admin.site.register(Movie)
-admin.site.register(Similarity, SimilarMovieAdmin)
+admin.site.register(Similarity, SimilarityAdmin)
 admin.site.register(SimilarMovie, SimilarMovieAdmin)
 admin.site.register(UserVote, UserVoteAdmin)
 admin.site.register(SearchAction, SearchActionAdmin)

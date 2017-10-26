@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from mainsite.models import Movie, Userinfo, Genre, PasswordReset, SimilarMovie, UserVote, SearchAction, VotedMovie,\
-    SearchStopword
+    SearchStopword, GroundTruth
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, HttpResponseRedirect
@@ -33,14 +33,20 @@ def movie_to_json(movie):
 
 
 def get_random_movie(user_id):
-    genre = random_genre()
-    popularity_range = random_popularity_range()
 
     movie_list = []
     movie_id_set = set()
+    groundtruth_movielens_ids = GroundTruth.objects.all().values("movielens_id")
     while True:
-        movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
-                                 popularity__lte=popularity_range[0]).order_by("?")[:1]
+        from_groundtruth = random_groundtruth()
+        if from_groundtruth:
+            print("from ground truth!")
+            movie_qs = Movie.objects.filter(movielens_id__in=groundtruth_movielens_ids).exclude(id__in=movie_id_set)[:1]
+        else:
+            genre = random_genre()
+            popularity_range = random_popularity_range()
+            movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
+                                     popularity__lte=popularity_range[0]).order_by("?").exclude(id__in=movie_id_set)[:1]
         if not movie_qs.exists():
             continue
         movie = movie_qs[0]
