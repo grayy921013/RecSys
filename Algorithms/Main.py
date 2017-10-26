@@ -59,15 +59,18 @@ features_field = ['title_tfitf',
         'country_jaccard',
         'awards_tfitf',
         'awards_bm25',
-        'awards_jaccard']
+        'awards_jaccard',
+        'filtered_plot_tfitf',
+        'filtered_plot_bm25',
+        'filtered_plot_jaccard']
 
 
 def test(filepath):
     bar = ProgressBar(widgets=[Timer()]).start()
     trainer = Trainer(features_field)
 
-    # WARNING: This takes 10 minutes
-    # trainer.generate_features(r'./Data/groundtruth.exp1.csv')
+    #WARNING: This takes 10 minutes
+    trainer.generate_features(r'./Data/groundtruth.exp1.csv')
 
     user_ratings, deleted_registers  = trainer.get_user_rating(filepath)
     result = trainer.evaluate(user_ratings)
