@@ -279,6 +279,7 @@ def blockbuster(request):
         }
         return render(request, 'home.html', context)
 
+
 @login_required
 def label(request, id):
     errors = " "
@@ -286,6 +287,7 @@ def label(request, id):
         # get the random movie
         temp_similar_list = Movie.objects.order_by('?')[:30]
         movie_obj = Movie.objects.get(id=id)
+
         context = {
             'movie': movie_obj,
             'similar_list': temp_similar_list,
@@ -297,6 +299,7 @@ def label(request, id):
             'errors': errors
         }
         return render(request, "home.html", context)
+
 
 @login_required
 def profile(request, id):
@@ -364,6 +367,7 @@ def search(request):
     SearchAction.objects.create(user=request.user, keyword=keyword)
     return render(request, 'home.html', context)
 
+
 @login_required
 def get_similar_movies(request, id):
     movies = Movie.objects.filter(id=id)
@@ -389,7 +393,22 @@ def get_similar_movies(request, id):
                       "plot": similar_movie.plot, "title": similar_movie.title, "year": similar_movie.year,
                       "status": status}
             movie_list.append(record)
+
+    # generating seed using movie_id and user_id
+    movie_id = id
+    user_id = request.user.id
+
+    hash_obj = hashlib.sha256()
+    hash_obj.update(('%s%s' % (str(movie_id), user_id)).encode('utf-8'))
+
+    seed = hash_obj.hexdigest()
+
+    random.seed(seed)
+
+    random.shuffle(movie_list)
+
     return JsonResponse(dict(data=movie_list))
+
 
 @login_required
 def user_vote(request):
