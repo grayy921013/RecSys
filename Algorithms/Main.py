@@ -45,9 +45,6 @@ features_field = ['title_tfitf',
         'cast_tfitf',
         'cast_bm25',
         'cast_jaccard',
-        'plot_tfitf',
-        'plot_bm25',
-        'plot_jaccard',
         'full_plot_tfitf',
         'full_plot_bm25',
         'full_plot_jaccard',
@@ -59,7 +56,10 @@ features_field = ['title_tfitf',
         'country_jaccard',
         'awards_tfitf',
         'awards_bm25',
-        'awards_jaccard']
+        'awards_jaccard',
+        'filtered_plot_tfitf',
+        'filtered_plot_bm25',
+        'filtered_plot_jaccard']
 
 
 def test(filepath):
