@@ -127,6 +127,17 @@ button:hover {
     background: #fed431;
 }
 
+.btn-show {
+    position: relative;
+    left: 132px;
+    top: -69px;
+    width: 0px;
+    height: 0px;
+    border-style: solid;
+    border-width: 0px 0px 16px 28px;
+    border-color: transparent transparent #fed431 transparent;
+}
+
 .movie-overlay {
     position: absolute;
     top: 0;
@@ -136,6 +147,20 @@ button:hover {
     height: 100%;
     width: 100%;
     opacity: 0;
+    transition: .5s ease;
+    padding-top: 40px;
+    padding-bottom: 30px;
+}
+
+.movie-overlay-show {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
     transition: .5s ease;
     padding-top: 40px;
     padding-bottom: 30px;
@@ -156,11 +181,10 @@ button:hover {
     font-size: 12px;
 }
 
-#container-progress{
+#container-progress {
     padding-left: 40px;
     padding-right: 40px;
 }
-
 
 .animation-target {
     -webkit-animation: animation 1000ms linear both;

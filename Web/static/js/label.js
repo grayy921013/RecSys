@@ -121,11 +121,10 @@ $(document).ready(function () {
 
                 } else {
                     $(uiHolder).fadeTo(0, 1);
+                    $(uiHolder).removeClass('animation-target')
                 }
-
             }
         }
-
     }
 
     var bindMovie = function (movie_list) {
@@ -138,6 +137,8 @@ $(document).ready(function () {
             var uiButtonNo = $(uiButtonHolder).find(".btn-no");
             var uiButtonSkip = $(uiButtonHolder).find(".btn-skip");
             var uiButtonYes = $(uiButtonHolder).find(".btn-yes");
+            var uiButtonShow = $(uiHolder).find(".btn-show");
+            var uiOverlay = $(uiHolder).find(".movie-overlay");
 
             if (i < movie_list.length) {
                 // set the holder to be visible and bind data
@@ -161,24 +162,52 @@ $(document).ready(function () {
 
                 $(uiButtonNo).unbind();
                 $(uiButtonNo).click(function () {
-                    $(this).blur();
-                    var id = $(this).attr("id").substring(9);
-                    bindClickListener(id, -1);
+                    if ($(this).attr("class").indexOf("btn-glow") == -1) {
+                        $(this).blur();
+                        var id = $(this).attr("id").substring(9);
+                        bindClickListener(id, -1);
+                    } else {
+                        $(this).removeClass("btn-glow");
+                        var id = $(this).attr("id").substring(9);
+                        bindClickListener(id, 2);
+                    }
                 })
 
                 $(uiButtonSkip).unbind();
                 $(uiButtonSkip).click(function () {
-                    $(this).blur();
-                    var id = $(this).attr("id").substring(9);
-                    bindClickListener(id, 0);
+                    if ($(this).attr("class").indexOf("btn-glow") == -1) {
+                        $(this).blur();
+                        var id = $(this).attr("id").substring(9);
+                        bindClickListener(id, 0);
+                    } else {
+                        $(this).removeClass("btn-glow");
+                        var id = $(this).attr("id").substring(9);
+                        bindClickListener(id, 2);
+                    }
                 })
 
                 $(uiButtonYes).unbind();
                 $(uiButtonYes).click(function () {
-                    $(this).blur();
-                    var id = $(this).attr("id").substring(9);
-                    bindClickListener(id, 1);
+                    if ($(this).attr("class").indexOf("btn-glow") == -1) {
+                        $(this).blur();
+                        var id = $(this).attr("id").substring(9);
+                        bindClickListener(id, 1);
+                    } else {
+                        $(this).removeClass("btn-glow");
+                        var id = $(this).attr("id").substring(9);
+                        bindClickListener(id, 2);
+                    }
                 })
+
+                $(uiButtonShow).unbind();
+                $(uiButtonShow).click(function () {
+                    var overlay = $(this).parent().find(".movie-overlay");
+                    if ($(overlay).attr("class").indexOf("movie-overlay-show") == -1) {
+                        $(overlay).addClass("movie-overlay-show");
+                    } else {
+                        $(overlay).removeClass("movie-overlay-show");
+                    }
+                });
 
                 // bind rating status
                 if (movie.status != 2) {

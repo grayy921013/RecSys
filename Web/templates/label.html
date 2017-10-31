@@ -52,6 +52,7 @@
 
 
 
+
                                 {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              style="height: 206px; width: 144px" alt="Mountain View"
                              class="noresize img-responsive centerBlock">
@@ -72,7 +73,8 @@
             <div id="container-progress">
                 <p id="label-progress">Progress:</p>
                 <div class="progress">
-                    <div class="progress-bar" id="label-progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
+                    <div class="progress-bar" id="label-progress-bar" role="progressbar" style="width: 0%"
+                         aria-valuenow="0" aria-valuemin="0"
                          aria-valuemax="100"></div>
                 </div>
             </div>
@@ -102,6 +104,7 @@
                             <span class="glyphicon  glyphicon-ok" aria-hidden="true"></span>
                         </button>
                     </div>
+                    <button class="btn-show btn-label"></button>
                 </div>
             {% endfor %}
             <div id="wrap"></div>
