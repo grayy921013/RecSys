@@ -39,19 +39,12 @@
 
     <div class="container-fluid">
 
-        <div class="col-sm-3 col-md-3 sidebar profile-container">
+        <div class="sidebar profile-container">
             <h4 style="text-align: center;">{{ movie.title }} ({{ movie.year }})</h4>
             <div class="movie-poster">
                 <a class="target-movie-holder" id="{{ movie.id }}">
                     {% with id=movie.movielens_id|stringformat:"i" %}
                         <img src="
-
-
-
-
-
-
-
 
                                 {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              style="height: 206px; width: 144px" alt="Mountain View"

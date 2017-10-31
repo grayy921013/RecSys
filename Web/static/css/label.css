@@ -29,16 +29,82 @@ button:hover {
     opacity: 0.95;
 }
 
+/* Hide for mobile, show later */
+.sidebar {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        width: 27%;
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
+    }
+
+    .similar-main {
+        padding-top: 30px;
+        padding-right: 10px;
+        padding-left: 120px;
+    }
+
+    .btn-show {
+        position: relative;
+        left: 132px;
+        top: -69px;
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 0px 0px 16px 28px;
+        border-color: transparent transparent #fed431 transparent;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: block;
+        padding-top: 30px;
+        overflow-x: auto;
+        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        border-bottom: 1px solid #eee;
+    }
+
+    .similar-main {
+        padding-top: 350px;
+        text-align: center;
+    }
+
+    .btn-show {
+        position: relative;
+        left: 52px;
+        top: -69px;
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 0px 0px 16px 28px;
+        border-color: transparent transparent #fed431 transparent;
+    }
+}
+
+.movie-title {
+
+}
+
 .movie-poster {
     position: absolute;
     z-index: 1;
     margin-top: 20px;
     left: 50% !important;
     transform: translate(-50%, 0) !important;
-}
-
-.movie-title {
-
 }
 
 .movie-info {
@@ -52,12 +118,6 @@ button:hover {
     margin-top: 40px;
     margin-bottom: 40px;
     height: 286px;
-}
-
-.similar-main {
-    padding-top: 30px;
-    padding-right: 10px;
-    padding-left: 120px;
 }
 
 .label-instruction {
@@ -125,17 +185,6 @@ button:hover {
 
 .btn-glow {
     background: #fed431;
-}
-
-.btn-show {
-    position: relative;
-    left: 132px;
-    top: -69px;
-    width: 0px;
-    height: 0px;
-    border-style: solid;
-    border-width: 0px 0px 16px 28px;
-    border-color: transparent transparent #fed431 transparent;
 }
 
 .movie-overlay {
