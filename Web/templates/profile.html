@@ -44,9 +44,9 @@
 
 {% block content %}
 
-    <div class="container-fluid">
+    <div class="container-fluid main">
         <!-- User profile -->
-        <div class="sidebar profile-container">
+        <div class="well profile-container col-md-3">
             <div class="profile-image">
                 <img src="{% static 'images/user_image.jpg' %}" class="img-rounded" alt="personal icon" width="120"
                      height="120">
@@ -76,7 +76,7 @@
             </div>
         </div>
         <!-- User finished and unfinished work -->
-        <div class="col-md-10 col-md-offset-3 main movies-container">
+        <div class="col-md-9 movies-container">
             <div class="unfinished-container">
                 <h4>Incompleted Movies: </h4>
                 <div class="horizontal-movie-list">
