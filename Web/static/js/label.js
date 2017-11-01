@@ -199,16 +199,6 @@ $(document).ready(function () {
                     }
                 })
 
-                $(uiButtonShow).unbind();
-                $(uiButtonShow).click(function () {
-                    var overlay = $(this).parent().find(".movie-overlay");
-                    if ($(overlay).attr("class").indexOf("movie-overlay-show") == -1) {
-                        $(overlay).addClass("movie-overlay-show");
-                    } else {
-                        $(overlay).removeClass("movie-overlay-show");
-                    }
-                });
-
                 // bind rating status
                 if (movie.status != 2) {
                     $(uiHolder).fadeTo(0, 0.5);

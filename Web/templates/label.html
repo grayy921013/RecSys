@@ -79,9 +79,13 @@
                     <div class="movie-container">
                         <img src=""
                              style="height: 206px; width: 144px" alt=""
-                             class="noresize img-responsive centerBlock">
+                             class="noresize img-responsive centerBlock"/>
                         <div class="movie-overlay">
                             <p class="movie-hover-text">{{ movie.plot }}</p>
+                        </div>
+
+                        <div class="helper-container">
+                            <button class="btn-show glyphicon glyphicon-comment btn-label"></button>
                         </div>
                     </div>
 
@@ -96,7 +100,6 @@
                             <span class="glyphicon  glyphicon-ok" aria-hidden="true"></span>
                         </button>
                     </div>
-                    <button class="btn-show btn-label"></button>
                 </div>
             {% endfor %}
             <div id="wrap"></div>

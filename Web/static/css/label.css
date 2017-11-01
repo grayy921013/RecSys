@@ -12,9 +12,6 @@ button:hover {
     cursor: hand;
 }
 
-.btn-label:hover {
-    color: #fbc402;
-}
 
 .navbar-nav > li > a {
     padding-top: 5px !important;
@@ -57,16 +54,8 @@ button:hover {
     }
 
     .btn-show {
-        position: relative;
-        left: 132px;
-        top: -69px;
-        width: 0px;
-        height: 0px;
-        border-style: solid;
-        border-width: 0px 0px 16px 28px;
-        border-color: transparent transparent #fed431 transparent;
+        display: none;
     }
-
 }
 
 @media (max-width: 768px) {
@@ -82,17 +71,11 @@ button:hover {
         padding-top: 350px;
         text-align: center;
     }
+}
 
-    .btn-show {
-        position: relative;
-        left: 52px;
-        top: -69px;
-        width: 0px;
-        height: 0px;
-        border-style: solid;
-        border-width: 0px 0px 16px 28px;
-        border-color: transparent transparent #fed431 transparent;
-    }
+
+.btn-show {
+    top: 160px;
 }
 
 .movie-title {
@@ -229,6 +212,18 @@ button:hover {
     vertical-align: middle;
     font-size: 12px;
 }
+
+.helper-container {
+    position: absolute;
+    height: 216px;
+    width: 156px;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 
 #container-progress {
     padding-left: 40px;
