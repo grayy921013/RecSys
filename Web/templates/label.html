@@ -8,7 +8,6 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <link href="{% static 'css/label.css' %}" rel="stylesheet">
-    <script src="{% static 'js/label.js' %}"></script>
 
 {% endblock %}
 
@@ -105,4 +104,9 @@
         </div>
     </div> <!-- /container -->
 
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/label.js' %}"></script>
 {% endblock %}
