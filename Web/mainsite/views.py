@@ -273,7 +273,14 @@ def blockbuster(request):
     tmp = []
     for movie in random_movie_list:
         tmp.append(movie)
-    shuffle(tmp)
+    hash_obj = hashlib.sha256()
+    hash_obj.update(str(request.user.pk).encode('utf-8'))
+
+    seed = hash_obj.hexdigest()
+
+    random.seed(seed)
+
+    random.shuffle(tmp)
     random_movie_list = tmp
 
     errors = " "
