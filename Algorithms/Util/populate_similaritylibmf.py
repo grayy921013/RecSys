@@ -31,9 +31,9 @@ def generate_libmf_als():
     if os.name == 'nt':
         raise Exception('There is no a LibMF executable for windows')
     else:
-        executable = './CF/libMF/mf-train-rating-predict'
+        executable = './CF/libMF/mf-train'
 
-    command = '''%s ./Data/ml-20m/ratings.csv model1.txt''' % executable
+    command = '''%s /Data/ml-20m/ratings.csv model1.txt''' % executable
     output = os.system(command)
     print(output)
 
