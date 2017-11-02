@@ -46,6 +46,8 @@
                         <img src="
 
 
+
+
                                 {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              style="height: 206px; width: 144px" alt="Mountain View"
                              class="noresize img-responsive centerBlock">
@@ -63,6 +65,14 @@
         <div class="col-md-9 col-md-offset-3 similar-main">
             <h4 class="label-instruction">Are these Movies <b>Similar</b> to {{ movie.title }}
                 ({{ movie.year }}) ?</h4>
+            <div class="alert alert-info label-info" role="alert">
+                <span class="glyphicon  glyphicon-remove" aria-hidden="true"></span>
+                - Not similar to this movie
+                <b style="margin-left: 10px;">Not Sure</b>
+                - I don't know this movie
+                <span class="glyphicon  glyphicon-ok" aria-hidden="true" style="margin-left: 10px;"></span>
+                - Similar to this movie
+            </div>
             <br>
             <div id="container-progress">
                 <p id="label-progress">Progress:</p>
@@ -75,7 +85,8 @@
             {% load static %}
             {% for similar_movie in similar_list %}
                 <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-                    <a class="popoverData" href="#" data-content="{{ movie.title }}" rel="popover" data-placement="top" data-trigger="hover">
+                    <a class="popoverData" href="#" data-content="{{ movie.title }}" rel="popover" data-placement="top"
+                       data-trigger="hover">
                         <div class="movie-title movie-line" id="{{ movie.movielens_id }}-title">{{ movie.title }}</div>
                     </a>
                     <div class="movie-year movie-line" id="{{ movie.movielens_id }}-year">({{ movie.year }})</div>
@@ -97,7 +108,7 @@
                             <span class="glyphicon  glyphicon-remove" aria-hidden="true"></span>
                         </button>
                         <button class="btn-skip btn-label">
-                            Skip
+                            Not Sure
                         </button>
                         <button class="btn-yes btn-label">
                             <span class="glyphicon  glyphicon-ok" aria-hidden="true"></span>

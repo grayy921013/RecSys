@@ -26,6 +26,21 @@ button:hover {
     opacity: 0.95;
 }
 
+.label-info {
+    width: 70%;
+    text-align: center;
+    color: rgba(90, 89, 89, 0.97);
+    position: relative;
+    margin-top: 20px;
+    left: 50% !important;
+    transform: translate(-50%, 0) !important;
+}
+
+#label-progress {
+    font-size: 17px;
+    font-weight: 500;
+}
+
 /* Hide for mobile, show later */
 
 @media (min-width: 992px) {
@@ -238,6 +253,7 @@ a.popoverData {
 
 
 #container-progress {
+    margin-top: 30px;
     padding-left: 40px;
     padding-right: 40px;
 }
