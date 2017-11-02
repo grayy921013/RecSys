@@ -1,3 +1,6 @@
+$(document).ready(function() {
+    $(".popoverData").popover();
+});
 var setupCSRF = function () {
     // using jQuery
     function getCookie(name) {
@@ -130,7 +133,9 @@ $(document).ready(function () {
     var bindMovie = function (movie_list) {
         for (var i = 0; i < ui_movie_list.length; i++) {
             var uiHolder = ui_movie_list[i];
-            var uiTitle = $($(uiHolder).find(".similar-title")).find("b");
+            var uiTitleAnchor = $($(uiHolder).find(".popoverData"));
+            var uiTitle = $($(uiHolder).find(".movie-title"));
+            var uiYear= $($(uiHolder).find(".movie-year"));
             var uiPopoverData = $(uiHolder).find(".movie-hover-text");
             var uiImage = $(uiHolder).find("img");
             var uiButtonHolder = $(uiHolder).find(".label-bar");
@@ -148,7 +153,9 @@ $(document).ready(function () {
 
                 // bind content
 
-                uiTitle.text(movie.title + " (" + movie.year + ")");
+                uiTitleAnchor.attr("data-content", movie.title);
+                uiTitle.text(movie.title);
+                uiYear.text("(" + movie.year + ")");
                 if (movie.plot) {
                     uiPopoverData.text(movie.plot)
                 } else {

@@ -65,16 +65,24 @@ body {
 
 .movie-item {
     margin-top: 40px;
-    margin-bottom: 10px;
+    margin-bottom: 70px;
     height: 250px;
 }
 
-.movie-title {
+a.popoverData {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+.movie-line {
     line-height: 1em;
-    height: 2em;
+    height: 1.2em;
     text-align: center;
     font-size: 16px;
-    margin-bottom: 50px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .movie-poster-div {

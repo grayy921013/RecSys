@@ -78,8 +78,20 @@ button:hover {
     top: 160px;
 }
 
-.movie-title {
+a.popoverData {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
 
+.movie-line {
+    line-height: 1em;
+    height: 1.2em;
+    text-align: center;
+    font-size: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .movie-poster {
@@ -114,6 +126,17 @@ button:hover {
     object-fit: contain;
     position: relative;
     vertical-align: top;
+}
+
+.movie-title {
+    line-height: 1em;
+    height: 1.2em;
+    text-align: center;
+    font-size: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .label-bar {
@@ -180,8 +203,8 @@ button:hover {
     width: 100%;
     opacity: 0;
     transition: .5s ease;
-    padding-top: 40px;
-    padding-bottom: 30px;
+    margin-top: 40px;
+    margin-bottom: 30px;
 }
 
 .movie-overlay-show {
@@ -194,8 +217,8 @@ button:hover {
     width: 100%;
     opacity: 1;
     transition: .5s ease;
-    padding-top: 40px;
-    padding-bottom: 30px;
+    margin-top: 40px;
+    margin-bottom: 30px;
 }
 
 .movie-container:hover .movie-overlay {

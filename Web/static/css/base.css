@@ -175,3 +175,7 @@ a:hover {
     color: #fff;
 }
 
+html {
+    height:100%;
+}
+
