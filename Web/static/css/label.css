@@ -28,18 +28,11 @@ button:hover {
 
 /* Hide for mobile, show later */
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
     .sidebar {
-        width: 27%;
         position: fixed;
-        top: 51px;
-        bottom: 0;
-        left: 0;
-        z-index: 1000;
-        display: block;
-        padding: 20px;
-        overflow-x: hidden;
-        overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        height: 100%;
+        top: 60px;
         background-color: #f5f5f5;
         border-right: 1px solid #eee;
     }
@@ -47,7 +40,6 @@ button:hover {
     .similar-main {
         padding-top: 30px;
         padding-right: 10px;
-        padding-left: 120px;
     }
 
     .btn-show {
@@ -55,10 +47,11 @@ button:hover {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
     .sidebar {
         display: block;
         padding-top: 30px;
+        padding-bottom: 20px;
         border-bottom: 1px solid #eee;
     }
 
