@@ -1,5 +1,4 @@
 import logging
-from Carbon.Aliases import false
 
 import pandas
 import os
