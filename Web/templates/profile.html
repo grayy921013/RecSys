@@ -73,7 +73,7 @@
         <!-- User finished and unfinished work -->
         <div class="col-md-9 movies-container">
             <div class="unfinished-container">
-                <h4>Incompleted Movies: </h4>
+                <h4>Continue with These Movies: </h4>
                 <div class="horizontal-movie-list">
                     {% load static %}
                     {% for movie in voting_movies %}
@@ -96,7 +96,7 @@
                 </div>
             </div>
             <div class="finished-container">
-                <h4>Completed Movies: </h4>
+                <h4>Recently Completed: </h4>
                 <div class="horizontal-movie-list">
                     {% load static %}
                     {% for movie in finished_movies %}

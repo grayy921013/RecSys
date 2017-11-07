@@ -16,7 +16,7 @@ import hashlib
 import string
 from django.http import Http404
 from django.utils import timezone
-from random import shuffle
+import json
 
 def get_metadata(request, imdb_id):
     try:
@@ -60,7 +60,10 @@ def get_random_movie(user_id):
         if len(movie_list) == 20:
             break
 
-    return movie_list
+    movie_id_list = []
+    for movie in movie_list:
+        movie_id_list.append(movie.id)
+    return movie_list, movie_id_list
 
 
 #### Web UI Implementation####
@@ -250,20 +253,32 @@ def modify_pwd(request, uid, token):
 
 @login_required
 def home(request):
+    if request.method != "GET":
+        raise Http404
     # get the random movie
-    start = time.time()
-    # random_movie_list = []
-    random_movie_list = get_random_movie(request.user.id)
-    end = time.time()
+    if 'movie_list' in request.COOKIES:
+        movie_id_list = json.loads(request.COOKIES['movie_list'])
+        random_movie_list = list(Movie.objects.filter(id__in=movie_id_list))
+        random_movie_list.sort(key=lambda t: movie_id_list.index(t.id))
+    else:
+        random_movie_list, movie_id_list = get_random_movie(request.user.id)
 
     errors = " "
-    if request.method == "GET":
-        context = {
-            'errors': errors,
-            'movie_list': random_movie_list,
-            'title': 'Home Page'
-        }
-        return render(request, 'home.html', context)
+    context = {
+        'errors': errors,
+        'movie_list': random_movie_list,
+        'title': 'Home Page'
+    }
+    response = render(request, 'home.html', context)
+    response.set_cookie('movie_list', json.dumps(movie_id_list))
+    return response
+
+
+@login_required
+def refresh(request):
+    response = HttpResponseRedirect(reverse('home'))
+    response.delete_cookie('movie_list')
+    return response
 
 
 @login_required
@@ -315,9 +330,9 @@ def label(request, id):
 
 
 @login_required
-def profile(request, id):
+def profile(request):
     try:
-        current_user = User.objects.get(id=id)
+        current_user = request.user
         num_labels = UserVote.objects.filter(user=current_user).count()
         num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
 
@@ -386,7 +401,7 @@ def search(request):
     context = {
         'movie_list': movie_list,
         'title': 'Search',
-        'empty_msg': "No result found! ",
+        'empty_msg': "There are no movies found according to your query",
         'notice': notice
     }
     SearchAction.objects.create(user=request.user, keyword=keyword)
