@@ -54,6 +54,34 @@
                            value="{{ confirm_password }}" placeholder="Password" class="form-control" required>
                 </div>
             </div>
+
+
+            <div class="form-group form-element">
+                <label for="security-question" class="col-sm-3 control-label optional-label">*Security Question</label>
+                <div class="col-sm-7">
+                    <select name="security-question" class="form-control" required>
+                        <option value="">Select a question</option>
+                        <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                        <option value="What is the name of your favorite childhood friend?">What is the name of your favorite childhood friend?</option>
+                        <option value="What is your favorite movie?">What is your favorite movie?</option>
+                        <option value="What was your favorite sport in high school?">What was your favorite sport in high school?</option>
+                        <option value="What school did you attend for sixth grade?">What school did you attend for sixth grade?</option>
+                        <option value="In what town was your first job?">In what town was your first job?</option>
+                        <option value="What was the name of the company where you had your first job?">What was the name of the company where you had your first job?</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group form-element">
+                <label for="security-answer" class="col-sm-3 control-label">*Security Answer</label>
+                <div class="col-sm-7">
+                    <input id="security-answer" name="security-answer"
+                           placeholder="Answer" class="form-control" required>
+                </div>
+            </div>
+
+            <hr class="separator">
+
             <div class="form-group form-element">
                 <label for="gender" class="col-sm-3 control-label optional-label">Gender</label>
                 <div class="col-sm-7">
@@ -68,8 +96,8 @@
             <div class="form-group form-element">
                 <label for="age" class="col-sm-3 control-label optional-label">Age</label>
                 <div class="col-sm-7">
-                    <input type="number" name="age" min="5" max="110" value="{{ age }}"
-                           placeholder="5 - 110" class="form-control">
+                    <input type="number" name="age" min="18" max="110" value="{{ age }}"
+                           placeholder="18 - 110" class="form-control">
                 </div>
             </div>
             <div class="form-group form-element">
@@ -98,30 +126,6 @@
                         <option value="retired">Retired</option>
                         <option value="unable">Unable to work</option>
                     </select>
-                </div>
-            </div>
-
-            <div class="form-group form-element">
-                <label for="security-question" class="col-sm-3 control-label optional-label">*Security Question</label>
-                <div class="col-sm-7">
-                    <select name="security-question" class="form-control" required>
-                        <option value="">Select a question</option>
-                        <option value="What was your childhood nickname?">What was your childhood nickname?</option>
-                        <option value="What is the name of your favorite childhood friend?">What is the name of your favorite childhood friend?</option>
-                        <option value="What is your favorite movie?">What is your favorite movie?</option>
-                        <option value="What was your favorite sport in high school?">What was your favorite sport in high school?</option>
-                        <option value="What school did you attend for sixth grade?">What school did you attend for sixth grade?</option>
-                        <option value="In what town was your first job?">In what town was your first job?</option>
-                        <option value="What was the name of the company where you had your first job?">What was the name of the company where you had your first job?</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group form-element">
-                <label for="security-answer" class="col-sm-3 control-label">*Security Answer</label>
-                <div class="col-sm-7">
-                    <input id="security-answer" name="security-answer"
-                           placeholder="Answer" class="form-control" required>
                 </div>
             </div>
 
