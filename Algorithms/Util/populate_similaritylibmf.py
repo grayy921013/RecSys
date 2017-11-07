@@ -1,4 +1,6 @@
 import logging
+from Carbon.Aliases import false
+
 import pandas
 import os
 import numpy as np
@@ -16,7 +18,8 @@ def libmf_als(batch_size=2500, cap=0.5, k=100):
     db_fieldname = 'libmf_cosine'
     generate_libmf_als()
     libmf_transform()
-    matrix = genfromtxt('model_movies.csv', delimiter=',')
+    return
+    matrix = genfromtxt('model_movies1.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
     data = pandas.read_pickle(db_fieldname)
     dataset = PostgresDataHandler()
@@ -33,7 +36,7 @@ def generate_libmf_als():
     else:
         executable = './CF/libMF/mf-train'
 
-    command = '''%s -k 10 ./Data/ml-20m/ratings.csv model1.txt''' % executable
+    command = '''%s -k 10 ./Data/ml-20m/ratings_libmf_tr.txt model1.txt''' % executable
     output = os.system(command)
     print(output)
 
@@ -139,25 +142,75 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
 
 def libmf_transform():
     f = open('model1.txt')
-    f_movies = open('model_movies.csv', 'w')
+    f_movies = open('model_movies1.csv', 'w')
+
+
+
 
     # Skip top of the model and user matrix
     line = '123'
-    while len(line) > 1:
+    movies = 0
+    features = 0
+    while line[0] != 'n':
+        parts = line.split(' ')
+        movies = int(parts[1])
+        line = f.readline()
+        parts = line.split(' ')
+        features = int(parts[1])
+    print movies
+    print features
+    #movies, features = list(map(int, f.readline().split()))
+    #q = false
+    while line[0] != 'q':
         line = f.readline()
 
     # Read # of movies and # of features
-    movies, features = list(map(int, f.readline().split()))
-    for i in range(movies):
+    #movies, features = list(map(int, f.readline().split()))
+    print " starting "  + line
+    for i in range(movies -1):
+
         m_features = [None] * features
         m_id = 0
         counter = 0
-        for idx in range(features):
-            m_id, m_feature, m_value = f.readline().split()
-            m_features[idx] = m_value
+
+        lineparts = f.readline().split()
+        print lineparts
+        m_id = lineparts[0][1:]
+        idx = 0
+        for itr in range(features):
+            m_value = lineparts[2 + idx];
+            m_features[itr] = m_value
             counter += float(m_value)
+            idx = idx + 1
+
+
         if counter:
             m_features = [m_id] + m_features
             f_movies.write(','.join(m_features) + '\n')
     f.close()
     f_movies.close()
+
+# def transform():
+#     f = open('model.txt')
+#     f_movies = open('model_movies.csv','w')
+#
+#     # Skip top of the model and user matrix
+#     line = '123'
+#     while len(line) > 1:
+#         line = f.readline()
+#
+#     # Read # of movies and # of features
+#     movies, features = list(map(int,f.readline().split()))
+#     for i in range(movies):
+#         m_features = [None]*features
+#         m_id = 0
+#         counter = 0
+#         for idx in range(features):
+#             m_id, m_feature, m_value = f.readline().split()
+#             m_features[idx] = m_value
+#             counter += float(m_value)
+#         if counter:
+#             m_features = [m_id] + m_features
+#             f_movies.write(','.join(m_features) + '\n')
+#     f.close()
+#     f_movies.close()
