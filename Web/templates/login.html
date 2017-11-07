@@ -22,7 +22,7 @@
         <div class="container login-container">
             <form class="form-signin" method="post" action="{% url 'userlogin' %}">
                 {% csrf_token %}
-                <h2 class="form-signin-heading">Hi.</h2>
+                <h2 class="form-signin-heading">We want your opinion about which movies are similar.</h2>
                 <p name="errors">{{ errors }}</p>
 
                 <label for="inputEmail" class="sr-only">Username</label>
