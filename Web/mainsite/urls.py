@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'^refresh$', views.refresh, name='refresh'),
     url(r'^blockbuster$', views.blockbuster, name='blockbuster'),
     url(r'^metadata/(?P<imdb_id>\d+)$', views.get_metadata, name='metadata'),
     url(r'^label/(?P<id>\d+)$', views.label, name='label'),
