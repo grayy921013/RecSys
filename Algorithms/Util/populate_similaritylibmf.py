@@ -157,8 +157,8 @@ def libmf_transform():
         line = f.readline()
         parts = line.split(' ')
         features = int(parts[1])
-    print movies
-    print features
+    print(movies)
+    print(features)
     #movies, features = list(map(int, f.readline().split()))
     #q = false
     while line[0] != 'q':
@@ -166,7 +166,7 @@ def libmf_transform():
 
     # Read # of movies and # of features
     #movies, features = list(map(int, f.readline().split()))
-    print " starting "  + line
+    print(" starting "  + line)
     for i in range(movies -1):
 
         m_features = [None] * features
@@ -174,18 +174,24 @@ def libmf_transform():
         counter = 0
 
         lineparts = f.readline().split()
-        print lineparts
+        print(lineparts)
+
         m_id = lineparts[0][1:]
         idx = 0
         for itr in range(features):
-            m_value = lineparts[2 + idx];
+            m_value = lineparts[2 + idx]
             m_features[itr] = m_value
+            print(idx)
+            print(itr)
+            print(m_value)
             counter += float(m_value)
             idx = idx + 1
+        print(m_features)
 
 
         if counter:
             m_features = [m_id] + m_features
+            print(m_features)
             f_movies.write(','.join(m_features) + '\n')
     f.close()
     f_movies.close()
