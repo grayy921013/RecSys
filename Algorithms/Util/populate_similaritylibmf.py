@@ -33,7 +33,7 @@ def generate_libmf_als():
     else:
         executable = './CF/libMF/mf-train'
 
-    command = '''%s /Data/ml-20m/ratings.csv model1.txt''' % executable
+    command = '''%s -k 10 ./Data/ml-20m/ratings.csv model1.txt''' % executable
     output = os.system(command)
     print(output)
 
