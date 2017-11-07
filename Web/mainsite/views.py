@@ -330,9 +330,9 @@ def label(request, id):
 
 
 @login_required
-def profile(request, id):
+def profile(request):
     try:
-        current_user = User.objects.get(id=id)
+        current_user = request.user
         num_labels = UserVote.objects.filter(user=current_user).count()
         num_movies = UserVote.objects.filter(user=current_user).values('movie1').distinct().count()
 
