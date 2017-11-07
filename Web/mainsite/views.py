@@ -386,7 +386,7 @@ def search(request):
     context = {
         'movie_list': movie_list,
         'title': 'Search',
-        'empty_msg': "No result found! ",
+        'empty_msg': "There are no movies found according to your query",
         'notice': notice
     }
     SearchAction.objects.create(user=request.user, keyword=keyword)

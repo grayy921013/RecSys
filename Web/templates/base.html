@@ -45,7 +45,7 @@
             </div>
             <form class="navbar-form navbar-left" method="post" action="{% url 'search' %}">
                 {% csrf_token %}
-                <input type="text" class="form-control" placeholder="Search..." name="keyword">
+                <input type="text" class="form-control" placeholder="Search For Titles" name="keyword">
                 <button type="submit" class="btn btn-sm btn-search">
                     <span class="glyphicon glyphicon-search icon-search" aria-hidden="true"></span>
                 </button>
