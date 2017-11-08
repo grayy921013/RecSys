@@ -47,7 +47,7 @@ button:hover {
     .sidebar {
         position: fixed;
         height: 100%;
-        top: 60px;
+        padding-top: 50px;
         background-color: #f5f5f5;
         border-right: 1px solid #eee;
     }
@@ -114,7 +114,6 @@ a.popoverData {
 
 .movie-item {
     margin-top: 40px;
-    margin-bottom: 40px;
     height: 286px;
 }
 
@@ -146,7 +145,7 @@ a.popoverData {
 .label-bar {
     width: 100%;
     text-align: center;
-    padding-top: 5px;
+    padding-top: 8px;
     padding-bottom: 5px;
 }
 
@@ -253,7 +252,6 @@ a.popoverData {
 
 
 #container-progress {
-    margin-top: 30px;
     padding-left: 40px;
     padding-right: 40px;
 }
