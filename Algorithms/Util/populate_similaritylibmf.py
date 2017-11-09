@@ -26,6 +26,7 @@ def libmf_als(batch_size=100, cap=0.5, k=100):
 def recreate_Similarity_Table():
     dataset = PostgresDataHandler()
     dataset.clear_similarity()
+    dataset.similarity_join();
 
 
 def generate_libmf_als():
