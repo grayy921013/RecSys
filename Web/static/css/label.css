@@ -64,6 +64,16 @@ button:hover {
     .btn-show {
         display: none;
     }
+
+    .movie-info {
+        position: absolute;
+        z-index: 1;
+        margin-top: 260px;
+        margin-right: 10px;
+        display: block;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
 }
 
 @media (max-width: 992px) {
@@ -77,6 +87,16 @@ button:hover {
     .similar-main {
         padding-top: 370px;
         text-align: center;
+    }
+
+    .movie-info {
+        position: absolute;
+        z-index: 1;
+        margin-top: 260px;
+        margin-right: 10px;
+        display: block;
+        max-height: 120px;
+        overflow-y: auto;
     }
 }
 
@@ -107,13 +127,6 @@ a.popoverData {
     margin-top: 20px;
     left: 50% !important;
     transform: translate(-50%, 0) !important;
-}
-
-.movie-info {
-    position: absolute;
-    z-index: 1;
-    margin-top: 260px;
-    margin-right: 10px;
 }
 
 .movie-item {
