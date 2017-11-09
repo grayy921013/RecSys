@@ -263,15 +263,21 @@ def home(request):
     else:
         random_movie_list, movie_id_list = get_random_movie(request.user.id)
 
-    finished_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=True).values('movie__id')
-    ongoing_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=False).values('movie__id')
+    finished_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=True)
+    ongoing_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=False)
+    finished_ids = set()
+    ongoing_ids = set()
+    for v in finished_movies:
+        finished_ids.add(v.movie_id)
+    for v in ongoing_movies:
+        ongoing_ids.add(v.movie_id)
     errors = " "
     context = {
         'errors': errors,
         'movie_list': random_movie_list,
         'title': 'Home Page',
-        'finished_movies': finished_movies,
-        'ongoing_movies': ongoing_movies
+        'finished_movies': finished_ids,
+        'ongoing_movies': ongoing_ids
     }
     response = render(request, 'home.html', context)
     response.set_cookie('movie_list', json.dumps(movie_id_list))
@@ -301,13 +307,23 @@ def blockbuster(request):
 
     random.shuffle(tmp)
     random_movie_list = tmp
+    finished_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=True)
+    ongoing_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=False)
+    finished_ids = set()
+    ongoing_ids = set()
+    for v in finished_movies:
+        finished_ids.add(v.movie_id)
+    for v in ongoing_movies:
+        ongoing_ids.add(v.movie_id)
 
     errors = " "
     if request.method == "GET":
         context = {
             'errors': errors,
             'movie_list': random_movie_list,
-            'title': 'Block Buster'
+            'title': 'Block Buster',
+            'finished_movies': finished_ids,
+            'ongoing_movies': ongoing_ids
         }
         return render(request, 'home.html', context)
 
