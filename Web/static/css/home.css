@@ -109,3 +109,31 @@ a.popoverData {
     top: 50%;
     transform: translate(-50%,-50%);
 }
+
+.modal-image{
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.movie-badge{
+    display: inline-block;
+}
+
+.movie-badge-holder{
+    text-align: center;
+}
+
+.movie-badge-finished{
+    background-color: forestgreen;
+}
+
+
+.movie-badge-unfinished{
+    background-color: palevioletred;
+}
+
+.movie-badge-none{
+    opacity: 0;
+}
+
+
