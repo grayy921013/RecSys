@@ -34,24 +34,6 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog help-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Label Movies Similar to the Movie you chose...</h4>
-                </div>
-                <div class="modal-body help-body">
-                    <img class="modal-image" src="{% static 'images/popup_label.png' %}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     {% load static %}
 
@@ -63,6 +45,7 @@
                 <a class="target-movie-holder" id="{{ movie.id }}">
                     {% with id=movie.movielens_id|stringformat:"i" %}
                         <img src="
+
 
 
 
@@ -142,6 +125,18 @@
 
 {% endblock %}
 
+{% block helpModal %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Label Movies Similar to the Movie you chose...</h4>
+    </div>
+    <div class="modal-body help-body">
+        <img class="modal-image" src="{% static 'images/popup_label.png' %}">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+    </div>
+{% endblock %}
 
 {% block script %}
     <script src="{% static 'js/label.js' %}"></script>

@@ -62,7 +62,11 @@
     <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
             <li><a href="#" class="nav-bottom-words">Terms</a></li>
-            <li><a href="#" class="nav-bottom-words">Help</a></li>
+            <li>
+                <a href="#" class="nav-bottom-words" data-toggle="modal" data-target="#myModal">
+                    Help
+                </a>
+            </li>
             <li><a href="#" class="nav-bottom-words">Contact us</a></li>
         </ul>
         <form class="navbar-form navbar-left">
@@ -70,6 +74,18 @@
         </form>
     </div>
 </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog help-modal" role="document">
+        <div class="modal-content">
+            {% block helpModal %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
