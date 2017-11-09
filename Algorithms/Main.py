@@ -61,8 +61,8 @@ from Util.populate_similaritylibmf import libmf_als, recreate_Similarity_Table
 #         'filtered_plot_bm25',
 #         'filtered_plot_jaccard',
 #         'als_cosine']
-features_field = ['libmf_cosine','title_bm25','cast_bm25','genre_bm25','director_bm25','writer_bm25','full_plot_bm25','language_bm25','country_bm25','awards_bm25','filtered_plot_bm25'];
-
+features_field = ['title_bm25','cast_bm25','genre_bm25','director_bm25','writer_bm25','full_plot_bm25','language_bm25','country_bm25','awards_bm25','filtered_plot_bm25'];
+#features_field = ['libmf_cosine']
 
 
 def test(filepath):
@@ -70,7 +70,7 @@ def test(filepath):
     trainer = Trainer(features_field)
 
     #WARNING: This takes 10 minutes
-    trainer.generate_features(r'./Data/groundtruth.exp1.csv')
+    #trainer.generate_features(r'./Data/groundtruth.exp1.csv')
 
     user_ratings, deleted_registers  = trainer.get_user_rating(filepath)
     result = trainer.evaluate(user_ratings)
