@@ -13,7 +13,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-def libmf_als(batch_size=1000, cap=0.5, k=100):
+def libmf_als(batch_size=500, cap=0.5, k=100):
     db_fieldname = 'libmf_cosine'
     #generate_libmf_als()
     libmf_transform()
