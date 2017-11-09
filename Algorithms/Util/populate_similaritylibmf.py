@@ -1,4 +1,5 @@
 import logging
+
 import pandas
 import os
 import numpy as np
@@ -12,11 +13,11 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-def libmf_als(batch_size=2500, cap=0.5, k=100):
+def libmf_als(batch_size=500, cap=0.5, k=100):
     db_fieldname = 'libmf_cosine'
-    generate_libmf_als()
+    #generate_libmf_als()
     libmf_transform()
-    matrix = genfromtxt('model_movies.csv', delimiter=',')
+    matrix = genfromtxt('model_movies1.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
     data = pandas.read_pickle(db_fieldname)
     dataset = PostgresDataHandler()
@@ -32,8 +33,9 @@ def generate_libmf_als():
         raise Exception('There is no a LibMF executable for windows')
     else:
         executable = './CF/libMF/mf-train'
+        #executable = './mf-train'
 
-    command = '''%s -k 10 ./Data/ml-20m/ratings.csv model1.txt''' % executable
+    command = '''%s -k 10 ./Data/ml-20m/ratings_libmf_tr.txt model1.txt''' % executable
     output = os.system(command)
     print(output)
 
@@ -46,6 +48,7 @@ def cosine_similarity(matrix, batch_size, cap, k):
                       widgets=['ALS: Cosine', ' ', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
     bar.start()
 
+    print("Calculate Similarities")
     # Calculate Similarity
     counter = 0
     for i in range(0, matrix.shape[0], batch_size):
@@ -54,12 +57,13 @@ def cosine_similarity(matrix, batch_size, cap, k):
         counter += 1
         bar.update(counter)
     bar.finish()
-
+    print("Append All Similarities")
     # Append All Similarities
     frames = []
     for i in range(0, matrix.shape[0], batch_size):
         frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
     result = pandas.concat(frames, axis=0)
+    print("result.to_pickle(db_fieldname)")
     result.to_pickle(db_fieldname)
     return result
 
@@ -107,10 +111,11 @@ def cosine_similarity_batch(m1, m2, cap, k, db_fieldname):
     rows_movielens = rows_movielens[mask]
     cols_movielens = cols_movielens[mask]
     scores = scores[mask]
-
+    print("Before getting top k")
     p = get_top_k(rows_movielens, cols_movielens, scores, k)
 
     # Temporarily save to a local file
+    print("p.to_pickle(db_fieldname)")
     p.to_pickle(db_fieldname)
 
 
@@ -121,16 +126,17 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
                                   names=('id1_id', 'id2_id', 'libmf_cosine'))
 
     p = pandas.DataFrame(pre_frame)
-
+    print("Getting top k elements for each movieid")
     # Get top K elements for each movieid1 set 1
+
     p = p \
         .sort_values(by=['id1_id', 'libmf_cosine'], ascending=False) \
         .groupby('id1_id') \
         .head(k) \
         .reset_index(drop=True)
-
+    print("Sort")
     p = p.sort_values(by=['id1_id'], ascending=True)
-
+    print("Temporarily save to a local file")
     # Temporarily save to a local file
     logger.info('ALS\t %d/%d found/saved', p.shape[0], len(scores))
 
@@ -139,25 +145,78 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
 
 def libmf_transform():
     f = open('model1.txt')
-    f_movies = open('model_movies.csv', 'w')
+    f_movies = open('model_movies1.csv', 'w')
+
+
+
 
     # Skip top of the model and user matrix
     line = '123'
-    while len(line) > 1:
+    movies = 0
+    features = 0
+    line = f.readline()
+    while line[0] != 'n':
+        print(line + " line ")
+        line = f.readline()
+
+    parts = line.split()
+    movies = int(parts[1])
+    line = f.readline()
+    parts = line.split()
+    features = int(parts[1])
+    print(movies)
+    print(features)
+    #movies, features = list(map(int, f.readline().split()))
+    #q = false
+    while line[0] != 'q':
         line = f.readline()
 
     # Read # of movies and # of features
-    movies, features = list(map(int, f.readline().split()))
-    for i in range(movies):
+    #movies, features = list(map(int, f.readline().split()))
+    for i in range(movies -1):
+
         m_features = [None] * features
         m_id = 0
         counter = 0
-        for idx in range(features):
-            m_id, m_feature, m_value = f.readline().split()
-            m_features[idx] = m_value
+
+        lineparts = f.readline().split()
+
+        m_id = lineparts[0][1:]
+        idx = 0
+        for itr in range(features):
+            m_value = lineparts[2 + idx]
+            m_features[itr] = m_value
             counter += float(m_value)
+            idx = idx + 1
+
+
         if counter:
             m_features = [m_id] + m_features
             f_movies.write(','.join(m_features) + '\n')
     f.close()
     f_movies.close()
+
+# def transform():
+#     f = open('model.txt')
+#     f_movies = open('model_movies.csv','w')
+#
+#     # Skip top of the model and user matrix
+#     line = '123'
+#     while len(line) > 1:
+#         line = f.readline()
+#
+#     # Read # of movies and # of features
+#     movies, features = list(map(int,f.readline().split()))
+#     for i in range(movies):
+#         m_features = [None]*features
+#         m_id = 0
+#         counter = 0
+#         for idx in range(features):
+#             m_id, m_feature, m_value = f.readline().split()
+#             m_features[idx] = m_value
+#             counter += float(m_value)
+#         if counter:
+#             m_features = [m_id] + m_features
+#             f_movies.write(','.join(m_features) + '\n')
+#     f.close()
+#     f_movies.close()

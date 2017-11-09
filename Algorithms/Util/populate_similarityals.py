@@ -15,7 +15,6 @@ def als(batch_size=2500, cap=0.5, k=100):
     db_fieldname = 'als_cosine'
     generate_als()
     transform()
-    return
     matrix = genfromtxt('model_movies.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
     data = pandas.read_pickle(db_fieldname)
