@@ -188,3 +188,8 @@ html {
     padding: 0px !important;
 }
 
+.modal-image{
+    max-height: 100%;
+    max-width: 100%;
+}
+

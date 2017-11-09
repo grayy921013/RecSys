@@ -32,25 +32,6 @@
 
 {% block content %}
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog help-modal" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Click the Movie you are familiar with...</h4>
-                </div>
-                <div class="modal-body help-body">
-                    <img class="modal-image" src="{% static 'images/popup_index_2.png' %}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div role="tabpanel" class="tab-pane fade in active" id="randomMovieList">
         {% if notice %}
             <div class="alert alert-info">
@@ -71,6 +52,7 @@
                             <img src="
 
 
+
                                     {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                                  alt="Mountain View"
                                  name="movie-poster"
@@ -89,6 +71,18 @@
     </div>
 {% endblock %}
 
+{% block helpModal %}
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Click the Movie you are familiar with...</h4>
+    </div>
+    <div class="modal-body help-body">
+        <img class="modal-image" src="{% static 'images/popup_index_2.png' %}">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+    </div>
+{% endblock %}
 
 {% block script %}
     <script src="{% static 'js/home.js' %}"></script>
