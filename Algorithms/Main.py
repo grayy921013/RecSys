@@ -61,7 +61,7 @@ from Util.populate_similaritylibmf import libmf_als, recreate_Similarity_Table
 #         'filtered_plot_bm25',
 #         'filtered_plot_jaccard',
 #         'als_cosine']
-features_field = ['libmf_cosine','title_tfitf','cast_tfitf','genre_tfitf','director_tfitf','writer_tfitf','full_plot_tfitf','language_tfitf','country_tfitf','awards_tfitf','filtered_plot_tfitf'];
+features_field = ['title_tfitf','cast_tfitf','genre_tfitf','director_tfitf','writer_tfitf','full_plot_tfitf','language_tfitf','country_tfitf','awards_tfitf','filtered_plot_tfitf'];
 #features_field = ['libmf_cosine']
 
 
