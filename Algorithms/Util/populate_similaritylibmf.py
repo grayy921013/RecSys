@@ -15,9 +15,8 @@ logger.setLevel(logging.DEBUG)
 
 def libmf_als(batch_size=2500, cap=0.5, k=100):
     db_fieldname = 'libmf_cosine'
-    generate_libmf_als()
+    #generate_libmf_als()
     libmf_transform()
-    return
     matrix = genfromtxt('model_movies1.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
     data = pandas.read_pickle(db_fieldname)
@@ -34,6 +33,7 @@ def generate_libmf_als():
         raise Exception('There is no a LibMF executable for windows')
     else:
         executable = './CF/libMF/mf-train'
+        #executable = './mf-train'
 
     command = '''%s -k 10 ./Data/ml-20m/ratings_libmf_tr.txt model1.txt''' % executable
     output = os.system(command)
@@ -150,12 +150,16 @@ def libmf_transform():
     line = '123'
     movies = 0
     features = 0
+    line = f.readline()
     while line[0] != 'n':
-        parts = line.split(' ')
-        movies = int(parts[1])
+        print(line + " line ")
         line = f.readline()
-        parts = line.split(' ')
-        features = int(parts[1])
+
+    parts = line.split()
+    movies = int(parts[1])
+    line = f.readline()
+    parts = line.split()
+    features = int(parts[1])
     print(movies)
     print(features)
     #movies, features = list(map(int, f.readline().split()))
@@ -165,7 +169,6 @@ def libmf_transform():
 
     # Read # of movies and # of features
     #movies, features = list(map(int, f.readline().split()))
-    print(" starting "  + line)
     for i in range(movies -1):
 
         m_features = [None] * features
@@ -173,24 +176,18 @@ def libmf_transform():
         counter = 0
 
         lineparts = f.readline().split()
-        print(lineparts)
 
         m_id = lineparts[0][1:]
         idx = 0
         for itr in range(features):
             m_value = lineparts[2 + idx]
             m_features[itr] = m_value
-            print(idx)
-            print(itr)
-            print(m_value)
             counter += float(m_value)
             idx = idx + 1
-        print(m_features)
 
 
         if counter:
             m_features = [m_id] + m_features
-            print(m_features)
             f_movies.write(','.join(m_features) + '\n')
     f.close()
     f_movies.close()
