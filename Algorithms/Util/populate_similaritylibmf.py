@@ -128,12 +128,13 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
     p = pandas.DataFrame(pre_frame)
     print("Getting top k elements for each movieid")
     # Get top K elements for each movieid1 set 1
+
     p = p \
         .sort_values(by=['id1_id', 'libmf_cosine'], ascending=False) \
         .groupby('id1_id') \
         .head(k) \
         .reset_index(drop=True)
-
+    print("Sort")
     p = p.sort_values(by=['id1_id'], ascending=True)
     print("Temporarily save to a local file")
     # Temporarily save to a local file
