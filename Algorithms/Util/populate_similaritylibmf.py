@@ -23,6 +23,10 @@ def libmf_als(batch_size=100, cap=0.5, k=100):
     dataset = PostgresDataHandler()
     dataset.save_libmf(data[['id1_id', 'id2_id', 'libmf_cosine']])
 
+def recreate_Similarity_Table():
+    dataset = PostgresDataHandler()
+    dataset.clear_similarity()
+
 
 def generate_libmf_als():
     # command = './rating_prediction --training-file=ratings.csv --recommender=MatrixFactorization --test-ratio=0.1  --save-user-mapping=user_mapping.txt --save-item-mapping=item_mapping.txt  --save-model=model.txt'
