@@ -418,11 +418,15 @@ def get_similar_movies(request, id):
     similar_movies = SimilarMovie.objects.filter(movie=movie)
     vote_status = {}
     id_set = set()
+    algorithm_count = {}
     voted_list = UserVote.objects.filter(user=request.user, movie1_id=id)
     for voted in voted_list:
         vote_status[voted.movie2_id] = voted.action
     for similar in similar_movies:
         if similar.similar_movie_id not in id_set:
+            if algorithm_count.get(similar.algorithm, 0) >= 5:
+                continue
+            algorithm_count[similar.algorithm] = algorithm_count.get(similar.algorithm, 0) + 1
             id_set.add(similar.similar_movie_id)
             similar_movie = similar.similar_movie
             status = 2
