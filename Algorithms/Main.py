@@ -59,7 +59,8 @@ features_field = ['title_tfitf',
         'awards_jaccard',
         'filtered_plot_tfitf',
         'filtered_plot_bm25',
-        'filtered_plot_jaccard']
+        'filtered_plot_jaccard',
+        'libmf_cosine']
 
 
 def test(filepath):
