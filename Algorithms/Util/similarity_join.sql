@@ -36,7 +36,7 @@ BEGIN
         UNION
         SELECT  id1_id, id2_id FROM mainsite_Similarityals
         UNION
-        SELECT  id1_id, id2_id FROM mainsite_Similaritylibmf
+        SELECT  id1_id, id2_id FROM mainsite_similaritylibmf
         ) a;
 
 
