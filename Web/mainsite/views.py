@@ -263,11 +263,15 @@ def home(request):
     else:
         random_movie_list, movie_id_list = get_random_movie(request.user.id)
 
+    finished_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=True).values('movie__id')
+    ongoing_movies = VotedMovie.objects.filter(user=request.user, movie__in=random_movie_list, finished=False).values('movie__id')
     errors = " "
     context = {
         'errors': errors,
         'movie_list': random_movie_list,
-        'title': 'Home Page'
+        'title': 'Home Page',
+        'finished_movies': finished_movies,
+        'ongoing_movies': ongoing_movies
     }
     response = render(request, 'home.html', context)
     response.set_cookie('movie_list', json.dumps(movie_id_list))
@@ -477,8 +481,18 @@ def user_vote(request):
     all_voted = True
     for voted in voted_list:
         voted_ids.add(voted.movie2_id)
-    for similar_movie in similar_movies:
-        if similar_movie.similar_movie_id not in voted_ids:
+
+    id_set = set()
+    algorithm_count = {}
+    for similar in similar_movies:
+        if similar.similar_movie_id not in id_set:
+            if algorithm_count.get(similar.algorithm, 0) >= 5:
+                continue
+            algorithm_count[similar.algorithm] = algorithm_count.get(similar.algorithm, 0) + 1
+            id_set.add(similar.similar_movie_id)
+
+    for id in id_set:
+        if id not in voted_ids:
             all_voted = False
             break
 
