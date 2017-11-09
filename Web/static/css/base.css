@@ -179,3 +179,12 @@ html {
     height:100%;
 }
 
+.help-modal{
+    width: 70%;
+    margin-left: 15%;
+}
+
+.help-body{
+    padding: 0px !important;
+}
+
