@@ -57,6 +57,8 @@ class Userinfo(models.Model):
     employment = models.CharField(max_length=100, default='', blank=True)
     security_question = models.CharField(max_length=100, default='', blank=True)
     security_answer = models.CharField(max_length=100, default='', blank=True)
+    has_visited_home = models.BooleanField(default=False)
+    has_visited_label = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user
