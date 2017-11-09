@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block nav %}
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="{% url 'home' %}" class="navbar-brand">Abra</a>
+        <a href="{% url 'blockbuster' %}" class="navbar-blockbuster">Blockbuster</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <div class="nav navbar-right">
+            {% block navbar %}
+
+            {% endblock %}
+        </div>
+        <form class="navbar-form navbar-left" method="post" action="{% url 'search' %}">
+            {% csrf_token %}
+            <input type="text" class="form-control" placeholder="Search For Titles" name="keyword">
+            <button type="submit" class="btn btn-sm btn-search">
+                <span class="glyphicon glyphicon-search icon-search" aria-hidden="true"></span>
+            </button>
+        </form>
+    </div>
+{% endblock %}

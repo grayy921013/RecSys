@@ -53,8 +53,7 @@ $(document).ready(function () {
 
     var ui_movie_list = $(".movie-item");
     var target_movie_id = $(".target-movie-holder").attr('id');
-    var label_progress_text = $("#label-progress")
-    var label_progress_bar = $("#label-progress-bar")
+    var label_progress_bar = $("#label-progress")
 
     var movie_list = [];
 
@@ -69,13 +68,13 @@ $(document).ready(function () {
             }
         }
 
-        label_progress_text.text("Progress: " + labeled + "/" + total);
+        label_progress_bar.text(labeled + "/" + total);
         var percent = 100;
         if (total > 0) {
             percent = labeled / total * 100;
         }
         label_progress_bar.attr('style', "width: " + percent + "%");
-    }
+    };
 
 
     var bindClickListener = function (movie_id, action) {

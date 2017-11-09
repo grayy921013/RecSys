@@ -36,6 +36,15 @@ body {
     float: left;
 }
 
+
+.navbar-back {
+    color: white !important;
+    font-size: 1.3em !important;
+    height: 60px;
+    padding: 15px;
+    float: left;
+}
+
 .navbar-fixed-bottom {
     background-color: black !important;
 }

@@ -36,8 +36,12 @@ button:hover {
 }
 
 #label-progress {
-    font-size: 17px;
-    font-weight: 500;
+    color: black;
+}
+
+.nav-progress {
+    float: left;
+    width: 100px;
 }
 
 /* Hide for mobile, show later */
@@ -264,8 +268,8 @@ a.popoverData {
 
 
 #container-progress {
-    padding-left: 40px;
-    padding-right: 40px;
+    margin-top: 20px;
+    width: 300px;
 }
 
 .animation-target {
