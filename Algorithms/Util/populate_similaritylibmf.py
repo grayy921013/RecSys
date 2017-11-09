@@ -48,6 +48,7 @@ def cosine_similarity(matrix, batch_size, cap, k):
                       widgets=['ALS: Cosine', ' ', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
     bar.start()
 
+    print("Calculate Similarities")
     # Calculate Similarity
     counter = 0
     for i in range(0, matrix.shape[0], batch_size):
@@ -56,12 +57,13 @@ def cosine_similarity(matrix, batch_size, cap, k):
         counter += 1
         bar.update(counter)
     bar.finish()
-
+    print("Append All Similarities")
     # Append All Similarities
     frames = []
     for i in range(0, matrix.shape[0], batch_size):
         frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
     result = pandas.concat(frames, axis=0)
+    print("result.to_pickle(db_fieldname)")
     result.to_pickle(db_fieldname)
     return result
 
@@ -109,10 +111,11 @@ def cosine_similarity_batch(m1, m2, cap, k, db_fieldname):
     rows_movielens = rows_movielens[mask]
     cols_movielens = cols_movielens[mask]
     scores = scores[mask]
-
+    print("Before getting top k")
     p = get_top_k(rows_movielens, cols_movielens, scores, k)
 
     # Temporarily save to a local file
+    print("p.to_pickle(db_fieldname)")
     p.to_pickle(db_fieldname)
 
 
@@ -123,7 +126,7 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
                                   names=('id1_id', 'id2_id', 'libmf_cosine'))
 
     p = pandas.DataFrame(pre_frame)
-
+    print("Getting top k elements for each movieid")
     # Get top K elements for each movieid1 set 1
     p = p \
         .sort_values(by=['id1_id', 'libmf_cosine'], ascending=False) \
@@ -132,7 +135,7 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
         .reset_index(drop=True)
 
     p = p.sort_values(by=['id1_id'], ascending=True)
-
+    print("Temporarily save to a local file")
     # Temporarily save to a local file
     logger.info('ALS\t %d/%d found/saved', p.shape[0], len(scores))
 
