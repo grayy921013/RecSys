@@ -4,9 +4,7 @@ $(document).ready(function() {
     // check if visited
     $.get("/check_visited?path=label", function(data){
         if(data == "true"){
-            alert("true")
         } else if(data == "false"){
-            alert("false")
             // popup
             $('#myModal').modal()
 
