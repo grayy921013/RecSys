@@ -487,7 +487,38 @@ def user_vote(request):
     voted_movie.save()
     return JsonResponse(dict(success=True))
 
+
 @login_required
 def userlogout(request):
     logout(request)
     return render(request, "login.html")
+
+
+def check_visited(request):
+    path = request.GET['path']
+    user_info = request.user.userinfo
+    if path == 'index':
+        if user_info.has_visited_home:
+            return HttpResponse('true')
+        else:
+            return HttpResponse('false')
+    else:
+        if user_info.has_visited_label:
+            return HttpResponse('true')
+        else:
+            return HttpResponse('false')
+
+
+def visit_page(request):
+    if 'path' not in request.GET:
+        return HttpResponse('invalid path')
+    path = request.GET['path']
+    user_info = request.user.userinfo
+    if path == 'index':
+        user_info.has_visited_home = True
+        user_info.save()
+    else:
+        user_info.has_visited_label = True
+        user_info.save()
+    return HttpResponse('ok')
+

@@ -15,5 +15,7 @@ urlpatterns = [
     url(r'^modifypwd/(?P<uid>\d+)/(?P<token>.+)', views.modify_pwd, name='modifypwd'),
     url(r'^search$', views.search, name='search'),
     url(r'^getsimilar/(?P<id>\d+)$', views.get_similar_movies, name='getsimilar'),
-    url(r'^uservote$', views.user_vote, name='uservote')
+    url(r'^uservote$', views.user_vote, name='uservote'),
+    url(r'^check_visited$', views.check_visited, name='check_visited'),
+    url(r'^visit_page$', views.visit_page, name='visit_page')
 ]

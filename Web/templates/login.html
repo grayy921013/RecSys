@@ -18,11 +18,23 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container-background">
+
+    </div>
     <div class="container-fluid">
         <div class="container login-container">
+            <div class="login-hint card">
+                <h2 class="form-signin-heading text-center">We Need Your Opinion!</h2>
+
+                <h4 class="text-center">What we are doing: </h4>
+                <p class="text-center">
+                    We are trying to collect your opinion about <b>whether two movies are similar </b> in order to <b>
+                    improve the performance </b> of existing movie recommendation system
+                </p>
+            </div>
+
             <form class="form-signin" method="post" action="{% url 'userlogin' %}">
                 {% csrf_token %}
-                <h2 class="form-signin-heading">We want your opinion about which movies are similar.</h2>
                 <p name="errors">{{ errors }}</p>
 
                 <label for="inputEmail" class="sr-only">Username</label>
