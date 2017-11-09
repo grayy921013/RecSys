@@ -36,7 +36,7 @@ BEGIN
         UNION
         SELECT  id1_id, id2_id FROM mainsite_Similarityals
         UNION
-        SELECT  id1_id, id2_id FROM mainsite_similaritylibmf
+        SELECT  id1_id, id2_id FROM mainsite_Similaritylibmf
         ) a;
 
 
@@ -106,7 +106,7 @@ BEGIN
     LEFT OUTER JOIN mainsite_SimilarityFiltered_plot       as n on a.id1_id = n.id1_id and a.id2_id = n.id2_id
     LEFT OUTER JOIN mainsite_SimilarityFull_plot    as o on a.id1_id = o.id1_id and a.id2_id = o.id2_id
     LEFT OUTER JOIN mainsite_Similarityals          as p on a.id1_id = p.id1_id and a.id2_id = p.id2_id
-    LEFT OUTER JOIN mainsite_similaritylibmf          as q on a.id1_id = q.id1_id and a.id2_id = q.id2_id;
+    LEFT OUTER JOIN mainsite_Similaritylibmf          as q on a.id1_id = q.id1_id and a.id2_id = q.id2_id;
 
     -- Insert data into legit table
     INSERT INTO mainsite_similarity(
