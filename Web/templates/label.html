@@ -11,26 +11,48 @@
 
 {% endblock %}
 
-{% block navbar %}
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            <a type="button" href="{% url 'home' %}" class="btn btn-default btn-md btn-icon-left"><span
-                    class="glyphicon glyphicon-home nav-glyphicon" aria-hidden="true"></span>
-            </a>
-        </li>
-        <li>
-            <a type="button" href="{% url 'profile' %}" class="btn btn-default btn-md btn-icon-left"><span
-                    class="glyphicon glyphicon-user nav-glyphicon" aria-hidden="true"></span>
-            </a>
-        </li>
-        <li>
-            <a type="button" class="btn btn-default btn-md btn-icon-right" href="{% url 'userlogout' %}"><span
-                    class="glyphicon glyphicon-log-out nav-glyphicon" aria-hidden="true"></span>
-            </a>
-        </li>
-    </ul>
+{% block nav %}
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a href="#" class="navbar-back"><span class="glyphicon glyphicon-arrow-left nav-glyphicon" aria-hidden="true"></span></a>
+        <a href="{% url 'home' %}" class="navbar-brand">Abra</a>
 
+        <div id="container-progress" class="navbar-left">
+            <div class="progress">
+                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50"
+                     aria-valuemin="0" aria-valuemax="100" style="width:50%" id="label-progress">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <div class="nav navbar-right">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a type="button" href="{% url 'home' %}" class="btn btn-default btn-md btn-icon-left"><span
+                            class="glyphicon glyphicon-home nav-glyphicon" aria-hidden="true"></span>
+                    </a>
+                </li>
+                <li>
+                    <a type="button" href="{% url 'profile' %}" class="btn btn-default btn-md btn-icon-left"><span
+                            class="glyphicon glyphicon-user nav-glyphicon" aria-hidden="true"></span>
+                    </a>
+                </li>
+                <li>
+                    <a type="button" class="btn btn-default btn-md btn-icon-right" href="{% url 'userlogout' %}"><span
+                            class="glyphicon glyphicon-log-out nav-glyphicon" aria-hidden="true"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -46,10 +68,6 @@
                     {% with id=movie.movielens_id|stringformat:"i" %}
                         <img src="
 
-
-
-
-
                                 {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
                              style="height: 206px; width: 144px" alt="Mountain View"
                              class="noresize img-responsive centerBlock">
@@ -59,7 +77,12 @@
             <div class="movie-info">
                 <ul id="movie-info-list">
                     <li>
-                        <b>Plot:</b> {{ movie.full_plot }}
+                        <b>Plot:</b>
+                        {% if movie.full_plot %}
+                            {{ movie.full_plot }}
+                        {% else %}
+                            {{ movie.plot }}
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -76,14 +99,6 @@
                 - Similar to this movie
             </div>
             <br>
-            <div id="container-progress">
-                <p id="label-progress">Progress:</p>
-                <div class="progress">
-                    <div class="progress-bar" id="label-progress-bar" role="progressbar" style="width: 0%"
-                         aria-valuenow="0" aria-valuemin="0"
-                         aria-valuemax="100"></div>
-                </div>
-            </div>
             {% load static %}
             {% for similar_movie in similar_list %}
                 <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">
@@ -122,7 +137,12 @@
             <br>
         </div>
     </div> <!-- /container -->
-
+    <div class="mask-holder">
+        <div class="congrats">
+            <h1 class="congrats-title">Congratulations!</h1>
+        </div>
+        <button class="btn btn-primary btn-mask-next" onclick="location.href = '/';"> Next!</button>
+    </div>
 {% endblock %}
 
 {% block helpModal %}
@@ -139,5 +159,18 @@
 {% endblock %}
 
 {% block script %}
+    <script src="{% static 'js/TweenMax.min.js' %}"></script>
+    <script src="{% static 'js/underscore-min.js' %}"></script>
     <script src="{% static 'js/label.js' %}"></script>
+{% endblock %}
+
+{% block navbarleft %}
+    <div id="container-progress" class="navbar-left">
+        <p id="label-progress">Progress:</p>
+        <div class="progress">
+            <div class="progress-bar" id="label-progress-bar" role="progressbar" style="width: 0%"
+                 aria-valuenow="0" aria-valuemin="0"
+                 aria-valuemax="100"></div>
+        </div>
+    </div>
 {% endblock %}

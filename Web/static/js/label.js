@@ -1,12 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $(".popoverData").popover();
 
     // check if visited
-    $.get("/check_visited?path=label", function(data){
-        if(data == "true"){
-            alert("true")
-        } else if(data == "false"){
-            alert("false")
+    $.get("/check_visited?path=label", function (data) {
+        if (data == "true") {
+        } else if (data == "false") {
             // popup
             $('#myModal').modal()
 
@@ -14,7 +12,9 @@ $(document).ready(function() {
             $.get("/visit_page?path=label")
         }
     })
+
 });
+
 var setupCSRF = function () {
     // using jQuery
     function getCookie(name) {
@@ -55,10 +55,11 @@ $(document).ready(function () {
 
     var ui_movie_list = $(".movie-item");
     var target_movie_id = $(".target-movie-holder").attr('id');
-    var label_progress_text = $("#label-progress")
-    var label_progress_bar = $("#label-progress-bar")
+    var label_progress_bar = $("#label-progress")
 
     var movie_list = [];
+
+    var lastPercent = -1;
 
     var refreshLabelProgress = function (movie_list) {
         var total = 0;
@@ -71,13 +72,19 @@ $(document).ready(function () {
             }
         }
 
-        label_progress_text.text("Progress: " + labeled + "/" + total);
+        label_progress_bar.text(labeled + "/" + total);
         var percent = 100;
         if (total > 0) {
             percent = labeled / total * 100;
         }
         label_progress_bar.attr('style', "width: " + percent + "%");
-    }
+
+        if (percent == 100 && lastPercent < 100 && lastPercent >= 0) {
+            startAnimation()
+        }
+
+        lastPercent = percent;
+    };
 
 
     var bindClickListener = function (movie_id, action) {
@@ -149,7 +156,7 @@ $(document).ready(function () {
             var uiHolder = ui_movie_list[i];
             var uiTitleAnchor = $($(uiHolder).find(".popoverData"));
             var uiTitle = $($(uiHolder).find(".movie-title"));
-            var uiYear= $($(uiHolder).find(".movie-year"));
+            var uiYear = $($(uiHolder).find(".movie-year"));
             var uiPopoverData = $(uiHolder).find(".movie-hover-text");
             var uiImage = $(uiHolder).find("img");
             var uiButtonHolder = $(uiHolder).find(".label-bar");
@@ -266,5 +273,82 @@ $(document).ready(function () {
 
     console.log("get target movie id " + target_movie_id);
     getSimilarList();
+    
+    $(".navbar-back").on('click', function () {
+        window.history.back();
+    });
+
+
+    // setup animation
+
+    $(function () {
+        var numberOfStars = 20;
+
+        for (var i = 0; i < numberOfStars; i++) {
+            $('.congrats').append('<div class="blob fa fa-star ' + i + '"></div>');
+        }
+
+        animateText();
+
+        animateBlobs();
+    });
+
+    var startAnimation = function () {
+        $(".mask-holder").show();
+        reset();
+
+        animateText();
+
+        animateBlobs();
+    }
+
+    function reset() {
+        $.each($('.blob'), function (i) {
+            TweenMax.set($(this), {x: 0, y: 0, opacity: 1});
+        });
+
+        TweenMax.set($('h1'), {scale: 1, opacity: 1, rotation: 0});
+    }
+
+    function animateText() {
+        TweenMax.from($('h1'), 0.8, {
+            scale: 0.4,
+            opacity: 0,
+            rotation: 15,
+            ease: Back.easeOut.config(4),
+        });
+    }
+
+    function animateBlobs() {
+
+        var xSeed = _.random(350, 380);
+        var ySeed = _.random(120, 170);
+
+        $.each($('.blob'), function (i) {
+            var $blob = $(this);
+            var speed = _.random(1, 5);
+            var rotation = _.random(5, 100);
+            var scale = _.random(0.8, 1.5);
+            var x = _.random(-xSeed, xSeed);
+            var y = _.random(-ySeed, ySeed);
+
+            TweenMax.to($blob, speed, {
+                x: x,
+                y: y,
+                ease: Power1.easeOut,
+                opacity: 0,
+                rotation: rotation,
+                scale: scale,
+                onStartParams: [$blob],
+                onStart: function ($element) {
+                    $element.css('display', 'block');
+                },
+                onCompleteParams: [$blob],
+                onComplete: function ($element) {
+                    $element.css('display', 'none');
+                }
+            });
+        });
+    }
 
 });

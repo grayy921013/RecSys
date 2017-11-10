@@ -36,8 +36,12 @@ button:hover {
 }
 
 #label-progress {
-    font-size: 17px;
-    font-weight: 500;
+    color: black;
+}
+
+.nav-progress {
+    float: left;
+    width: 100px;
 }
 
 /* Hide for mobile, show later */
@@ -95,14 +99,13 @@ button:hover {
     }
 }
 
-
 .btn-show {
     top: 160px;
 }
 
 a.popoverData {
-  color: inherit; /* blue colors for links too */
-  text-decoration: inherit; /* no underline */
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
 }
 
 .movie-line {
@@ -262,10 +265,82 @@ a.popoverData {
     right: 0;
 }
 
-
 #container-progress {
-    padding-left: 40px;
-    padding-right: 40px;
+    margin-top: 20px;
+    width: 300px;
+}
+
+.mask-holder {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(100, 100, 100, 0.6);
+    text-align: center;
+    display: none;
+}
+
+.mask-content {
+    display: inline-block;
+    margin-top: 10%;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Sigmar+One);
+
+.congrats {
+    position: absolute;
+    top: 140px;
+    width: 550px;
+    height: 500px;
+    padding: 20px 10px;
+    text-align: center;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+}
+
+.btn-mask-next {
+    position: absolute;
+    text-align: center;
+    left: calc(50% - 100px);
+    top: 50%;
+    width: 200px;
+    height: 70px;
+    font-size: 2.5em;
+    background-color: #fed431;
+    border: none;
+}
+
+.btn-mask-next:hover {
+    background-color: #fec313;
+}
+
+.congrats-title {
+    transform-origin: 50% 50%;
+    font-size: 50px;
+    font-family: 'Sigmar One', cursive;
+    cursor: pointer;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    text-align: center;
+    width: 100%;
+    color: white;
+    font-size: 7em;
+}
+
+.blob {
+    height: 50px;
+    width: 50px;
+    color: #ffcc00;
+    background-color: #ffcc00;
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    z-index: 1;
+    font-size: 30px;
+    display: none;
 }
 
 .animation-target {
