@@ -435,7 +435,7 @@ def get_similar_movies(request, id):
     if not movies:
         return JsonResponse(dict(data=movie_list))
     movie = movies[0]
-    similar_movies = SimilarMovie.objects.filter(movie=movie)
+    similar_movies = SimilarMovie.objects.filter(movie=movie).order_by('rank')
     vote_status = {}
     id_set = set()
     algorithm_count = {}
@@ -493,7 +493,7 @@ def user_vote(request):
         vote.delete()
 
     movie_id = int(request.POST["movie1_id"])
-    similar_movies = SimilarMovie.objects.filter(movie_id=movie_id)
+    similar_movies = SimilarMovie.objects.filter(movie_id=movie_id).order_by('rank')
     voted_list = UserVote.objects.filter(user=request.user, movie1_id=movie_id)
     voted_ids = set()
     all_voted = True
