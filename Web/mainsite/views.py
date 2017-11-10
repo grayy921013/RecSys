@@ -489,6 +489,8 @@ def user_vote(request):
                         movie2_id=int(request.POST["movie2_id"]))
     vote.action = int(request.POST["action"])
     vote.save()
+    if vote.action == 2:
+        vote.delete()
 
     movie_id = int(request.POST["movie1_id"])
     similar_movies = SimilarMovie.objects.filter(movie_id=movie_id)
