@@ -273,6 +273,10 @@ $(document).ready(function () {
 
     console.log("get target movie id " + target_movie_id);
     getSimilarList();
+    
+    $(".navbar-back").on('click', function () {
+        window.history.back();
+    });
 
 
     // setup animation
