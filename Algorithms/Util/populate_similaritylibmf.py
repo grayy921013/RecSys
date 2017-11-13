@@ -39,7 +39,7 @@ def generate_libmf_als():
         executable = './CF/libMF/mf-train'
         #executable = './mf-train'
 
-    command = '''%s -k 10 ./Data/ml-20m/ratings_libmf_tr.txt model1.txt''' % executable
+    command = '''%s -f 0 -l2 0.05 -k 100 -t 10 ./Data/ml-20m/ratings_libmf_tr.txt model1.txt''' % executable
     output = os.system(command)
     print(output)
 
