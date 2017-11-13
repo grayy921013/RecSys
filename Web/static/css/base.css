@@ -229,3 +229,7 @@ html {
     max-width: 100%;
 }
 
+.btn-left {
+    float: left;
+}
+
