@@ -13,6 +13,21 @@ $(document).ready(function () {
         }
     })
 
+    var previousLabelCount = 0;
+    // update goal
+    setInterval(function () {
+        $.get("/get_vote_count", function (data) {
+            var currentLabelCount = parseInt(data)
+            $('.nav-goal').removeClass("animated bounceIn");
+            if (currentLabelCount != previousLabelCount) {
+                $(".nav-goal").text("Our Goal: " + currentLabelCount + "/100")
+                $('.nav-goal').addClass("animated bounceIn");
+
+                previousLabelCount = currentLabelCount;
+            }
+        })
+    }, 1000);
+
 });
 
 var setupCSRF = function () {
@@ -273,7 +288,7 @@ $(document).ready(function () {
 
     console.log("get target movie id " + target_movie_id);
     getSimilarList();
-    
+
     $(".navbar-back").on('click', function () {
         window.history.back();
     });

@@ -41,8 +41,9 @@ body {
     color: white !important;
     font-size: 1.3em !important;
     height: 60px;
-    padding: 15px;
+    padding: 8px;
     float: left;
+    margin-right: 10px;
 }
 
 .navbar-fixed-bottom {

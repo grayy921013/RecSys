@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^getsimilar/(?P<id>\d+)$', views.get_similar_movies, name='getsimilar'),
     url(r'^uservote$', views.user_vote, name='uservote'),
     url(r'^check_visited$', views.check_visited, name='check_visited'),
-    url(r'^visit_page$', views.visit_page, name='visit_page')
+    url(r'^visit_page$', views.visit_page, name='visit_page'),
+    url(r'^get_vote_count$', views.get_vote_count, name='get_vote_count')
 ]
