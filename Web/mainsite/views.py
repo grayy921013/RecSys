@@ -8,15 +8,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-import math
-import random
-import time
 from mainsite.random_module import *
 import hashlib
 import string
 from django.http import Http404
 from django.utils import timezone
 import json
+
+COUNT_PER_ALGORITHM = 7
 
 def get_metadata(request, imdb_id):
     try:
@@ -443,10 +442,11 @@ def get_similar_movies(request, id):
     for voted in voted_list:
         vote_status[voted.movie2_id] = voted.action
     for similar in similar_movies:
+        # Each algorithm will contribute constant number of movies
+        if algorithm_count.get(similar.algorithm, 0) >= COUNT_PER_ALGORITHM:
+            continue
+        algorithm_count[similar.algorithm] = algorithm_count.get(similar.algorithm, 0) + 1
         if similar.similar_movie_id not in id_set:
-            if algorithm_count.get(similar.algorithm, 0) >= 5:
-                continue
-            algorithm_count[similar.algorithm] = algorithm_count.get(similar.algorithm, 0) + 1
             id_set.add(similar.similar_movie_id)
             similar_movie = similar.similar_movie
             status = 2
@@ -502,13 +502,16 @@ def user_vote(request):
 
     id_set = set()
     algorithm_count = {}
+    # Get the list of displayed similar movies for this movie
     for similar in similar_movies:
+        # Each algorithm will contribute constant number of movies
+        if algorithm_count.get(similar.algorithm, 0) >= COUNT_PER_ALGORITHM:
+            continue
+        algorithm_count[similar.algorithm] = algorithm_count.get(similar.algorithm, 0) + 1
         if similar.similar_movie_id not in id_set:
-            if algorithm_count.get(similar.algorithm, 0) >= 5:
-                continue
-            algorithm_count[similar.algorithm] = algorithm_count.get(similar.algorithm, 0) + 1
             id_set.add(similar.similar_movie_id)
 
+    # Check if all the similar movies have been labeled
     for id in id_set:
         if id not in voted_ids:
             all_voted = False
