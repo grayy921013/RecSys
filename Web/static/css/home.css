@@ -126,4 +126,8 @@ a.popoverData {
     opacity: 0;
 }
 
-
+.nav-goal{
+    font-size: 2em;
+    color: white;
+    padding: 12px;
+}

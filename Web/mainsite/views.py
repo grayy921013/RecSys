@@ -561,3 +561,8 @@ def visit_page(request):
         user_info.save()
     return HttpResponse('ok')
 
+
+def get_vote_count(request):
+    total_count = UserVote.objects.count()
+    return HttpResponse(str(total_count))
+

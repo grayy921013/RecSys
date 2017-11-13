@@ -266,8 +266,24 @@ a.popoverData {
 }
 
 #container-progress {
-    margin-top: 20px;
+    margin-top: 11px;
     width: 300px;
+}
+
+.label-progress{
+    height: 31px;
+}
+
+.label-progress-content{
+    font-size: 1.5em;
+    padding-top: 4px;
+    color: white !important;
+}
+
+.nav-goal{
+    font-size: 2em;
+    color: white;
+    padding: 12px;
 }
 
 .mask-holder {

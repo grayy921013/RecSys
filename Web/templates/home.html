@@ -7,11 +7,18 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
 {% endblock %}
 
 {% block navbar %}
     <ul class="nav navbar-nav navbar-right">
+        <li>
+            <a type="button" class="" href="/">
+                <p class="nav-goal"></p>
+            </a>
+        </li>
+
         <li>
             <a type="button" class="btn btn-default btn-md btn-icon-left" href="{% url 'profile' %}">
                 <span class="glyphicon nav-glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -64,6 +71,8 @@
                     {% with id=movie.movielens_id|stringformat:"i" %}
                         <a href="{% url 'label' movie.id %}">
                             <img src="
+
+
 
 
 
