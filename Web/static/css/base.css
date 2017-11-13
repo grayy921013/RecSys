@@ -9,6 +9,31 @@ body {
     background-color: #eee;
 }
 
+.nav-glyphicon:hover {
+    color: rgba(163, 163, 163, 0.7) !important;
+}
+
+.glyphicon-search:hover {
+    color: rgba(163, 163, 163, 0.7) !important;
+}
+
+.navbar-header > a:hover {
+    color: rgba(163, 163, 163, 0.7) !important;
+    text-decoration: none !important;
+}
+
+.navbar-fixed-top > .active > a:hover{
+    background-color: rgb(120, 120, 120);
+}
+
+.navbar-fixed-top > .active > span:hover{
+    color: rgb(120, 120, 120);
+}
+
+.nav-bottom-words:hover {
+    text-decoration: none !important;
+}
+
 .navbar-nav > li > a {
     padding-top: 3px !important;
     padding-bottom: 3px !important;
@@ -53,6 +78,7 @@ body {
     color: #DEDEDE;
     font-size: 1em;
     margin-bottom: 6px;
+    margin-right: 10px;
 }
 
 .nav-click {

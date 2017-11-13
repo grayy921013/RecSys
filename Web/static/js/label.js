@@ -6,7 +6,7 @@ $(document).ready(function () {
         if (data == "true") {
         } else if (data == "false") {
             // popup
-            $('#myModal').modal()
+            $('#helpModal').modal()
 
             // set that page as visited
             $.get("/visit_page?path=label")
