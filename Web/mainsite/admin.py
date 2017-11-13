@@ -34,13 +34,13 @@ class UserVoteAdmin(admin.ModelAdmin):
         with connection.cursor() as cursor:
             cursor.execute("select count(CASE WHEN action=-1 THEN 1 END), algorithm from " +
                            "mainsite_similarmovie,mainsite_uservote where movie1_id=movie_id and " +
-                           "movie2_id=similar_movie_id group by algorithm;")
+                           "movie2_id=similar_movie_id and rank < 7 group by algorithm;")
             not_similar = cursor.fetchall()
             for tuple in not_similar:
                 not_similar_count[tuple[1]] = tuple[0]
             cursor.execute("select count(CASE WHEN action=1 THEN 1 END), algorithm from " +
                            "mainsite_similarmovie,mainsite_uservote where movie1_id=movie_id and " +
-                           "movie2_id=similar_movie_id group by algorithm;")
+                           "movie2_id=similar_movie_id and rank < 7 group by algorithm;")
             similar = cursor.fetchall()
             for tuple in similar:
                 precision[tuple[1]] = tuple[0] / (tuple[0] + not_similar_count[tuple[1]])
