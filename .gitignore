@@ -71,6 +71,7 @@ Web/myprojectenv/
 Algorithms - Copy/
 Algorithms/.ipynb_checkpoints/
 *.ipynb
+Algorithms/Data/TMDBTotal.json
 Algorithms/Data/ml-20m/*
 Algorithms/als_cosine*
 Algorithms/model.txt
