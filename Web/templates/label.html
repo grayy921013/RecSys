@@ -22,8 +22,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="#" class="navbar-back"><span class="glyphicon glyphicon-arrow-left nav-glyphicon"
-                                              aria-hidden="true"></span></a>
+        <a href="#" class="navbar-back">
+            <span class="glyphicon glyphicon-arrow-left nav-glyphicon"
+                                              aria-hidden="true">
+            </span></a>
         <a href="{% url 'home' %}" class="navbar-brand">Abra</a>
 
         <div id="container-progress" class="navbar-left">
@@ -112,7 +114,7 @@
                 <span class="glyphicon  glyphicon-ok" aria-hidden="true" style="margin-left: 10px;"></span>
                 - Similar to this movie
             </div>
-            <br>
+        
             {% load static %}
             {% for similar_movie in similar_list %}
                 <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">

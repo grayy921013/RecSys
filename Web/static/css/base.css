@@ -233,3 +233,8 @@ html {
     float: left;
 }
 
+.nav-goal{
+    font-size: 1.7em;
+    color: white;
+    padding: 12px;
+}
