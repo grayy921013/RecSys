@@ -557,6 +557,6 @@ def visit_page(request):
 
 
 def get_vote_count(request):
-    total_count = UserVote.objects.count()
+    total_count = UserVote.objects.exclude(action__exact=0).count()
     return HttpResponse(str(total_count))
 
