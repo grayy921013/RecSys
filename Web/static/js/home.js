@@ -2,7 +2,7 @@ $(document).ready(function () {
     $(".popoverData").popover();
 
     var current_img = 1;
-    var total_img = 3;
+    var total_img = 4;
 
     initGallery();
 
@@ -42,7 +42,7 @@ $(document).ready(function () {
             $.get("/visit_page?path=index")
         }
     })
-    
+
     var previousLabelCount = 0;
     // update goal
     setInterval(function () {
@@ -65,6 +65,7 @@ $(document).ready(function () {
         $('#img_1').show();
         $('#img_2').hide();
         $('#img_3').hide();
+        $('#img_4').hide();
     }
 
     function updateGallery(selector) {
