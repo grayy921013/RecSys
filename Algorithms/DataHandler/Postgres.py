@@ -463,3 +463,59 @@ class PostgresDataHandler(DataHandler):
                 and id2_id = d.id;""");
             except Exception as e:
                 print(e)
+
+    def createTempTMDBTable(self):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""CREATE TABLE IF NOT EXISTS temp_tmdb (id1_id integer,id2_id integer,rank integer);""");
+            except Exception as e:
+                print(e)
+
+    def insertTMDB_Json(self,tuples):
+        with connection.cursor() as cursor:
+            try:
+                args_str = ','.join(cursor.mogrify("(%s,%s,%s)", x) for x in tuples)
+                cursor.execute("INSERT INTO temp_tmdb (id1_id,id2_id,rank) VALUES" + args_str)
+            except Exception as e:
+                print(e)
+    def selectTMDB(self):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("SELECT * FROM temp_tmdb")
+                for (id1_id, id2_id) in cursor:
+                    print(id1_id)
+                    print(id2_id)
+            except Exception as e:
+                print(e)
+
+    def changeTMDB(self):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""create table temp_tmdb_bk as select m1.id as id1_id,
+                 m2.id as id2_id, s.rank as rank from temp_tmdb s join  
+                 mainsite_movie m1 on s.id1_id = m1.tmdb_id join mainsite_movie m2 on s.id2_id = m2.tmdb_id;""")
+                cursor.execute("""truncate table temp_tmdb;""")
+                cursor.execute("""insert into temp_tmdb select * from temp_tmdb_bk;""")
+                cursor.execute("""drop table temp_tmdb_bk ;""")
+            except Exception as e:
+                print(e)
+
+    def updateTMDB_similarMovie(self):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""update mainsite_similarmovie set movie_id = s.id1_id, rank = s.rank, similar_movie_id = s.id2_id, algorithm = 3 from temp_tmdb s;""")
+            except Exception as e:
+                print(e)
+
+
+
+
+
+
+
+
+
+
+
+
+

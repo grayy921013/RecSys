@@ -30,6 +30,7 @@ from progressbar import ProgressBar, Bar, Percentage, Timer
 from sklearn.externals import joblib
 from Util.populate_similarityals import als
 from Util.populate_similaritylibmf import libmf_als, recreate_Similarity_Table
+from Util.add_tmdb_movie_similarity import add_tmdb
 # features_field = ['title_tfitf',
 #         'title_bm25',
 #         'title_jaccard',
@@ -148,6 +149,8 @@ if __name__ == "__main__":
     elif command == 'populate_age_diff':
         dataset = PostgresDataHandler()
         dataset.updateSimilarityAgeDiffFeature();
+    elif command == 'add_tmdb':
+        add_tmdb()
     elif command == 'p' or command == 'populate':
         populate_movie_pairs(filepath)
     elif command == 'recreate_similarity':
