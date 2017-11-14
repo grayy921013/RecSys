@@ -145,6 +145,9 @@ if __name__ == "__main__":
         als()
     elif command == 'als-libmf':
         libmf_als()
+    elif command == 'populate_age_diff':
+        dataset = PostgresDataHandler()
+        dataset.updateSimilarityAgeDiffFeature();
     elif command == 'p' or command == 'populate':
         populate_movie_pairs(filepath)
     elif command == 'recreate_similarity':

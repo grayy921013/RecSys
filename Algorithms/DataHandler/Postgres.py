@@ -452,3 +452,14 @@ class PostgresDataHandler(DataHandler):
                                (AsIs(field),AsIs(field),AsIs(field)));
             except Exception as e:
                 print(e)
+
+    def updateSimilarityAgeDiffFeature(self):
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute("""update mainsite_similarity 
+                set age_diff = (1.0 - (abs(c.year-d.year)/CAST(maxYearQuery.maxYear AS DOUBLE PRECISION)))
+                from mainsite_movie c, mainsite_movie d, (SELECT abs(a.year-b.year) AS maxYear FROM mainsite_movie a, mainsite_movie b ORDER BY maxYear DESC LIMIT 1) AS maxYearQuery
+                where id1_id = c.id
+                and id2_id = d.id;""");
+            except Exception as e:
+                print(e)
