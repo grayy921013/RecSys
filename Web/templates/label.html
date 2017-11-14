@@ -22,8 +22,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="#" class="navbar-back"><span class="glyphicon glyphicon-arrow-left nav-glyphicon"
-                                              aria-hidden="true"></span></a>
+        <a href="#" class="navbar-back">
+            <span class="glyphicon glyphicon-arrow-left nav-glyphicon"
+                                              aria-hidden="true">
+            </span></a>
         <a href="{% url 'home' %}" class="navbar-brand">Abra</a>
 
         <div id="container-progress" class="navbar-left">
@@ -112,7 +114,7 @@
                 <span class="glyphicon  glyphicon-ok" aria-hidden="true" style="margin-left: 10px;"></span>
                 - Similar to this movie
             </div>
-            <br>
+
             {% load static %}
             {% for similar_movie in similar_list %}
                 <div id="div{{ similar_movie.imdb_id }}" class="col-sm-6 col-md-4 col-lg-3 col movie-item">
@@ -165,10 +167,10 @@
         <h4 class="modal-title">Label Movies Similar to the Movie you chose...</h4>
     </div>
     <div class="modal-body help-body">
-        <img id="img_1" class="modal-image" src="{% static 'images/home_help_1.png' %}">
-        <img id="img_2" class="modal-image" src="{% static 'images/home_help_2.png' %}">
-        <img id="img_3" class="modal-image" src="{% static 'images/home_help_3.png' %}">
-        <img id="img_4" class="modal-image" src="{% static 'images/home_help_4.png' %}">
+        <img id="img_1" class="modal-image" src="{% static 'images/label_help_1.png' %}">
+        <img id="img_2" class="modal-image" src="{% static 'images/label_help_2.png' %}">
+        <img id="img_3" class="modal-image" src="{% static 'images/label_help_3.png' %}">
+        <img id="img_4" class="modal-image" src="{% static 'images/label_help_4.png' %}">
     </div>
     <div class="modal-footer">
         <button id="show_prev" type="button" class="btn btn-primary btn-left">Previous</button>

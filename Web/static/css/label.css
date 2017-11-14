@@ -203,6 +203,10 @@ a.popoverData {
     font-size: 2em;
 }
 
+.glyphicon-arrow-left {
+    font-size: 1.8em !important;
+}
+
 #movie-info-list {
     margin-bottom: 70px;
 }
@@ -267,6 +271,7 @@ a.popoverData {
 
 #container-progress {
     margin-top: 11px;
+    margin-left: 10px;
     width: 300px;
 }
 
@@ -275,15 +280,9 @@ a.popoverData {
 }
 
 .label-progress-content{
-    font-size: 1.5em;
+    font-size: 1.3em;
     padding-top: 4px;
     color: white !important;
-}
-
-.nav-goal{
-    font-size: 2em;
-    color: white;
-    padding: 12px;
 }
 
 .mask-holder {
