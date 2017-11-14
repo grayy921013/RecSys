@@ -135,3 +135,7 @@ a.popoverData {
 .empty-msg{
     height: 1000px;
 }
+
+.movie-item-finished{
+    opacity: 0.6;
+}

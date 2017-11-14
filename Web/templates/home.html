@@ -45,54 +45,62 @@
 {% block content %}
 
     <div role="tabpanel" class="tab-pane fade in active" id="randomMovieList">
-        {% if notice %}
-            <div class="alert alert-info">
-                {{ notice }}
-            </div>
-        {% endif %}
-        {% load static %}
-        {% for movie in movie_list %}
+    {% if notice %}
+        <div class="alert alert-info">
+            {{ notice }}
+        </div>
+    {% endif %}
+    {% load static %}
+    {% for movie in movie_list %}
+        {% if movie.id in finished_movies %}
+            <div class="col-sm-6 col-md-4 col-lg-3 col movie-item movie-item-finished">
+        {% else %}
             <div class="col-sm-6 col-md-4 col-lg-3 col movie-item">
-                <a class="popoverData" href="#" data-content="{{ movie.title }}" rel="popover" data-placement="top"
-                   data-trigger="hover">
-                    <div class="movie-title movie-line" id="{{ movie.movielens_id }}-title">{{ movie.title }}</div>
-                </a>
-                <div class="movie-year movie-line" id="{{ movie.movielens_id }}-year">({{ movie.year }})</div>
-                <div class="movie-badge-holder">
-                    {% if movie.id in finished_movies %}
-                        <span class="movie-badge-finished badge">Finished</span>
-                    {% elif movie.id in ongoing_movies %}
-                        <span class="movie-badge-unfinished badge">Unfinished</span>
-                    {% else %}
-                        <span class="movie-badge-none badge">Unfinished</span>
-                    {% endif %}
-                </div>
-                <div class="movie-poster-div">
-                    {% with id=movie.movielens_id|stringformat:"i" %}
-                        <a href="{% url 'label' movie.id %}">
-                            <img src="
+        {% endif %}
 
-
-
-
-
-
-                                    {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
-                                 alt="Mountain View"
-                                 name="movie-poster"
-                                 class="resize img-responsive centerBlock">
-                        </a>
-                    {% endwith %}
-                </div>
-            </div>
-        {% empty %}
-            <h3 class="empty-msg">
-                {{ empty_msg }}
-            </h3>
-        {% endfor %}
-        <div id="wrap"></div>
-        <br>
+    <a class="popoverData" href="#" data-content="{{ movie.title }}" rel="popover" data-placement="top"
+       data-trigger="hover">
+        <div class="movie-title movie-line" id="{{ movie.movielens_id }}-title">{{ movie.title }}</div>
+    </a>
+    <div class="movie-year movie-line" id="{{ movie.movielens_id }}-year">({{ movie.year }})</div>
+    <div class="movie-badge-holder">
+        {% if movie.id in finished_movies %}
+            <span class="movie-badge-finished badge">Finished</span>
+        {% elif movie.id in ongoing_movies %}
+            <span class="movie-badge-unfinished badge">Unfinished</span>
+        {% else %}
+            <span class="movie-badge-none badge">Unfinished</span>
+        {% endif %}
     </div>
+
+
+    <div class="movie-poster-div">
+        {% with id=movie.movielens_id|stringformat:"i" %}
+            <a href="{% url 'label' movie.id %}">
+                <img src="
+
+
+
+
+
+
+
+                    {% with 'posters/'|add:id|add:'.jpg' as image_static %}{% static image_static %}{% endwith %}"
+                     alt="Mountain View"
+                     name="movie-poster"
+                     class="resize img-responsive centerBlock">
+            </a>
+        {% endwith %}
+    </div>
+    </div>
+    {% empty %}
+        <h3 class="empty-msg">
+            {{ empty_msg }}
+        </h3>
+    {% endfor %}
+<div id="wrap"></div>
+<br>
+</div>
 {% endblock %}
 
 {% block helpModal %}
