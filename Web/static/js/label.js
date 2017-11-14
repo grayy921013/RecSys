@@ -50,7 +50,7 @@ $(document).ready(function () {
             var currentLabelCount = parseInt(data)
             $('.nav-goal').removeClass("animated bounceIn");
             if (currentLabelCount != previousLabelCount) {
-                $(".nav-goal").text("Our Goal: " + currentLabelCount + "/100")
+                $(".nav-goal").text("Our Goal: " + currentLabelCount + "/2000")
                 $('.nav-goal').addClass("animated bounceIn");
 
                 previousLabelCount = currentLabelCount;
