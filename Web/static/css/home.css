@@ -131,3 +131,7 @@ a.popoverData {
     color: white;
     padding: 12px;
 }
+
+.empty-msg{
+    height: 1000px;
+}
