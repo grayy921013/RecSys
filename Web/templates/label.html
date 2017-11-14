@@ -165,10 +165,14 @@
         <h4 class="modal-title">Label Movies Similar to the Movie you chose...</h4>
     </div>
     <div class="modal-body help-body">
-        <img class="modal-image" src="{% static 'images/popup_label.png' %}">
+        <img id="img_1" class="modal-image" src="{% static 'images/home_help_1.png' %}">
+        <img id="img_2" class="modal-image" src="{% static 'images/home_help_2.png' %}">
+        <img id="img_3" class="modal-image" src="{% static 'images/home_help_3.png' %}">
+        <img id="img_4" class="modal-image" src="{% static 'images/home_help_4.png' %}">
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+        <button id="show_prev" type="button" class="btn btn-primary btn-left">Previous</button>
+        <button id="show_next" type="button" class="btn btn-primary">Next</button>
     </div>
 {% endblock %}
 
