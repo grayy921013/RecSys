@@ -23,8 +23,8 @@ $(document).ready(function () {
         var hide_img_id = "img_" + current_img;
         current_img--;
         var show_img_id = "img_" + current_img;
-        $('#' + hide_img_id).hide();
-        $('#' + show_img_id).show();
+        $('#' + hide_img_id, modal_selector).hide();
+        $('#' + show_img_id, modal_selector).show();
         updateGallery();
     });
 
@@ -81,7 +81,7 @@ $(document).ready(function () {
         $('#img_4', modal_selector).hide();
     }
 
-    function updateGallery(selector) {
+    function updateGallery() {
         if (current_img >= total_img) {
             $("#show_next", modal_selector).text("OK");
         }
