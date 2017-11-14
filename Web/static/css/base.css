@@ -157,6 +157,10 @@ body {
         float: left !important;
         margin: 0 !important;
     }
+
+    .navbar-fixed-bottom {
+        display: none !important;
+    }
 }
 
 .main .page-header {
