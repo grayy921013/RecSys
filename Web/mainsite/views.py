@@ -522,7 +522,9 @@ def user_vote(request):
 @login_required
 def userlogout(request):
     logout(request)
-    return render(request, "login.html")
+    response = render(request, "login.html")
+    response.delete_cookie('movie_list')
+    return response
 
 
 def check_visited(request):
