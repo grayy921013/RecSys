@@ -95,24 +95,50 @@ def train(filepath):
     print('\n -*- Model succesfully trained -*-')
     bar.finish()
 
-def populate_movie_pairs(filepath):
+def predict(id):
+    model = train(r'./Data/groundtruth.exp1.csv')
+    print('-*- model loaded -*-')
+    trainer = Trainer(features_field, model)
 
-    model = joblib.load('TMP_MODEL.pkl') 
+    predict_movie(trainer, id, algorithm=-1)
+
+def populate_movie_pairs(model_filepath='TMP_MODEL.pkl', algorithm=0):
+    '''
+    Use a previously trained model:
+        You NEED to first run the train function to generate that file.
+
+    Then it will try to predict the best 20 similar movies, between
+    each possibly movie pair.
+
+    Input:
+    - Linear Regression model file path
+
+    Output:
+    - Insert into Movie Pair Table
+
+    Standard Output:
+    - n/a
+    '''
+
+    # model = joblib.load(model_filepath) 
+    model = train(r'./Data/groundtruth.exp1.csv')
     print('-*- model loaded -*-')
     trainer = Trainer(features_field, model)
 
     minimum = 3
     maximum = 27001
 
-    step = 300
-    trainer.dataset.clear_similar_movies()
+    step = 2000
+    trainer.dataset.clear_similar_movies(algorithm)
     for i in range(0,27300,step):
         print('Update: ', i, '/', 27300)
 
+        # Get all the pairs saved into the mainsite_similarity DB
+        # using movieid1 between a range and all the movieid2 saved
         features = trainer.dataset.get_pairs(low=i, high=i+step)
 
         features = np.array(features)
-        print('Pairs being predicted: ', len(features))
+        print('\tPairs being predicted: ', len(features))
 
         # -*- Predict -*-
         standardized_flag = False
@@ -122,10 +148,9 @@ def populate_movie_pairs(filepath):
         top_movie_pairs = trainer.predict_from_pairs(features, k, standardized_flag)
         print('Predicted pairs: ', len(top_movie_pairs))
         # -*- Persist -*-
-        trainer.dataset.save_similar_movies(top_movie_pairs.values.tolist())
+        trainer.dataset.save_similar_movies(top_movie_pairs.values.tolist(), algorithm)
         print('-*- similar movies succesfully save -*-')
         
-
 if __name__ == "__main__":
 
     if len(sys.argv) > 1:
@@ -152,7 +177,9 @@ if __name__ == "__main__":
     elif command == 'add_tmdb':
         add_tmdb()
     elif command == 'p' or command == 'populate':
-        populate_movie_pairs(filepath)
+        populate_movie_pairs(filepath, -1)
+    elif command == 'predict':
+        predict(int(filepath))
     elif command == 'recreate_similarity':
         recreate_Similarity_Table()
     else:

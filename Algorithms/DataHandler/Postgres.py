@@ -317,11 +317,31 @@ class PostgresDataHandler(DataHandler):
         logger.info('Duration INSERT: %f', time()-t_db)
         return None
 
-    def clear_similar_movies(self):
-        SimilarMovie.objects.all().delete()
 
-    def save_similar_movies(self, pairs, batch_size=1000):
-        batch = list(map(lambda x: SimilarMovie(movie_id = x[0], similar_movie_id=x[1], rank=0, algorithm=0), pairs))
+    def clear_similar_movies(self, algorithm):
+        SimilarMovie.objects.filter(algorithm=algorithm).delete()
+
+    def save_similar_movies(self, pairs, algorithm, batch_size=1000):
+        batch = [None]*len(pairs);
+
+        rank = 0;
+        prev_movie_id = -1;
+        for i in range(len(pairs)):
+            x = pairs[i]
+
+            movie_id = x[0]
+
+            if movie_id != prev_movie_id:
+                rank = 1;
+                prev_movie_id = movie_id
+            else:
+                rank += 1
+
+            batch[i] = SimilarMovie(movie_id = movie_id, 
+                                    similar_movie_id=x[1], 
+                                    rank=rank, 
+                                    algorithm=algorithm)
+
         logger.debug('Parsed')
 
         if batch_size is not None:
@@ -339,6 +359,7 @@ class PostgresDataHandler(DataHandler):
             counter += 1
             bar.update(counter)
         bar.finish()
+
 
 
     def save_als(self, data):
