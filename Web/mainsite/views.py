@@ -50,7 +50,7 @@ def get_random_movie(user_id):
             continue
         movie = movie_qs[0]
         # Filter out movies that has been voted by more than four users.
-        if UserVote.objects.filter(movie1=movie).distinct('user').count() > 4:
+        if UserVote.objects.filter(movie1=movie, action__in=[-1, 1]).distinct('user').count() > 4:
             continue
         if movie.id in movie_id_set:
             continue
@@ -293,7 +293,15 @@ def refresh(request):
 @login_required
 def blockbuster(request):
     # get the random movie
-    random_movie_list = Movie.objects.exclude(popularity__isnull=True).order_by('-popularity')[:30]
+    random_movies = Movie.objects.exclude(popularity__isnull=True).order_by('-popularity')
+    random_movie_list = []
+    for movie in random_movies:
+        if UserVote.objects.filter(movie1=movie, action__in=[-1, 1]).distinct('user').count() > 4:
+            continue
+        random_movie_list.append(movie)
+        if len(random_movie_list) == 30:
+            break
+
     tmp = []
     for movie in random_movie_list:
         tmp.append(movie)
