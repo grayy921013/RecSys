@@ -44,6 +44,7 @@ def get_random_movie(user_id):
         else:
             genre = random_genre()
             popularity_range = random_popularity_range()
+            popularity_range = random_popularity_range()
             movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
                                      popularity__lte=popularity_range[0]).order_by("?").exclude(id__in=movie_id_set)[:1]
         if not movie_qs.exists():
@@ -293,7 +294,7 @@ def refresh(request):
 @login_required
 def blockbuster(request):
     # get the random movie
-    random_movies = Movie.objects.exclude(popularity__isnull=True).order_by('-popularity')
+    random_movies = Movie.objects.order_by('-imdb_votes')
     random_movie_list = []
     for movie in random_movies:
         if UserVote.objects.filter(movie1=movie, action__in=[-1, 1]).distinct('user').count() > 4:
@@ -417,7 +418,7 @@ def search(request):
         else:
             filtered_set.add(word)
     if query_valid:
-        movie_list = query_set.order_by('-popularity')[:30]
+        movie_list = query_set.order_by('-imdb_votes')[:30]
     else:
         movie_list = []
     notice = ""

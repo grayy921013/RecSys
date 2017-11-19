@@ -27,7 +27,7 @@ class Movie(models.Model):
     cast = models.CharField(max_length=2000)
     metacritic = models.CharField(max_length=2000)
     imdb_rating = models.FloatField(null=True)
-    imdb_votes = models.IntegerField(null=True)
+    imdb_votes = models.IntegerField(null=True, db_index=True)
     poster = models.CharField(max_length=1000)
     plot = models.CharField(max_length=2000)
     full_plot = models.CharField(max_length=10000)
