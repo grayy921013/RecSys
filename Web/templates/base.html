@@ -38,14 +38,80 @@
 <nav class="navbar navbar-inverse navbar-fixed-bottom">
     <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" class="nav-bottom-words">Terms</a></li>
-            <li><a href="#" class="nav-bottom-words">Contact us</a></li>
+            <li><a href="#" class="nav-bottom-words" data-toggle="modal" data-target="#termsModal">Terms</a></li>
+            <li><a href="#" class="nav-bottom-words" data-toggle="modal" data-target="#contactModal">Contact us</a></li>
         </ul>
         <form class="navbar-form navbar-left">
-            <a href="#" class="nav-bottom-words">About Abra</a>
+            <a href="#" class="nav-bottom-words" data-toggle="modal" data-target="#aboutModal">About Abra</a>
         </form>
     </div>
 </nav>
+
+<!-- Bottom Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">About Abra</h4>
+            </div>
+            <div class="modal-body">
+                We are trying to collect your opinion about <b>whether two movies are similar </b>
+                in order to <b>improve the performance </b> of existing movie recommendation system.
+                Your label submissions will help to make our life easier in selecting movies tonight!
+                <br><br>
+                Thanks for your help :)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Privacy Terms</h4>
+            </div>
+            <div class="modal-body">
+                The purpose of this experiment is to collect user opinions to determine the effectiveness and efficiency
+                of various similarity algorithms over movies. This experiment will not "test" you or your ability to
+                select similar movies. Instead, our aim is to evaluate the algorithms with respect to human judgment.
+                Your identity information will not be recorded by participating in this experiment. Please be advised
+                that there is no risk associated with participation in this study.
+                <br>
+                If you read and fully understood the extent of the study and any risks involved, tick the checkbox "I
+                agree". Your action acknowledges your understanding of the information provided in this form and
+                indicates your willingness to participate in this experiment.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+                If you have any questions or suggestions, please feel free to contact us by
+                <a href="mailto:rlu1@andrew.cmu.edu">email</a>.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
