@@ -44,9 +44,8 @@ def get_random_movie(user_id):
         else:
             genre = random_genre()
             popularity_range = random_popularity_range()
-            popularity_range = random_popularity_range()
-            movie_qs = Movie.objects.filter(genres__name__contains=genre, popularity__gte=popularity_range[1],
-                                     popularity__lte=popularity_range[0]).order_by("?").exclude(id__in=movie_id_set)[:1]
+            movie_qs = Movie.objects.filter(genres__name__contains=genre, imdb_votes__gte=popularity_range[1],
+                                            imdb_votes__lte=popularity_range[0]).order_by("?").exclude(id__in=movie_id_set)[:1]
         if not movie_qs.exists():
             continue
         movie = movie_qs[0]

@@ -71,7 +71,7 @@ score >= 50: 5/9
 5 > score >= 0: 1/9
 '''
 
-popularity_ranges = [[10000, 50], [50, 5], [5, 0]]
+popularity_ranges = [[2000000, 200000], [200000, 10000], [10000, 0]]
 popularity_percentage = [5, 3, 1]
 
 
