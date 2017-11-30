@@ -3,6 +3,7 @@ Frontend Setup:
 
 1. Clone the repo
 2. Make sure you have python3 and pip installed. Install required packages in `Web/requirements.txt` using `pip install -r requirements.txt`. You can also use `virtualenv`.
+3. Install Postgres and create a new database. Fill in the corresponding credential in `Web/Web/settings.py`.
 3. Run `python3 manage.py makemigrations` and `python3 manage.py migrate`.
 4. Import all the necessary data in `import.sql`. The sql file is avialable in Google drive, because it is too large to fit in Git.
 5. To get the movie posters ready, you need to download poster images from the original server and put them under `Web/static/posters`.
