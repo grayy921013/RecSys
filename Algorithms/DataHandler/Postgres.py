@@ -43,8 +43,7 @@ from mainsite.models import Movie, \
                             SimilarityFiltered_plot
 
 
-logger = logging.getLogger(__name__)
-
+logger = logging.getLogger('root')
 
 
 
@@ -376,7 +375,9 @@ class PostgresDataHandler(DataHandler):
                             (
                                 id1_id integer,
                                 id2_id integer,
-                                als_cosine double precision
+                                als_cosine double precision,
+                                db_id1 integer,
+                                db_id2 integer
                             );""")
             
             # solution = cursor.fetchall()
@@ -388,36 +389,22 @@ class PostgresDataHandler(DataHandler):
             1000)
         return solution
 
-    def save_libmf(self, data):
+    def get_als(self):
         t = time()
         solution = []
         with connection.cursor() as cursor:
-            try:
-                cursor.execute("DROP TABLE mainsite_similaritylibmf;")
-                # solution = cursor.fetchall()
-                # print solution
-            except Exception as e:
-                print(e)
-            cursor.execute("""CREATE TABLE public.mainsite_similaritylibmf
-                            (
-                                id1_id integer,
-                                id2_id integer,
-                                libmf_cosine double precision
-                            );""")
+            cursor.execute("SELECT id1_id, id2_id, als_cosine \
+                              FROM mainsite_similarityals s")
+            solution = cursor.fetchall()
 
-            # solution = cursor.fetchall()
-            # print solution
-
-        logger.debug('Time Retrieving Features: %f', time() - t)
-        self.save_similarity_batch2(data,
-                                    'mainsite_similaritylibmf',
-                                    1000)
+        logger.debug('Time Retrieving als: %f', time()-t)
         return solution
-    def createSimilarity_Field(self,field):
+
+    def createSimilarity_Field(self, field):
 
         with connection.cursor() as cursor:
             try:
-                cursor.execute("""DROP TABLE mainsite_similarity%s""",AsIs(field));
+                cursor.execute("""DROP TABLE mainsite_similarity%s""", AsIs(field));
             except Exception as e:
                 print(e)
             print("Creating Similarity Field")
@@ -428,12 +415,13 @@ class PostgresDataHandler(DataHandler):
                                 %s_tfitf double precision,
                                 %s_bm25 double precision,
                                 %s_jaccard double precision
-                            );""",(AsIs(field),AsIs(field),AsIs(field),AsIs(field)));
+                            );""", (AsIs(field), AsIs(field), AsIs(field), AsIs(field)));
 
-    def addSimilarityColumn(self,field):
+    def addSimilarityColumn(self, field):
         with connection.cursor() as cursor:
             try:
-                cursor.execute("""ALTER TABLE mainsite_similarity ADD COLUMN %s_tfitf double precision;""", (AsIs(field),));
+                cursor.execute("""ALTER TABLE mainsite_similarity ADD COLUMN %s_tfitf double precision;""",
+                               (AsIs(field),));
 
             except Exception as e:
                 print(e)
@@ -447,30 +435,33 @@ class PostgresDataHandler(DataHandler):
                                (AsIs(field),));
             except Exception as e:
                 print(e)
-    def addMovieField(self,field,datatype):
+
+    def addMovieField(self, field, datatype):
         with connection.cursor() as cursor:
             try:
                 cursor.execute("""ALTER TABLE mainsite_movie ADD COLUMN %s %s;""",
-                               (AsIs(field),AsIs(datatype)));
+                               (AsIs(field), AsIs(datatype)));
             except Exception as e:
                 print(e)
-    def createFieldTmpTable(self,field,datatype):
+
+    def createFieldTmpTable(self, field, datatype):
         with connection.cursor() as cursor:
             try:
                 cursor.execute("""CREATE TABLE public.mainsite_movie%s
                             (
                                 %s %s,
                                 id integer
-                                
-                            );""",(AsIs(field),AsIs(field),AsIs(datatype)));
+
+                            );""", (AsIs(field), AsIs(field), AsIs(datatype)));
             except Exception as e:
                 print(e)
 
-    def updateMainsiteMovieField(self,field):
+    def updateMainsiteMovieField(self, field):
         with connection.cursor() as cursor:
             try:
-                cursor.execute("""UPDATE mainsite_movie t2 SET %s = t1.%s FROM mainsite_movie%s t1 WHERE t2.id = t1.id;""",
-                               (AsIs(field),AsIs(field),AsIs(field)));
+                cursor.execute(
+                    """UPDATE mainsite_movie t2 SET %s = t1.%s FROM mainsite_movie%s t1 WHERE t2.id = t1.id;""",
+                    (AsIs(field), AsIs(field), AsIs(field)));
             except Exception as e:
                 print(e)
 
@@ -488,17 +479,19 @@ class PostgresDataHandler(DataHandler):
     def createTempTMDBTable(self):
         with connection.cursor() as cursor:
             try:
-                cursor.execute("""CREATE TABLE IF NOT EXISTS temp_tmdb (id1_id integer,id2_id integer,rank integer);""");
+                cursor.execute(
+                    """CREATE TABLE IF NOT EXISTS temp_tmdb (id1_id integer,id2_id integer,rank integer);""");
             except Exception as e:
                 print(e)
 
-    def insertTMDB_Json(self,tuples):
+    def insertTMDB_Json(self, tuples):
         with connection.cursor() as cursor:
             try:
                 args_str = ','.join(cursor.mogrify("(%s,%s,%s)", x) for x in tuples)
                 cursor.execute("INSERT INTO temp_tmdb (id1_id,id2_id,rank) VALUES" + args_str)
             except Exception as e:
                 print(e)
+
     def selectTMDB(self):
         with connection.cursor() as cursor:
             try:
@@ -524,19 +517,10 @@ class PostgresDataHandler(DataHandler):
     def updateTMDB_similarMovie(self):
         with connection.cursor() as cursor:
             try:
-                cursor.execute("""update mainsite_similarmovie set movie_id = s.id1_id, rank = s.rank, similar_movie_id = s.id2_id, algorithm = 3 from temp_tmdb s;""")
+                cursor.execute(
+                    """update mainsite_similarmovie set movie_id = s.id1_id, rank = s.rank, similar_movie_id = s.id2_id, algorithm = 3 from temp_tmdb s;""")
             except Exception as e:
                 print(e)
-
-
-
-
-
-
-
-
-
-
 
 
 

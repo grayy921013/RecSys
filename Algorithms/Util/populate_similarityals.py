@@ -9,11 +9,13 @@ from progressbar import ProgressBar, Bar, Percentage, Timer
 from DataHandler.Postgres import PostgresDataHandler
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
 
-def als(batch_size=2500, cap=0.5, k=100):
+def als(batch_size=2500, cap=0.5, k=100, force=False):
     db_fieldname = 'als_cosine'
-    #generate_als()
+    
+    # TODO: only Run if the 'als_cosine' 
+
+    # generate_als()
     transform()
     matrix = genfromtxt('model_movies.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)

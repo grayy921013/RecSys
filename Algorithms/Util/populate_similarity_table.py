@@ -14,7 +14,7 @@ from CB import CBRecommender, CBAlgorithmTMDB, CBAlgorithmTFIDF, CBAlgorithmBM25
 logger = logging.getLogger('root')
 
 
-def main(movies_ids_tagged, fields, algorithms, k):
+def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
     if k is None:
         TOP_K = 100
     else:
@@ -25,7 +25,7 @@ def main(movies_ids_tagged, fields, algorithms, k):
     dataset = PostgresDataHandler()
     if algorithms is None:
         algorithms = [
-            CBAlgorithmJACCARD, 
+            # CBAlgorithmJACCARD, 
             CBAlgorithmTFIDF, 
             CBAlgorithmBM25,
         ]
@@ -33,17 +33,17 @@ def main(movies_ids_tagged, fields, algorithms, k):
     # Get the connection with the 'database'
     if fields is None:
         fields = [
-            Field.TITLE,
-            Field.GENRE,
-            Field.CAST,
-            Field.PLOT,
-            Field.FULL_PLOT,
-            Field.DIRECTOR,
+            # Field.TITLE,
+            # Field.GENRE,
+            # Field.CAST,
+            # Field.PLOT,
+            # Field.FULL_PLOT,
+            # Field.DIRECTOR,
             Field.WRITER,
             Field.LANGUAGE,
             Field.COUNTRY,
             Field.AWARDS,
-            Field.FILTERED_PLOT
+            # Field.FILTERED_PLOT
         ]
 
     # For each field caculate the similarity
@@ -65,12 +65,11 @@ def main(movies_ids_tagged, fields, algorithms, k):
         # For each algorithm
         algos = list(map(lambda x: x(), algorithms))
         for algo in algos:
-            print(algo)
+            logger.debug(algo.__name__)
             algo_idx += 1
             dataset.set_field_algo(field, algo)
 
             # Train the recommender using the given algorithm and dataset
-            
             result = rec.train(data, algo)
             
             # Extract the data from the sparse matrix
@@ -103,7 +102,7 @@ def main(movies_ids_tagged, fields, algorithms, k):
             p = p.sort_values(by=['id1_id'], ascending=True)
             
             # Temporarily save to a local file
-            logger.info('%s\t %d/%d found/saved', algo.__name__, p.shape[0], len(scores))
+            logger.info('%s\t %d/%d saved/found', algo.__name__, p.shape[0], len(scores))
             
             # Temporarily save to a local file
             p.to_pickle(algo.__name__)

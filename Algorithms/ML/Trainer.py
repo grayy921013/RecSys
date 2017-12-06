@@ -22,7 +22,7 @@ class Trainer(object):
             self.model = model
 
     @staticmethod
-    def generate_features(filepath, fields = None, algorithms = None, k = None):
+    def generate_features(filepath = None, fields = None, algorithms = None, k = None):
         '''
         Given the file path of a CSV with at least the following two columns:
             movieid1, movieid2,...
@@ -31,24 +31,88 @@ class Trainer(object):
         :param filepath: Path to a csv file
         :return: None
         '''
+        movies_ids_tagged = []
+        if filepath is not None:
+            # -*- Extract unique movie ids -*-
 
-        # -*- Extract unique movie ids -*-
+            # Load Data
+            ground_truth = pandas.read_csv(filepath)
 
-        # Load Data
-        ground_truth = pandas.read_csv(filepath)
+            # Delete empty records
+            ground_truth.dropna()
 
-        # Delete empty records
-        ground_truth.dropna()
-
-        # Get unique ids
-        m1 = ground_truth['movieid1'].unique()
-        m2 = ground_truth['movieid2'].unique()
-        movies_ids_tagged = np.union1d(m1, m2)
-        logger.debug('No. of unique tagged IDs in ground_truth: %d', len(movies_ids_tagged))
+            # Get unique ids
+            m1 = ground_truth['movieid1'].unique()
+            m2 = ground_truth['movieid2'].unique()
+            movies_ids_tagged = np.union1d(m1, m2)
+            logger.debug('No. of unique tagged IDs in ground_truth: %d', len(movies_ids_tagged))
 
         # Generate features
         populate_sim.main(movies_ids_tagged, fields, algorithms, k)
     
+    @staticmethod
+    def get_user_rating_als(filepath):
+        '''
+        Given the file path of a CSV with at least the following three columns:
+            movieid1, movieid2, rating
+        Return an aggregated pandas data frame with a single row for each movie pair, and its mean rating
+
+        NOTE: If any of the movies in this file are not present in the TMDB database. Those rows will be removed
+
+        :param filepath: Path to a csv file
+        :return: (user_ratings,deleted_register)
+        user_ratings: pandas data frame with the columns:
+            movieid1: same as input
+            movieid2: same as input
+            rating: mean rating among all the users
+        deleted_register: number of rows deleted because its movies are not in the TMDB Database
+        '''
+
+        # Load Data
+        dataset = PostgresDataHandler()
+
+        ground_truth = pandas.DataFrame(dataset.get_als(), columns=['movieid1', 'movieid2', 'rating']);
+        logger.debug('Original Record Numbers: %d', ground_truth.shape[0])
+
+        # -*- Clean File using the MOVIE table as reference -*-
+
+        # Extracts the unique movie dis
+        m1 = ground_truth['movieid1'].unique()
+        m2 = ground_truth['movieid2'].unique()
+        ground_truth_ids = np.union1d(m1, m2)
+
+        # Get movielens id stored in the DB
+        dataset = PostgresDataHandler()
+        db_ids = np.array(dataset.get_data(Field.MOVIELENS_ID))[:, 1].astype(int)
+
+        # Extract ground_truth ids which are also in the DB
+        valid_ground_truth_ids = np.intersect1d(db_ids, ground_truth_ids)
+
+        # Get the ids which are NOT in the DB
+        missing_movies = np.setdiff1d(ground_truth_ids, valid_ground_truth_ids)
+        logger.debug('Missing Movies %d', len(missing_movies))
+
+        # Remove any record that contains this movies
+        mask1 = np.logical_not(ground_truth['movieid1'].isin(missing_movies))
+        mask2 = np.logical_not(ground_truth['movieid2'].isin(missing_movies))
+        clean_ground_truth = ground_truth.loc[mask1 & mask2]
+        deleted_registers = ground_truth.shape[0] - clean_ground_truth.shape[0]
+        logger.debug('Deleted Registers: %d' % (deleted_registers))
+
+        # -*- Group By -*-
+        # Group by MOVIEID1, MOVIEID2 using the MEAN as aggregator
+        # user_ratings = clean_ground_truth.groupby(['movieid1', 'movieid2'])['rating'].mean()
+        # user_ratings = user_ratings.reset_index()
+        user_ratings = clean_ground_truth
+
+        
+        # Change ratings from number to binary
+        # user_ratings.loc['rating'] = user_ratings['rating'].values > 0.5
+
+        logger.debug('Aggregated Record Numbers: %d', user_ratings.shape[0])
+
+        return user_ratings, deleted_registers
+
     @staticmethod
     def get_user_rating(filepath):
         '''
@@ -71,9 +135,17 @@ class Trainer(object):
         ground_truth = pandas.read_csv(filepath)
         logger.debug('Original Record Numbers: %d', ground_truth.shape[0])
 
+        logger.debug(ground_truth.head())
+        logger.debug(ground_truth.tail())
         # Delete empty records
-        ground_truth.dropna()
+        logger.debug("HEO")
+        logger.debug(ground_truth.isnull().sum())
+    
+        ground_truth = ground_truth.dropna()
+        logger.debug(ground_truth.isnull().sum())
 
+        logger.debug(ground_truth[ground_truth.isnull().any(axis=1)])
+    
         # -*- Clean File using the MOVIE table as reference -*-
 
         # Extracts the unique movie dis
@@ -109,7 +181,7 @@ class Trainer(object):
 
         logger.debug('Aggregated Record Numbers: %d', user_ratings.shape[0])
 
-        return user_ratings, deleted_registers
+        return user_ratings, deleted_registers, clean_ground_truth
 
     @staticmethod
     def from_movielens_to_db_id(movielens_ids):
@@ -134,6 +206,7 @@ class Trainer(object):
 
         return movie_ids.values.ravel().astype(int).tolist()
 
+    # This one transform from movielens to db id
     def append_features(self, movie_pairs, standardized_flag):
         '''
         Given an array of movie pairs, it goes to the table mainsite_similarity and extract the specified features
@@ -142,11 +215,12 @@ class Trainer(object):
         :return: A panda Data Frame with dimensions (2+K) x N. Where K is the number of features that the class was
                  initialized with and N is the original number of rows of the movie_pairs array.
         '''
-        logger.debug('User Ratings: %d', movie_pairs.shape[0])
+        logger.debug('User Ratings: %d x %d', movie_pairs.shape[0], movie_pairs.shape[1])
 
         movie_pairs_db_id = np.zeros(shape=movie_pairs.shape).astype(int)
         movie_pairs_db_id[:, 0] = self.from_movielens_to_db_id(movie_pairs[:, 0])
         movie_pairs_db_id[:, 1] = self.from_movielens_to_db_id(movie_pairs[:, 1])
+        movie_pairs_db_id = np.unique(movie_pairs_db_id, axis=0)
         features = self.dataset.get_features(movie_pairs_db_id.tolist(), self.features)
 
         features_df = pandas.DataFrame(features, columns=['movieid1', 'movieid2'] + self.features)
@@ -160,7 +234,18 @@ class Trainer(object):
             
         movie_pairs_df = pandas.DataFrame(movie_pairs, columns=['movieid1', 'movieid2'])
 
-        return pandas.merge(movie_pairs_df, features_df, how='left')
+        # If there is an error about empty or null values in the features
+        # check if this merge is being done correctly
+        # logger.debug(movie_pairs_df.shape)
+        # logger.debug(features_df.shape)
+        # tmp = pandas.merge(movie_pairs_df, features_df, how='inner')
+        # logger.debug('User Ratings with Features (+): %dx%d', tmp.shape[0], tmp.shape[1])
+        # tmp = pandas.merge(movie_pairs_df, features_df, how='left')
+        # logger.debug('User Ratings with Features (left): %dx%d', tmp.shape[0], tmp.shape[1])
+        
+        result = pandas.merge(movie_pairs_df, features_df, how='left')
+
+        return result
 
     # TODO: Find a more appropiate name for this function
     def append_features2(self, movie_pairs, standardized_flag):
@@ -202,6 +287,9 @@ class Trainer(object):
         logger.debug('Training with %d rows', x_train.shape[0])
         logger.debug('Training Data')
         logger.debug(x_train.head())
+
+        # print(x_train[self.features].head())
+        # # print(x_train[self.features].head())
 
         # Train
         self.model.fit(x_train[self.features], y_train)
@@ -253,6 +341,7 @@ class Trainer(object):
             x_test = self.append_features(lista, standardized_flag)
         else:
             x_test = self.append_features2(lista, standardized_flag)
+
         logger.debug('Predict Features')
         logger.debug(x_test.head())
 
@@ -388,6 +477,62 @@ class Trainer(object):
         # Get metrics
         return Trainer.get_metrics(y_test > 0.5, y_predicted, b_test)
 
+    # def evaluate(self, user_ratings, k = 20, standardized_flag=True):
+    #     '''
+    #     Given an aggregate panda dataframe of user ratings.
+    #     - Split the dataset into TRAIN and TEST (50/50)
+    #     - Train a model with the TRAIN part
+    #     - Predict the top K movies with the TEST aprt
+    #     - Test the predictions against the original user_ratings
+    #     :param user_ratings: Pandas dataframe with the following columns (movieid1, movieid2, rating)
+    #     :param k: number of related movies to pick for each id
+    #     :return: a ordered dict of metrics
+    #     '''
+
+    #     # -*- Cross Validation Split -*-
+
+    #     # Data
+    #     logger.debug('EVALUATE')
+
+    #     y = user_ratings['rating']
+
+    #     logger.debug('\n\n\n\n\n\n\n\n\n--------------------------------------------------------')
+    #     logger.debug(y.isnull().sum())
+    #     logger.debug(y[y.isnull()])
+        
+
+    #     x = user_ratings.values
+    #     blocks = user_ratings['movieid1'].values
+
+    #     # split into train and test set
+    #     cv = model_selection.GroupKFold(2)
+
+    #     train_idx, test_idx = next(iter(cv.split(x, y, blocks)))
+    #     user_ratings_train, y_train, b_train = x[train_idx], y[train_idx], blocks[train_idx]
+    #     user_ratings_test, y_test, b_test = x[test_idx], y[test_idx], blocks[test_idx]
+
+    #     # Train in FULL SET
+    #     # X_train, y_train, b_train = X, y, blocks
+    #     # X_test, y_test, b_test = X, y, blocks
+
+    #     logger.debug('Total Data: %d', len(y))
+    #     logger.debug('Intersection between Train/Test: %d', len(set(b_train).intersection(set(b_test))))
+    #     logger.debug('Train Data Size: %d', len(user_ratings_train))
+    #     logger.debug('Test Data Size: %d', len(user_ratings_test))
+
+    #     # -*- Train -*-
+    #     logger.info('Training')
+    #     self.train(user_ratings_train, y_train, standardized_flag)
+
+    #     # -*- Predict -*-
+    #     logger.info('Predicting')
+    #     top_movie_pairs = self.predict(set(b_test), user_ratings, k, standardized_flag)
+
+    #     # -*- Test -*-
+    #     logger.info('Testing')
+    #     return self.test(user_ratings_test, y_test, b_test, top_movie_pairs)
+
+
     def evaluate(self, user_ratings, k = 20, standardized_flag=True):
         '''
         Given an aggregate panda dataframe of user ratings.
@@ -403,14 +548,19 @@ class Trainer(object):
         # -*- Cross Validation Split -*-
 
         # Data
-        y = user_ratings['rating']
+        y = user_ratings['rating'].values
         x = user_ratings.values
         blocks = user_ratings['movieid1'].values
+
+        logger.debug('EVALUATE')
 
         # split into train and test set
         cv = model_selection.GroupKFold(2)
 
+        print(x.shape, y.shape, blocks.shape)
         train_idx, test_idx = next(iter(cv.split(x, y, blocks)))
+        print(train_idx)
+        print(test_idx)
         user_ratings_train, y_train, b_train = x[train_idx], y[train_idx], blocks[train_idx]
         user_ratings_test, y_test, b_test = x[test_idx], y[test_idx], blocks[test_idx]
 
@@ -425,6 +575,9 @@ class Trainer(object):
 
         # -*- Train -*-
         logger.info('Training')
+        logger.debug('\n\n\n\n\n\n\n\n\nB--------------------------------------------------------')
+        logger.debug(np.isnan(y_train).sum())
+        logger.debug(y_train[np.isnan(y_train)])
         self.train(user_ratings_train, y_train, standardized_flag)
 
         # -*- Predict -*-

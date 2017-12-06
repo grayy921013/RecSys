@@ -16,18 +16,71 @@ import numpy as np
 from time import time
 from sklearn.feature_extraction.text import CountVectorizer
 from scipy.sparse import csr_matrix
+from scipy.spatial.distance import cdist, squareform
+from progressbar import ProgressBar, Bar, Percentage, Timer
+import pandas
 
 from .CBAlgorithm import CBAlgorithm
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('root')
 
+def distance_batch(m1,
+                   m2,
+                   ids_1,
+                   ids_2,
+                   cap,
+                   metric='jaccard'):
+    # Calculate Distance
+    result = 1-cdist(m1, m2, metric)
+    logger.debug('distance')
+
+    result = np.array(result)
+    
+    # Remove super small values
+    result[result < cap] = 0
+
+    # Make the matrix sparse/smaller
+    result = csr_matrix(result)
+    
+    # Return only those values
+    rows, cols = result.nonzero()
+    rows_movielens = ids_1[rows]
+    cols_movielens = ids_2[cols]
+    scores = result.data
+
+    # Filter Out similarity between the same movie
+    # Ex. Toy Story and Toy Story -_-
+    mask = rows_movielens != cols_movielens
+    rows_movielens = rows_movielens[mask]
+    cols_movielens = cols_movielens[mask]
+    scores = scores[mask]
+
+    return rows_movielens, cols_movielens, scores
+
+
+def get_top_k(rows_movielens, cols_movielens, scores, k):
+    # Only save the ids of the movies for the first
+    # algorithm, because next one will have the same id
+    pre_frame = np.rec.fromarrays((rows_movielens, cols_movielens, scores), \
+        names=('id1_id','id2_id','als_cosine'))
+
+    p = pandas.DataFrame(pre_frame)
+    
+    # Get top K elements for each movieid1 set 1
+    p = p \
+        .sort_values(by=['id1_id', 'als_cosine'], ascending=False) \
+        .groupby('id1_id') \
+        .head(k) \
+        .reset_index(drop=True)
+
+    return p;
 
 class CBAlgorithmJACCARD(CBAlgorithm):
 
     def __init__(self):
         self.__name__ = 'JACCARD'
 
-    def index(self, data):
+    def index(self, data, max_features=1000):
         '''
         Index the dataset using TFIDF as score
         :param data: Array of strings
@@ -36,14 +89,17 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         data = super(CBAlgorithmJACCARD, self).index(data)
 
         t0 = time()
-        self.vectorizer = CountVectorizer(max_df=0.5, stop_words='english')
+        self.vectorizer = CountVectorizer(max_df=0.5,
+            max_features=max_features,
+            stop_words='english')
+
         self.indexed = self.vectorizer.fit_transform(data)
         duration = time() - t0
         logger.debug("n_samples: %d, n_features: %d" % self.indexed.shape)
         logger.debug("duration: %d" % duration)
         return self.indexed
 
-    def similarity(self, index=None, epsilon=1):
+    def similarity(self, index=None, cap=0.5, k=100, batch_size=1000):
         '''
         Given a index (Matrix NxM) With N items and M features, calculates the similarity between each pair of items
 
@@ -55,51 +111,43 @@ class CBAlgorithmJACCARD(CBAlgorithm):
             index = self.indexed
         super(CBAlgorithmJACCARD, self).similarity(index)
 
+        # Get all the ids
         t0 = time()
-        
-        assert(0 < epsilon <= 1)
-        
-        # Transform index to be a binary index
-        csr = index
-        csr = csr.astype(bool).astype(float)
 
-        csr_rownnz = csr.getnnz(axis=1)
-        intrsct = csr.dot(csr.T)
-        return intrsct
-        nnz_i = np.repeat(csr_rownnz, intrsct.getnnz(axis=1))
-        unions = nnz_i + csr_rownnz[intrsct.indices] - intrsct.data
-        dists = 1.0 - intrsct.data / unions
-        
-        mask = (dists > 0) | (dists <= epsilon)
-        data = dists[mask]
-        # TODO: Fix force to mantain same # of references with the
-        #       the other algorithms to avoid having to merge
-        data[data == 0] = 1e-10
-        indices = intrsct.indices[mask]
-        
-        idx = intrsct.indptr[:-1]
-        i = -1
-        while idx[i] == len(mask):
-            idx[i] -= 1
-            i -= 1
-        rownnz = np.add.reduceat(mask, idx)
-        # TODO: Fix patch that corrects a numpy error on the add.reduceat
-        #       function when the indexes are the same instead of having a
-        #       numpy is adding a 1, which leds to overflow
-        idx1 = intrsct.indptr[:-1]
-        idx2 = intrsct.indptr[1:]
-        idx3 = (idx1-idx2) == 0
-        rownnz[idx3] = 0
-        indptr = np.r_[0, np.cumsum(rownnz)]
-        
-        out = csr_matrix((data, indices, indptr), intrsct.shape)
+        logger.debug(index.shape)
+        matrix = index.todense()
+        logger.debug('densed')
 
-        # Zero out redundant scores
-        # Ex. The movies (2,1) and (1,2) will have the same score
-        #     Thus without loosing generality 
-        #     we will only save the pairs where m1 < m2
-        lower_triangle_idx = np.tril_indices(out.shape[0])
-        out[lower_triangle_idx] = 0
-        out.eliminate_zeros()
+        # Start
+        bar = ProgressBar(maxval=matrix.shape[0]/batch_size + 1, \
+                      widgets=['JACCARD', ' ', Bar('=', '[', ']'), ' ', Percentage(), ' - ', Timer()])
+        bar.start()
+        # Calculate Similarity
+        counter = 0
+        for i in range(0, matrix.shape[0], batch_size):
+            logger.debug("%d/%d", i, matrix.shape[0])
+            m1 = matrix[i:i+batch_size,:]
 
-        return out
+            # Calculate Distance
+            rows_movielens, cols_movielens, scores = distance_batch(m1, matrix, self.ids, self.ids, cap)
+
+            # Extract TOP K result
+            p = get_top_k(rows_movielens, cols_movielens, scores, k)
+
+            # Temporarily save to a local file
+            p.to_pickle('tmp_%s_%i' % (self.__name__, i))
+
+            counter += 1
+            bar.update(counter)
+        bar.finish()
+
+        # Append All Similarities
+        frames = []
+        for i in range(0, matrix.shape[0], batch_size):
+            frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
+        result = pandas.concat(frames, axis=0)
+        # result.to_pickle(db_fieldname)
+
+        # Remove Temporary Files
+        logger.debug('Duration: %f', time()-t0)
+        return result
