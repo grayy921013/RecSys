@@ -51,7 +51,7 @@ class Trainer(object):
         populate_sim.main(movies_ids_tagged, fields, algorithms, k)
     
     @staticmethod
-    def get_user_rating_als(filepath):
+    def get_user_rating_als():
         '''
         Given the file path of a CSV with at least the following three columns:
             movieid1, movieid2, rating
@@ -59,19 +59,69 @@ class Trainer(object):
 
         NOTE: If any of the movies in this file are not present in the TMDB database. Those rows will be removed
 
-        :param filepath: Path to a csv file
-        :return: (user_ratings,deleted_register)
+        :return: (user_ratings,deleted_register, clean_ground_truth)
         user_ratings: pandas data frame with the columns:
             movieid1: same as input
             movieid2: same as input
             rating: mean rating among all the users
         deleted_register: number of rows deleted because its movies are not in the TMDB Database
+        clean_ground_truth: same dataframe as the input BUT removing the rows wich have movies
+                            that are not present in the metadata table
         '''
 
         # Load Data
         dataset = PostgresDataHandler()
 
         ground_truth = pandas.DataFrame(dataset.get_als(), columns=['movieid1', 'movieid2', 'rating']);
+
+        return Trainer.get_user_rating_from_df(ground_truth)
+
+    @staticmethod
+    def get_user_rating_uservote():
+        '''
+        Given the file path of a CSV with at least the following three columns:
+            movieid1, movieid2, rating
+        Return an aggregated pandas data frame with a single row for each movie pair, and its mean rating
+
+        NOTE: If any of the movies in this file are not present in the TMDB database. Those rows will be removed
+
+        :return: (user_ratings,deleted_register, clean_ground_truth)
+        user_ratings: pandas data frame with the columns:
+            movieid1: same as input
+            movieid2: same as input
+            rating: mean rating among all the users
+        deleted_register: number of rows deleted because its movies are not in the TMDB Database
+        clean_ground_truth: same dataframe as the input BUT removing the rows wich have movies
+                            that are not present in the metadata table
+        '''
+
+        # Load Data
+        dataset = PostgresDataHandler()
+
+        ground_truth = pandas.DataFrame(dataset.get_uservote(), columns=['movieid1', 'movieid2', 'rating']);
+
+        return Trainer.get_user_rating_from_df(ground_truth)
+
+    @staticmethod
+    def get_user_rating_from_df(dataframe):
+        '''
+        Given a non-aggregated pandas data frame with pairs of movie and boolean indicator of its rating
+        Return an aggregated pandas data frame with a single row for each movie pair, and its mean rating
+
+        NOTE: If any of the movies in this file are not present in the TMDB database. Those rows will be removed
+
+        :param dataframe: Pandas dataframe with columns 'movieid1', 'movieid2', 'rating'
+        :return: (user_ratings,deleted_register, clean_ground_truth)
+        user_ratings: pandas data frame with the columns:
+            movieid1: same as input
+            movieid2: same as input
+            rating: mean rating among all the users
+        deleted_register: number of rows deleted because its movies are not in the TMDB Database
+        clean_ground_truth: same dataframe as the input BUT removing the rows wich have movies
+                            that are not present in the metadata table
+        '''
+
+        ground_truth = dataframe
         logger.debug('Original Record Numbers: %d', ground_truth.shape[0])
 
         # -*- Clean File using the MOVIE table as reference -*-
@@ -101,17 +151,15 @@ class Trainer(object):
 
         # -*- Group By -*-
         # Group by MOVIEID1, MOVIEID2 using the MEAN as aggregator
-        # user_ratings = clean_ground_truth.groupby(['movieid1', 'movieid2'])['rating'].mean()
-        # user_ratings = user_ratings.reset_index()
-        user_ratings = clean_ground_truth
+        user_ratings = clean_ground_truth.groupby(['movieid1', 'movieid2'])['rating'].mean()
+        user_ratings = user_ratings.reset_index()
 
-        
         # Change ratings from number to binary
         # user_ratings.loc['rating'] = user_ratings['rating'].values > 0.5
 
         logger.debug('Aggregated Record Numbers: %d', user_ratings.shape[0])
 
-        return user_ratings, deleted_registers
+        return user_ratings, deleted_registers, clean_ground_truth
 
     @staticmethod
     def get_user_rating(filepath):

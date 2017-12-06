@@ -522,5 +522,21 @@ class PostgresDataHandler(DataHandler):
             except Exception as e:
                 print(e)
 
+    def get_uservote(self):
+        t = time()
+        solution = []
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT movie1_id, "
+                                  "movie2_id, "
+                                  "case when action = 1 then 1 "
+                                       "when action = -1 then 0 END as action "
+                            "FROM mainsite_uservote "
+                           "WHERE action != 0;")
+            solution = cursor.fetchall()
+
+        logger.debug('Time Retrieving als: %f', time() - t)
+        return solution
+        pass
+
 
 
