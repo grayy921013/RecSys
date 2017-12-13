@@ -105,7 +105,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
             logger.info('%s\t %d/%d saved/found', algo.__name__, p.shape[0], len(scores))
             
             # Temporarily save to a local file
-            p.to_pickle(algo.__name__)
+            p.to_pickle('Temp/'+algo.__name__)
             
             # Release Memory
             algo.destroy()
@@ -133,7 +133,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
                 # If it's the first algorithm we will use him as standard to obtain min and max
                 # TO DO: we should get id1, id2 for each file and then use that 
                 if i == 0:
-                    p_s = pandas.read_pickle(algo.__name__)[pickle_batch:pickle_batch+batch_size]
+                    p_s = pandas.read_pickle('Temp/'+algo.__name__)[pickle_batch:pickle_batch+batch_size]
                     
                     # TODO: Look for a better way to do this. in the case where the first
                     #       algo is something like 1mm*N record and the second is > than that
@@ -157,7 +157,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
 
                     pickle_batch = pickle_batch+end_idx
                 else:
-                    p_s = pandas.read_pickle(algo.__name__)
+                    p_s = pandas.read_pickle('Temp/'+algo.__name__)
                     
                     s_idx = p_s.id1_id.searchsorted(start)[0]
                     if end == -1:
