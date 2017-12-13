@@ -74,7 +74,7 @@ class Trainer(object):
 
         ground_truth = pandas.DataFrame(dataset.get_als(), columns=['movieid1', 'movieid2', 'rating']);
 
-        return Trainer.get_user_rating_from_df(ground_truth)
+        return Trainer.get_user_rating_from_df_movielens(ground_truth)
 
     @staticmethod
     def get_user_rating_uservote():
@@ -111,6 +111,7 @@ class Trainer(object):
         NOTE: If any of the movies in this file are not present in the TMDB database. Those rows will be removed
 
         :param dataframe: Pandas dataframe with columns 'movieid1', 'movieid2', 'rating'
+                          NOTE: The id of the movies should be their movielesns ID.
         :return: (user_ratings,deleted_register, clean_ground_truth)
         user_ratings: pandas data frame with the columns:
             movieid1: same as input

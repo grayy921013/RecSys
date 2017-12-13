@@ -147,7 +147,7 @@ def predict(id):
 
     predict_movie(trainer, id, algorithm=-1)
 
-def train(filepath, model_filepath='TMP_MODEL.pkl'):
+def train(filepath, model_filepath='Temp/TMP_MODEL.pkl'):
     '''
     Use the 100% of the data in a given groundtruth file
     to train the linear regression model. Finally it serializes
@@ -204,7 +204,7 @@ def predict_movie(trainer, low, high=None, standardized_flag=False, k=20, algori
 
     return top_movie_pairs
     
-def populate_movie_pairs(model_filepath='TMP_MODEL.pkl', algorithm=0):
+def populate_movie_pairs(model_filepath='Temp/TMP_MODEL.pkl', algorithm=0):
     '''
     Use a previously trained model:
         You NEED to first run the train function to generate that file.

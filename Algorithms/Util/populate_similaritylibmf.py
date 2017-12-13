@@ -17,9 +17,9 @@ def libmf_als(batch_size=100, cap=0.5, k=100):
     db_fieldname = 'libmf_cosine'
     #generate_libmf_als()
     libmf_transform()
-    matrix = genfromtxt('model_movies1.csv', delimiter=',')
+    matrix = genfromtxt('Temp/model_movies1.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
-    data = pandas.read_pickle(db_fieldname)
+    data = pandas.read_pickle('Temp/'+db_fieldname)
     dataset = PostgresDataHandler()
     dataset.save_libmf(data[['id1_id', 'id2_id', 'libmf_cosine']])
 
@@ -65,10 +65,10 @@ def cosine_similarity(matrix, batch_size, cap, k):
     # Append All Similarities
     frames = []
     for i in range(0, matrix.shape[0], batch_size):
-        frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
+        frames.append(pandas.read_pickle('Temp/%s_%i' % (db_fieldname, i)))
     result = pandas.concat(frames, axis=0)
     print("result.to_pickle(db_fieldname)")
-    result.to_pickle(db_fieldname)
+    result.to_pickle('Temp/'+db_fieldname)
     return result
 
 
@@ -120,7 +120,7 @@ def cosine_similarity_batch(m1, m2, cap, k, db_fieldname):
 
     # Temporarily save to a local file
     print("p.to_pickle(db_fieldname)")
-    p.to_pickle(db_fieldname)
+    p.to_pickle('Temp/'+db_fieldname)
 
 
 def get_top_k(rows_movielens, cols_movielens, scores, k):
@@ -149,7 +149,7 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
 
 def libmf_transform():
     f = open('model1.txt')
-    f_movies = open('model_movies1.csv', 'w')
+    f_movies = open('Temp/model_movies1.csv', 'w')
 
 
 
@@ -202,7 +202,7 @@ def libmf_transform():
 
 # def transform():
 #     f = open('model.txt')
-#     f_movies = open('model_movies.csv','w')
+#     f_movies = open('Temp/model_movies.csv','w')
 #
 #     # Skip top of the model and user matrix
 #     line = '123'

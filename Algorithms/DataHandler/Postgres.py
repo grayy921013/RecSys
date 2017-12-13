@@ -526,11 +526,13 @@ class PostgresDataHandler(DataHandler):
         t = time()
         solution = []
         with connection.cursor() as cursor:
-            cursor.execute("SELECT movie1_id, "
-                                  "movie2_id, "
+            cursor.execute("SELECT m1.movielens_id movie1id, "
+                                  "m2.movielens_id movie2_id, "
                                   "case when action = 1 then 1 "
                                        "when action = -1 then 0 END as action "
-                            "FROM mainsite_uservote "
+                            "FROM mainsite_uservote m "
+                            "JOIN mainsite_movie m1 on m.movie1_id = m1.id "
+                            "JOIN mainsite_movie m2 on m.movie2_id = m2.id "
                            "WHERE action != 0;")
             solution = cursor.fetchall()
 

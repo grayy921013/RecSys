@@ -17,9 +17,9 @@ def als(batch_size=2500, cap=0.5, k=100, force=False):
 
     # generate_als()
     transform()
-    matrix = genfromtxt('model_movies.csv', delimiter=',')
+    matrix = genfromtxt('Temp/model_movies.csv', delimiter=',')
     data = cosine_similarity(matrix, batch_size, cap, k)
-    data = pandas.read_pickle(db_fieldname)
+    data = pandas.read_pickle('Temp/' + db_fieldname)
     dataset = PostgresDataHandler()
     dataset.save_als(data[['id1_id', 'id2_id', 'als_cosine']])
 
@@ -33,7 +33,7 @@ def generate_als():
     else:
         executable = './CF/MyMediaLite-3.11/bin/rating_prediction '
 
-    command = '''%s --training-file=./Data/ml-20m/ratings.csv --recommender=MatrixFactorization --test-ratio=0.1 --save-model=model.txt --no-id-mapping''' % executable
+    command = '''%s --training-file=./Data/ml-20m/ratings.csv --recommender=MatrixFactorization --test-ratio=0.1 --save-model=Temp/model.txt --no-id-mapping''' % executable
     output = os.system(command)
     print(output)
 
@@ -58,9 +58,9 @@ def cosine_similarity(matrix, batch_size, cap, k):
     # Append All Similarities
     frames = []
     for i in range(0, matrix.shape[0], batch_size):
-        frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
+        frames.append(pandas.read_pickle('Temp/%s_%i' % (db_fieldname, i)))
     result = pandas.concat(frames, axis=0)
-    result.to_pickle(db_fieldname)
+    result.to_pickle('Temp/' + db_fieldname)
     return result
     
 def cosine_similarity_batch(m1, m2, cap, k, db_fieldname):
@@ -111,7 +111,7 @@ def cosine_similarity_batch(m1, m2, cap, k, db_fieldname):
     p = get_top_k(rows_movielens, cols_movielens, scores, k)
 
     # Temporarily save to a local file
-    p.to_pickle(db_fieldname)
+    p.to_pickle('Temp/' + db_fieldname)
 
 def get_top_k(rows_movielens, cols_movielens, scores, k):
     # Only save the ids of the movies for the first
@@ -137,8 +137,8 @@ def get_top_k(rows_movielens, cols_movielens, scores, k):
     
 
 def transform():
-    f = open('model.txt')
-    f_movies = open('model_movies.csv','w')
+    f = open('Temp/model.txt')
+    f_movies = open('Temp/model_movies.csv','w')
 
     # Skip top of the model and user matrix
     line = '123'

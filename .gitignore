@@ -80,3 +80,4 @@ Algorithms/model_movies.csv
 Algorithms/libmf_*
 Algorithms/*.csv
 Algorithms/TMP_MODEL.pkl
+Algorithms/Temp/

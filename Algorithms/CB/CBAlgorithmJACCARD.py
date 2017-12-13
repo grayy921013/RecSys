@@ -135,7 +135,7 @@ class CBAlgorithmJACCARD(CBAlgorithm):
             p = get_top_k(rows_movielens, cols_movielens, scores, k)
 
             # Temporarily save to a local file
-            p.to_pickle('tmp_%s_%i' % (self.__name__, i))
+            p.to_pickle('Temp/tmp_%s_%i' % (self.__name__, i))
 
             counter += 1
             bar.update(counter)
@@ -144,7 +144,7 @@ class CBAlgorithmJACCARD(CBAlgorithm):
         # Append All Similarities
         frames = []
         for i in range(0, matrix.shape[0], batch_size):
-            frames.append(pandas.read_pickle('%s_%i' % (db_fieldname, i)))
+            frames.append(pandas.read_pickle('Temp/%s_%i' % (db_fieldname, i)))
         result = pandas.concat(frames, axis=0)
         # result.to_pickle(db_fieldname)
 
