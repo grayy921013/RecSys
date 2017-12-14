@@ -18,5 +18,5 @@
 2. Install required packages in `Algorithms/requirements.txt` using `pip install -r requirements.txt`. 
 3. Usage: `python Main.py [-h] [-algorithm [Algorithm ID]] [-movie [Movie ID]] command [file_path]`
 
-[More Details](Algorithms/README.md)
+4. [More Details](Algorithms)
 
