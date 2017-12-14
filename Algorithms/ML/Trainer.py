@@ -22,6 +22,15 @@ class Trainer(object):
             self.model = model
 
     @staticmethod
+    def get_model(name, *args):
+        if name == 'svm':
+            return svm.SVC(*args)
+        elif name == 'log_reg':
+            return linear_model.LogisticRegression(*args)
+        else:
+            return linear_model.Ridge(1.)
+
+    @staticmethod
     def generate_features(filepath = None, fields = None, algorithms = None, k = None):
         '''
         Given the file path of a CSV with at least the following two columns:
@@ -604,12 +613,10 @@ class Trainer(object):
         logger.debug('EVALUATE')
 
         # split into train and test set
+        # TODO: Allow to tune the size of the training and testing set. Look into: model_selection.GroupShuffleSplit
         cv = model_selection.GroupKFold(2)
 
-        print(x.shape, y.shape, blocks.shape)
         train_idx, test_idx = next(iter(cv.split(x, y, blocks)))
-        print(train_idx)
-        print(test_idx)
         user_ratings_train, y_train, b_train = x[train_idx], y[train_idx], blocks[train_idx]
         user_ratings_test, y_test, b_test = x[test_idx], y[test_idx], blocks[test_idx]
 

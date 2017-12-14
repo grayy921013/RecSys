@@ -35,7 +35,7 @@ def main(argv):
     # Get the connection with the 'database'
     dataset = PostgresDataHandler()
     # Single Field
-    data = dataset.get_data(Field.PLOT)
+    data = dataset.get_data(Field.FULL_PLOT)
     matrix = np.array(data)
     ids = matrix[:, 0].astype(int)
     values = matrix[:, 1]
@@ -44,32 +44,41 @@ def main(argv):
     bulk_count = 0
     t = time()
     print(t)
-    for value in values[-999:]:
-        print(ids[movie_index])
-        tokens = nltk.word_tokenize(value.encode('utf-8').decode('utf-8'))
-        tagged = snert.tag(tokens)
-        #ne = nltk.ne_chunk(tagged_tokens=tagged,binary=True)
-        sentence = ""
-        for word in tagged:
-            if word[1] != u'PERSON':
-                sentence = sentence + " " + word[0]
-        sentence = sentence.lstrip()
-        bulk.append(MovieFiltered_Plot(id = ids[movie_index], filtered_plot=sentence))
-        bulk_count = bulk_count + 1
-        if bulk_count >= 999:
-            print(time() - t)
-            print("Saved Bulk")
-            t = time()
-            MovieFiltered_Plot.objects.bulk_create(bulk)
-            bulk_count = 0
-            bulk = []
-        #movie = Movie.objects.get(id=ids[movie_index])
-        #movie.filtered_plot = sentence
-        #movie.save()
-        movie_index = movie_index + 1
-    if bulk:
-        MovieFiltered_Plot.objects.bulk_create(bulk)
-        print("Saved Last Bulk")
+
+    super_string = ' '.join(values)
+    # for value in values:
+    types = set()
+    persons = set()
+    # print(ids[movie_index])
+    tokens = nltk.word_tokenize(super_string.encode('utf-8').decode('utf-8'))
+    tagged = snert.tag(tokens)
+    #ne = nltk.ne_chunk(tagged_tokens=tagged,binary=True)
+    sentence = ""
+    for word in tagged:
+        if word[1] == u'PERSON':
+            persons(word[0])
+        else:
+            types.append(word[1])
+
+    # sentence = sentence.lstrip()
+    # bulk.append(MovieFiltered_Plot(id = ids[movie_index], filtered_plot=sentence))
+    # bulk_count = bulk_count + 1
+    # if bulk_count >= 999:
+    #     print(time() - t)
+    #     print("Saved Bulk")
+    #     t = time()
+    #     MovieFiltered_Plot.objects.bulk_create(bulk)
+    #     bulk_count = 0
+    #     bulk = []
+    #movie = Movie.objects.get(id=ids[movie_index])
+    #movie.filtered_plot = sentence
+    #movie.save()
+    movie_index = movie_index + 1
+
+
+    # if bulk:
+    #     MovieFiltered_Plot.objects.bulk_create(bulk)
+    #     print("Saved Last Bulk")
 
 
 if __name__ == "__main__":

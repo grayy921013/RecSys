@@ -25,7 +25,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
     dataset = PostgresDataHandler()
     if algorithms is None:
         algorithms = [
-            # CBAlgorithmJACCARD, 
+            CBAlgorithmJACCARD,
             CBAlgorithmTFIDF, 
             CBAlgorithmBM25,
         ]
@@ -33,17 +33,17 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
     # Get the connection with the 'database'
     if fields is None:
         fields = [
-            # Field.TITLE,
-            # Field.GENRE,
-            # Field.CAST,
-            # Field.PLOT,
-            # Field.FULL_PLOT,
-            # Field.DIRECTOR,
+            Field.TITLE,
+            Field.GENRE,
+            Field.CAST,
+            Field.PLOT,
+            Field.FULL_PLOT,
+            Field.DIRECTOR,
             Field.WRITER,
             Field.LANGUAGE,
             Field.COUNTRY,
             Field.AWARDS,
-            # Field.FILTERED_PLOT
+            Field.FILTERED_PLOT
         ]
 
     # For each field caculate the similarity
