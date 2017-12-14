@@ -9,7 +9,7 @@ This module implements content base recommendation algorithms:
 
 """
 
-# Author: Caleb De La Cruz P. <cdelacru>
+# Author: Caleb De La Cruz P. <delacruzp>
 
 
 import logging

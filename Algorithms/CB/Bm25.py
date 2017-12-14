@@ -13,7 +13,7 @@ Original Author:  Basil Beirouti
 Pull Request: https://github.com/scikit-learn/scikit-learn/pull/6973
 """
 
-# Author: Caleb De La Cruz P. <cdelacru>
+# Author: Caleb De La Cruz P. <delacruzp>
 
 import numpy as np
 import scipy.sparse as sp

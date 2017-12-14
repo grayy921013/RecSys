@@ -6,7 +6,7 @@ All CBAlgorithms should inherit from this class and included the methods here de
 
 """
 
-# Author: Caleb De La Cruz P. <cdelacru>
+# Author: Caleb De La Cruz P. <delacruzp>
 
 
 import logging

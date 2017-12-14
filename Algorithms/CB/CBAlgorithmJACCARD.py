@@ -8,7 +8,7 @@ This implementation uses JACCARD to measure similarity between items. It uses a 
 
 """
 
-# Author: Caleb De La Cruz P. <cdelacru>
+# Author: Caleb De La Cruz P. <delacruzp>
 
 
 import logging

@@ -7,7 +7,7 @@ This implementation uses BM25 to measure similarity between items. It uses a sci
 
 """
 
-# Author: Caleb De La Cruz P. <cdelacru>
+# Author: Caleb De La Cruz P. <delacruzp>
 
 
 import logging

@@ -7,7 +7,7 @@ TfidfVectorizer. Using its fit_transform function.
 
 """
 
-# Author: Caleb De La Cruz P. <cdelacru>
+# Author: Caleb De La Cruz P. <delacruzp>
 
 
 import logging
