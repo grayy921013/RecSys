@@ -32,19 +32,11 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
 
     # Get the connection with the 'database'
     if fields is None:
-        fields = [
-            Field.TITLE,
-            Field.GENRE,
-            Field.CAST,
-            Field.PLOT,
-            Field.FULL_PLOT,
-            Field.DIRECTOR,
-            Field.WRITER,
-            Field.LANGUAGE,
-            Field.COUNTRY,
-            Field.AWARDS,
-            Field.FILTERED_PLOT
-        ]
+        # If not field is specified train with all the fields
+        fields = []
+
+        for f in Field:
+            fields.append(f)
 
     # For each field caculate the similarity
     for field in fields:
@@ -55,6 +47,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
         data = dataset.get_data(field, movies_ids_tagged)
         size = len(data)
         logger.info("%d records retrieved", size)
+        exit(-1)
 
         # Set variables initial values
         t = time()

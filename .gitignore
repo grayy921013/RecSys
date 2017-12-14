@@ -62,16 +62,11 @@ fabric.properties
 # data files
 tomatoes.txt
 Web/tools/*.csv
+Web/myprojectenv/
 omdbMovies.txt
 migrations/
-Algorithms/TFITF
-Algorithms/JACCARD
-Algorithms/BM25
-Web/myprojectenv/
-Algorithms - Copy/
-Algorithms/.ipynb_checkpoints/
 *.ipynb
+Algorithms/.ipynb_checkpoints/
 Algorithms/Data/TMDBTotal.json
 Algorithms/Data/ml-20m/*
-Algorithms/als_cosine*
 Algorithms/Temp/*
