@@ -15,7 +15,8 @@
 ## Algorithm Setup
 
 1. Follow steps 1-4 of the **FrontEnd Setup** 
-2. Usage: `python Main.py [-h] [-algorithm [Algorithm ID]] [-movie [Movie ID]] command [file_path]`
+2. Install required packages in `Algorithms/requirements.txt` using `pip install -r requirements.txt`. 
+3. Usage: `python Main.py [-h] [-algorithm [Algorithm ID]] [-movie [Movie ID]] command [file_path]`
 
-[More Details] (Algorithms/README.md)
+[More Details](Algorithms/README.md)
 
