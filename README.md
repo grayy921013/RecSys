@@ -1,5 +1,6 @@
 # RecSys
-Frontend Setup:
+
+## Frontend Setup:
 
 1. Clone the repo
 2. Make sure you have python3 and pip installed. Install required packages in `Web/requirements.txt` using `pip install -r requirements.txt`. You can also use `virtualenv`.
@@ -10,3 +11,11 @@ Frontend Setup:
 5. Run `python3 manage.py runserver 0.0.0.0:8000` to start a local server.
 6. To run locally, you may need to comment the last three lines in `Web/settings.py` because they force the whole site to run with HTTPS.
 7. To make the site run with HTTPS, you need to first [configure Apache to run with Django](https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/modwsgi/). You also need to configure the certificate.
+
+## Algorithm Setup
+
+1. Follow steps 1-4 of the **FrontEnd Setup** 
+2. Usage: `python Main.py [-h] [-algorithm [Algorithm ID]] [-movie [Movie ID]] command [file_path]`
+
+[More Details] (Algorithms/README.md)
+
