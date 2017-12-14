@@ -11,34 +11,34 @@ This file contains settings that allows to tune the system.
 """
 
 # List of features to be used to train, test and/or predict movie recomendations
-features_field = [
-        'title_bm25',
-        'genre_bm25',
-        'director_bm25',
-        'writer_bm25',
-        'cast_bm25',
-        'plot_bm25',
-        'full_plot_bm25',
-        'language_bm25',
-        'country_bm25',
-        'awards_bm25',
-        'year',
-        'als_cosine',
-]
+# features_field = [
+#         'title_bm25',
+#         'genre_bm25',
+#         'director_bm25',
+#         'writer_bm25',
+#         'cast_bm25',
+#         'plot_bm25',
+#         'full_plot_bm25',
+#         'language_bm25',
+#         'country_bm25',
+#         'awards_bm25',
+#         # 'year',
+#         # 'als_cosine',
+# ]
 
 # # i.e. TFITF
-# features_field = [
-#         'title_tfitf',
-#         'genre_tfitf',
-#         'director_tfitf',
-#         'writer_tfitf',
-#         'cast_tfitf',
-#         'plot_tfitf',
-#         'full_plot_tfitf',
-#         'language_tfitf',
-#         'country_tfitf',
-#         'awards_tfitf',
-# ]
+features_field = [
+        'title_tfitf',
+        'genre_tfitf',
+        'director_tfitf',
+        'writer_tfitf',
+        'cast_tfitf',
+        'plot_tfitf',
+        'full_plot_tfitf',
+        'language_tfitf',
+        'country_tfitf',
+        'awards_tfitf',
+]
 #
 # # i.e. JACCARD
 # features_field = [

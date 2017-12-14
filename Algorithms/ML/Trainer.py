@@ -6,6 +6,7 @@ import pandas
 import Util.populate_similarity_table as populate_sim
 from collections import OrderedDict
 from DataHandler import PostgresDataHandler
+from scipy import linalg
 from sklearn import svm, linear_model, model_selection, metrics
 from sklearn.preprocessing import StandardScaler
 from Util import Field
@@ -24,9 +25,10 @@ class Trainer(object):
     @staticmethod
     def get_model(name, *args):
         if name == 'svm':
-            return svm.SVC(*args)
+            return svm.SVC(kernel='linear', C=.1)
+            return svm.SVC(C=0.2)
         elif name == 'log_reg':
-            return linear_model.LogisticRegression(*args)
+            return linear_model.LogisticRegression()
         else:
             return linear_model.Ridge(1.)
 
@@ -165,7 +167,7 @@ class Trainer(object):
         user_ratings = user_ratings.reset_index()
 
         # Change ratings from number to binary
-        # user_ratings.loc['rating'] = user_ratings['rating'].values > 0.5
+        user_ratings.loc['rating'] = user_ratings['rating'].values > 0.5
 
         logger.debug('Aggregated Record Numbers: %d', user_ratings.shape[0])
 
@@ -404,7 +406,11 @@ class Trainer(object):
         logger.debug(x_test.head())
 
         # Predict score for all this features
-        x_scores = self.model.predict(x_test[self.features])
+        # Reference: http://fa.bianp.net/blog/2012/learning-to-rank-with-scikit-learn-the-pairwise-transform/
+        coef = self.model.coef_.ravel() / linalg.norm(self.model.coef_)
+        x_scores = np.dot(x_test[self.features], coef)
+
+
         x_scores = pandas.DataFrame(x_scores, columns=['Score'])
         logger.debug('Predicted')
         logger.debug(x_scores.head())
