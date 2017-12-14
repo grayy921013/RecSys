@@ -40,7 +40,8 @@ from mainsite.models import Movie, \
                             SimilarityCountry, \
                             SimilarityAwards, \
                             SimilarityLast_updated, \
-                            SimilarityFiltered_plot
+                            SimilarityFiltered_plot, \
+                            SimilarityTags 
 
 
 logger = logging.getLogger('root')
@@ -81,6 +82,8 @@ class PostgresDataHandler(DataHandler):
             SimilarityClass = SimilarityAwards
         elif Field.FILTERED_PLOT == field:
             SimilarityClass = SimilarityFiltered_plot
+        elif Field.TAGS == field:
+            SimilarityClass = SimilarityTags
         return SimilarityClass
 
     def clear_similarity(self, field=None):
@@ -404,9 +407,10 @@ class PostgresDataHandler(DataHandler):
         with connection.cursor() as cursor:
             try:
                 cursor.execute("""DROP TABLE mainsite_similarity%s""", AsIs(field));
-            except Exception as e:
-                print(e)
-            print("Creating Similarity Field")
+            except Exception as ignored:
+                pass
+
+            logger.info("Creating Similarity Field")
             cursor.execute("""CREATE TABLE public.mainsite_similarity%s
                             (
                                 id1_id integer,

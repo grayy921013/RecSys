@@ -82,7 +82,7 @@ model = 'lin_reg'
 
 # Flag to decide if the features should be re-generated
 # WARNING: Setting this to true can increase testing time by ~10 minutes
-generate_features = False
+generate_features = True
 
 # Flag to decide if the the groundtruth training data should be aggregated
 aggregated_training_data = True

@@ -15,7 +15,13 @@ import sys
 from DataHandler import PostgresDataHandler
 
 
-def main(argv):
+#to add a new field and generate features for that field complete the following steps  after running this script:
+#1. Add the Field to the Field Enum
+#1.5. Add field to the function get_class_for_field in the Postgres.py file
+#2. Add field to default fields array in Main.py
+#3. Set the generate_features property to True in the .settings.py file
+#4. Run Main.py in test mode
+def add(fieldname):
     dataset = PostgresDataHandler()
     #creates a column for the field in the mainsite_movie table. Takes field and datatype as arguments
     # dataset.addMovieField(argv[0],argv[1]);
@@ -25,15 +31,6 @@ def main(argv):
     # dataset.updateMainsiteMovieField(argv[0]);
 
     #creates temporary similarity table
-    dataset.addSimilarityColumn(argv[0]);
+    dataset.addSimilarityColumn(fieldname);
     #creates the the columns for the three similarity algorithms in mainsite_similarity table
-    dataset.createSimilarity_Field(argv[0]);
-
-
-#to add a new field and generate features for that field complete the following steps  after running this script:
-#1. Add the Field to the Field Enum
-#2. Add field to default fields array in Main.py
-#3. Set the generate_features property to True in the .settings.py file
-#4. Run Main.py in test mode
-if __name__ == "__main__":
-    main(sys.argv)
+    dataset.createSimilarity_Field(fieldname);

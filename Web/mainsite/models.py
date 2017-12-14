@@ -268,6 +268,13 @@ class SimilarityFiltered_plot(models.Model):
     filtered_plot_bm25 = models.FloatField(null=True)
     filtered_plot_jaccard = models.FloatField(null=True)
 
+class SimilarityTags(models.Model):
+    id1_id = models.IntegerField()
+    id2_id = models.IntegerField()
+    tags_tfitf = models.FloatField(null=True)
+    tags_bm25 = models.FloatField(null=True)
+    tags_jaccard = models.FloatField(null=True)
+
 class SimilarityFull_plot(models.Model):
     id1_id = models.IntegerField()
     id2_id = models.IntegerField()

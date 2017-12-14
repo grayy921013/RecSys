@@ -135,7 +135,7 @@ class CBAlgorithmJACCARD(CBAlgorithm):
             p = get_top_k(rows_movielens, cols_movielens, scores, k)
 
             # Temporarily save to a local file
-            p.to_pickle('Temp/tmp_%s_%i' % (self.__name__, i))
+            p.to_pickle('Temp/%s_%i' % (self.__name__, i))
 
             counter += 1
             bar.update(counter)

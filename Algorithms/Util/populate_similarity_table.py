@@ -25,7 +25,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
     dataset = PostgresDataHandler()
     if algorithms is None:
         algorithms = [
-            CBAlgorithmJACCARD,
+            # CBAlgorithmJACCARD,
             CBAlgorithmTFIDF, 
             CBAlgorithmBM25,
         ]
@@ -33,10 +33,7 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
     # Get the connection with the 'database'
     if fields is None:
         # If not field is specified train with all the fields
-        fields = []
-
-        for f in Field:
-            fields.append(f)
+        fields = list(Field)
 
     # For each field caculate the similarity
     for field in fields:
@@ -47,7 +44,6 @@ def main(movies_ids_tagged = [], fields=None, algorithms=None, k=None):
         data = dataset.get_data(field, movies_ids_tagged)
         size = len(data)
         logger.info("%d records retrieved", size)
-        exit(-1)
 
         # Set variables initial values
         t = time()
