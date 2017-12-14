@@ -108,8 +108,8 @@ def test(file_path):
     if s.generate_features:
         # TODO: Add all this params to settings.py
         # filepath = None, fields = None, algorithms = None, k = None
-        trainer.generate_features(fields=[Field.TAGS])
-        # trainer.generate_features(fields=[Field.FULL_PLOT, Field.TAGS])
+        # To generate features for the whole database remove the filepath argument
+        trainer.generate_features(filepath=file_path)
 
     user_ratings, deleted_registers, full_user_ratings = trainer.get_user_rating(file_path)
 
@@ -213,8 +213,8 @@ def predict_movie(trainer,
     print('Predicted pairs: ', top_movie_pairs)
     # -*- Persist -*-
     if algorithm is not None:
-        trainer.datas.clear_similar_movies(algorithm)
-        trainer.datas.save_similar_movies(top_movie_pairs.values.tolist(), algorithm)
+        trainer.dataset.clear_similar_movies(algorithm)
+        trainer.dataset.save_similar_movies(top_movie_pairs.values.tolist(), algorithm)
         print('-*- similar movies succesfully save -*-')
 
     return top_movie_pairs

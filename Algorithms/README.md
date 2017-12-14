@@ -29,3 +29,8 @@ Usage: `python Main.py [-h] [-algorithm [Algorithm ID]] [-movie [Movie ID]] comm
 | predict | Given a movie id it predicts the best 20 movie recommendations for that movie |
 | add_tmdb | Aggregates the recommendations of the tmdb website as an extra algorithm to the database. |
 | age_diff | Populate the age_diff feature in the features table |
+
+# Nice To Have
+
+[] Perform the truncate and sorting of movies for CB Algorithms in a batched way, to allow scaling of data, while being able to run in machines with limited RAM memory.
+[] Allow to specify in the settings file which: algorithms, fields and movies should be considered when generating features.
